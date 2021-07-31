@@ -94,7 +94,7 @@ class App extends Component {
     var datasAll=JSON.stringify(data)
     const fileData = "MARC 001, 035"+data.idProv
     +"\n----------------------------------"
-    +"\n100$a "+data.autor
+    +"\n100$a "+name
     +"\n----------------------------------"
     +"\n245$a "+data.titulo
     +"\n----------------------------------"
