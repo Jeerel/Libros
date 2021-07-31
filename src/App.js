@@ -74,11 +74,57 @@ class App extends Component {
   };
 
   downloadMARC = (data) => {
-    const fileData = JSON.stringify(data);
+     let name=""
+    if(data.autor === 1){
+      name ="Alvarez, Rolando."
+    }else if(data.autor === 2){
+      name ="Salinas de Gortari, Carlos."
+    }else if( data.autor === 3){
+      name="Pichardo Pagaza, Ignacio"
+    }
+    var date=new Date(data.fecha);
+    var year=date.getFullYear().toString()
+    var month=date.getMonth()+1
+    if(month<10){
+      month="0"+month;
+    }
+    var day=date.getDay();
+    console.log(year+month.toString()+day.toString())
+    console.log(name)
+    var datasAll=JSON.stringify(data)
+    const fileData = "MARC 001, 035"+data.idProv
+    +"\n----------------------------------"
+    +"\n100$a "+data.autor
+    +"\n----------------------------------"
+    +"\n245$a "+data.titulo
+    +"\n----------------------------------"
+    +"\n20$a "+data.isbn
+    +"\n----------------------------------"
+    +"\n260$a "+data.anio
+    +"\n----------------------------------"
+    +"\n260$b "+data.editorialName
+    +"\n----------------------------------"
+    +"\n260$c "+data.anio
+    +"\n----------------------------------"
+    +"\n300 "+data.descripcion
+    +"\n----------------------------------"
+    +"\n980$a "+year+month.toString()+day.toString()
+    +"\n----------------------------------"
+    +"\n980$b "+data.precio
+    +"\n----------------------------------"
+    +"\n980$f "+data.numFact/*"020$a "+data.isbn 
+    +"\n----------------------------------"
+    +"\n100$a "+name//JSON.stringify(data);
+    +"\n----------------------------------"
+    +"\n245$a "+data.titulo//JSON.stringify(data);
+    +"\n----------------------------------"
+    +"\n245$a "+ datasAll
+    +"\n----------------------------------"
+    */
     const blob = new Blob([fileData], { type: "text/plain" });
     const url = URL.createObjectURL(blob);
     const link = document.createElement("a");
-    link.download = data.id + ".txt";
+    link.download = "Marc21-"+data.isbn + ".txt";
     link.href = url;
     link.click();
   };
@@ -250,6 +296,7 @@ class App extends Component {
               <h2>Alta de Libros</h2>
             </div>
             <div className="col-md-6 col-sm-1"></div>
+            
             <div className="col-md-3 col-sm-3">
               <div className="form-group">
                 <label>ISSN/ISBN</label>
@@ -396,19 +443,38 @@ class App extends Component {
 
           <ModalBody>
             <div className="row">
-              <div className="col-md-4 col-sm-4">
+            <div className="col-md-4 col-sm-4">
                 <div className="form-group">
-                  <label htmlFor="nombre">ISSN/ISBN</label>
+                  <label htmlFor="nombre">Identificador único de proveedor</label>
                   <input
                     className="form-control"
                     type="text"
-                    name="isbn"
-                    id="isbn"
+                    name="idProv"
+                    id="idProv"
                     onChange={this.handleChange}
-                    value={form ? form.isbn : ""}
+                    value={form ? form.idProv : ""}
                   />
                 </div>
               </div>
+             
+              <div className="col-md-4 col-sm-4">
+                <div className="form-group">
+                  <label htmlFor="nombre">Autor</label>
+                  <select
+                    className="form-control"
+                    name="autor"
+                    id="autor"
+                    onChange={this.handleChange}
+                    value={form ? form.autor : ""}
+                  >
+                    <option value="">Seleccione una opción</option>
+                    <option value="1">Alvarez, Rolando</option>
+                    <option value="2">Salinas de Gortari, Carlos</option>
+                    <option value="3">Pichardo Pagaza, Ignacio</option>
+                  </select>
+                </div>
+              </div>
+            
               <div className="col-md-4 col-sm-4">
                 <div className="form-group">
                   <label htmlFor="nombre">Titulo</label>
@@ -424,14 +490,27 @@ class App extends Component {
               </div>
               <div className="col-md-4 col-sm-4">
                 <div className="form-group">
-                  <label htmlFor="nombre">Autor</label>
+                  <label htmlFor="nombre">ISSN/ISBN</label>
                   <input
                     className="form-control"
                     type="text"
-                    name="autor"
-                    id="autor"
+                    name="isbn"
+                    id="isbn"
                     onChange={this.handleChange}
-                    value={form ? form.autor : ""}
+                    value={form ? form.isbn : ""}
+                  />
+                </div>
+              </div>
+              <div className="col-md-4 col-sm-4">
+                <div className="form-group">
+                  <label htmlFor="nombre">Lugar de piblicación</label>
+                  <input
+                    className="form-control"
+                    type="text"
+                    name="placePub"
+                    id="placePub"
+                    onChange={this.handleChange}
+                    value={form ? form.placePub : ""}
                   />
                 </div>
               </div>
@@ -458,14 +537,67 @@ class App extends Component {
               </div>
               <div className="col-md-4 col-sm-4">
                 <div className="form-group">
-                  <label htmlFor="nombre">Año</label>
+                  <label htmlFor="nombre">Año de publicación</label>
                   <input
                     className="form-control"
-                    type="text"
+                    type="number"
                     name="anio"
                     id="anio"
                     onChange={this.handleChange}
                     value={form ? form.anio : ""}
+                  />
+                </div>
+              </div>
+              <div className="col-md-4 col-sm-4">
+                <div className="form-group">
+                  <label htmlFor="nombre">Fecha</label>
+                  <input
+                    className="form-control"
+                    type="date"
+                    name="fecha"
+                    id="fecha"
+                    onChange={this.handleChange}
+                    value={form ? form.date : ""}
+                  />
+                </div>
+              </div>
+              <div className="col-md-4 col-sm-4">
+                <div className="form-group">
+                  <label htmlFor="nombre">Precio</label>
+                  <input
+                    className="form-control"
+                    type="number"
+                    name="precio"
+                    id="precio"
+                    onChange={this.handleChange}
+                    value={form ? form.precio : ""}
+                  />
+                </div>
+              </div>
+              <div className="col-md-4 col-sm-4">
+                <div className="form-group">
+                  <label htmlFor="nombre"># Factura</label>
+                  <input
+                    className="form-control"
+                    type="number"
+                    name="numFact"
+                    id="numFact"
+                    onChange={this.handleChange}
+                    value={form ? form.numFact : ""}
+                  />
+                </div>
+              </div>
+              <div className="col-md-4 col-sm-4">
+                <div className="form-group">
+                  <label htmlFor="nombre"># Copias</label>
+                  <input
+                    className="form-control"
+                    type="number"
+                    value="1"
+                    name="numCopy"
+                    id="numCopy"
+                    onChange={this.handleChange}
+                    value={form ? form.numCopy : 1}
                   />
                 </div>
               </div>
