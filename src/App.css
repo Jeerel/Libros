@@ -13,32 +13,7 @@
 .rigth{
   right: 20%;
 }
-.fixed-action-btn {
-  position: fixed;
-  right: 23px;
-  bottom: 23px;
-  padding-top: 15px;
-  margin-bottom: 0;
-  z-index: 997;
-}
-.btn-floating {
-  display: inline-block;
-  color: #fff;
-  background:#01579b;
-  border: transparent;
-  position: relative;
-  overflow: hidden;
-  z-index: 1;
-  width: 40px;
-  height: 40px;
-  line-height: 40px;
-  padding: 0;  
-  border-radius: 50%;
-  -webkit-transition: background-color .3s;
-  transition: background-color .3s;
-  cursor: pointer;
-  vertical-align: middle;
-}
+
 @media (prefers-reduced-motion: no-preference) {
   .App-logo {
     animation: App-logo-spin infinite 20s linear;
@@ -67,4 +42,31 @@
   to {
     transform: rotate(360deg);
   }
+}
+.fixed-action-btn {
+  position: fixed;
+  right: 23px;
+  bottom: 23px;
+  padding-top: 15px;
+  margin-bottom: 0;
+  z-index: 997;
+}
+
+.btn-floating {
+  display: inline-block;
+  color: #fff;
+  background: #01579b;
+  border: transparent;
+  position: relative;
+  overflow: hidden;
+  z-index: 1;
+  width: 40px;
+  height: 40px;
+  line-height: 40px;
+  padding: 0;
+  border-radius: 50%;
+  -webkit-transition: background-color .3s;
+  transition: background-color .3s;
+  cursor: pointer;
+  vertical-align: middle;
 }

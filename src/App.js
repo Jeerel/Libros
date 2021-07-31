@@ -49,7 +49,7 @@ class App extends Component {
       .then((response) => {
         this.setState({ data: response.data });
       })
-      .catch((error) => { });
+      .catch((error) => {});
   };
 
   peticionPost = async () => {
@@ -175,9 +175,9 @@ class App extends Component {
           .then((response) => {
             this.setState({ dataEditorial: response.data });
           })
-          .catch((error) => { });
+          .catch((error) => {});
       })
-      .catch((error) => { });
+      .catch((error) => {});
   };
   seleccionarEmpresa = (empresa) => {
     this.setState({
@@ -246,17 +246,6 @@ class App extends Component {
         </nav>
         <div className="container">
           <div className="row">
-            <div className="fixed-action-btn">
-              <button
-                className="btn-floating"
-                onClick={() => {
-                  this.setState({ form: null, tipoModal: "insertar" });
-                  this.modalInsertar();
-                }}
-              >
-                <FontAwesomeIcon icon={faPlus} />
-              </button>
-            </div>
             <div className="col-md-6 col-sm-11 rigth">
               <h2>Alta de Libros</h2>
             </div>
@@ -298,9 +287,7 @@ class App extends Component {
               <div className="form-group">
                 <label>Editorial</label>
                 <select className="form-control">
-                  <option value="">
-                    Seleccione una opción
-                  </option>
+                  <option value="">Seleccione una opción</option>
                   {this.state.dataEditorial.map((editorial, i) => {
                     return (
                       <option key={i} value={editorial.ideditorial}>
@@ -384,6 +371,17 @@ class App extends Component {
               </table>
             </div>
           </div>
+          <div className="fixed-action-btn">
+            <button
+              className="btn-floating"
+              onClick={() => {
+                this.setState({ form: null, tipoModal: "insertar" });
+                this.modalInsertar();
+              }}
+            >
+              <FontAwesomeIcon icon={faPlus} />
+            </button>
+          </div>
         </div>
         <Modal isOpen={this.state.modalInsertar} className="modal-xl">
           <ModalHeader style={{ display: "block" }}>
@@ -447,9 +445,7 @@ class App extends Component {
                     onChange={this.handleChange}
                     value={form ? form.editorial : ""}
                   >
-                    <option value="">
-                      Seleccione una opción
-                    </option>
+                    <option value="">Seleccione una opción</option>
                     {this.state.dataEditorial.map((editorial, i) => {
                       return (
                         <option key={i} value={editorial.ideditorial}>
@@ -493,7 +489,7 @@ class App extends Component {
               onClick={() => this.peticionPost()}
               className="btn btn-primary"
             >
-              Guuardar
+              Guardar
             </button>
             <button
               className="btn btn-danger"
