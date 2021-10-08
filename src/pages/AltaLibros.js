@@ -250,9 +250,8 @@ class AltaLibros extends React.Component {
         this.loadData();
     }
 
-    //const { form } = this.state; tenemos que hacer su constructor
-
     render() {
+        const { form } = this.state;
         return (
             <div>
                 <div className="container">
@@ -395,7 +394,207 @@ class AltaLibros extends React.Component {
                         </button>
                     </div>
                 </div>
-                <Modal isOpen={this.state.modalInsertar} className="modal-xl"></Modal>
+                <Modal isOpen={this.state.modalInsertar} className="modal-xl">
+                    <ModalHeader style={{ display: "block" }}>
+                        Nuevo Libro
+                        <span
+                            style={{ float: "right" }}
+                            onClick={() => this.modalInsertar()}
+                        >
+                            <FontAwesomeIcon icon={faTimes} />
+                        </span>
+                    </ModalHeader>
+
+                    <ModalBody>
+                        <div className="row">
+                            <div className="col-md-4 col-sm-4">
+                                <div className="form-group">
+                                    <label htmlFor="nombre">Identificador único de proveedor</label>
+                                    <input
+                                        className="form-control"
+                                        type="text"
+                                        name="idProv"
+                                        id="idProv"
+                                        onChange={this.handleChange}
+                                        value={form ? form.idProv : ""}
+                                    />
+                                </div>
+                            </div>
+
+                            <div className="col-md-4 col-sm-4">
+                                <div className="form-group">
+                                    <label htmlFor="nombre">Autor</label>
+                                    <select
+                                        className="form-control"
+                                        name="autor"
+                                        id="autor"
+                                        onChange={this.handleChange}
+                                        value={form ? form.autor : ""}
+                                    >
+                                        <option value="">Seleccione una opción</option>
+                                        <option value="1">Alvarez, Rolando</option>
+                                        <option value="2">Salinas de Gortari, Carlos</option>
+                                        <option value="3">Pichardo Pagaza, Ignacio</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div className="col-md-4 col-sm-4">
+                                <div className="form-group">
+                                    <label htmlFor="nombre">Titulo</label>
+                                    <input
+                                        className="form-control"
+                                        type="text"
+                                        name="titulo"
+                                        id="titulo"
+                                        onChange={this.handleChange}
+                                        value={form ? form.titulo : ""}
+                                    />
+                                </div>
+                            </div>
+                            <div className="col-md-4 col-sm-4">
+                                <div className="form-group">
+                                    <label htmlFor="nombre">ISSN/ISBN</label>
+                                    <input
+                                        className="form-control"
+                                        type="text"
+                                        name="isbn"
+                                        id="isbn"
+                                        onChange={this.handleChange}
+                                        value={form ? form.isbn : ""}
+                                    />
+                                </div>
+                            </div>
+                            <div className="col-md-4 col-sm-4">
+                                <div className="form-group">
+                                    <label htmlFor="nombre">Lugar de piblicación</label>
+                                    <input
+                                        className="form-control"
+                                        type="text"
+                                        name="placePub"
+                                        id="placePub"
+                                        onChange={this.handleChange}
+                                        value={form ? form.placePub : ""}
+                                    />
+                                </div>
+                            </div>
+                            <div className="col-md-4 col-sm-4">
+                                <div className="form-group">
+                                    <label htmlFor="nombre">Editorial</label>
+                                    <select
+                                        className="form-control"
+                                        name="editorial"
+                                        id="editorial"
+                                        onChange={this.handleChange}
+                                        value={form ? form.editorial : ""}
+                                    >
+                                        <option value="">Seleccione una opción</option>
+                                        {this.state.dataEditorial.map((editorial, i) => {
+                                            return (
+                                                <option key={i} value={editorial.ideditorial}>
+                                                    {editorial.editorialName}
+                                                </option>
+                                            );
+                                        })}
+                                    </select>
+                                </div>
+                            </div>
+                            <div className="col-md-4 col-sm-4">
+                                <div className="form-group">
+                                    <label htmlFor="nombre">Año de publicación</label>
+                                    <input
+                                        className="form-control"
+                                        type="number"
+                                        name="anio"
+                                        id="anio"
+                                        onChange={this.handleChange}
+                                        value={form ? form.anio : ""}
+                                    />
+                                </div>
+                            </div>
+                            <div className="col-md-4 col-sm-4">
+                                <div className="form-group">
+                                    <label htmlFor="nombre">Fecha</label>
+                                    <input
+                                        className="form-control"
+                                        type="date"
+                                        name="fecha"
+                                        id="fecha"
+                                        onChange={this.handleChange}
+                                        value={form ? form.date : ""}
+                                    />
+                                </div>
+                            </div>
+                            <div className="col-md-4 col-sm-4">
+                                <div className="form-group">
+                                    <label htmlFor="nombre">Precio</label>
+                                    <input
+                                        className="form-control"
+                                        type="number"
+                                        name="precio"
+                                        id="precio"
+                                        onChange={this.handleChange}
+                                        value={form ? form.precio : ""}
+                                    />
+                                </div>
+                            </div>
+                            <div className="col-md-4 col-sm-4">
+                                <div className="form-group">
+                                    <label htmlFor="nombre"># Factura</label>
+                                    <input
+                                        className="form-control"
+                                        type="number"
+                                        name="numFact"
+                                        id="numFact"
+                                        onChange={this.handleChange}
+                                        value={form ? form.numFact : ""}
+                                    />
+                                </div>
+                            </div>
+                            <div className="col-md-4 col-sm-4">
+                                <div className="form-group">
+                                    <label htmlFor="nombre"># Copias</label>
+                                    <input
+                                        className="form-control"
+                                        type="number"
+                                        value="1"
+                                        name="numCopy"
+                                        id="numCopy"
+                                        onChange={this.handleChange}
+                                        value={form ? form.numCopy : 1}
+                                    />
+                                </div>
+                            </div>
+                            <div className="col-md-12 col-sm-12">
+                                <div className="form-group">
+                                    <label htmlFor="nombre">Descripción</label>
+                                    <textarea
+                                        className="form-control"
+                                        name="descripcion"
+                                        id="descripcion"
+                                        onChange={this.handleChange}
+                                        value={form ? form.descripcion : ""}
+                                        rows="3"
+                                    ></textarea>
+                                </div>
+                            </div>
+                        </div>
+                    </ModalBody>
+                    <ModalFooter>
+                        <button
+                            onClick={() => this.peticionPost()}
+                            className="btn btn-primary"
+                        >
+                            Guardar
+                        </button>
+                        <button
+                            className="btn btn-danger"
+                            onClick={() => this.modalInsertar()}
+                        >
+                            Cancelar
+                        </button>
+                    </ModalFooter>
+                </Modal>
             </div>
         )
     }
