@@ -10,16 +10,17 @@ import {
     faPlus,
     faSearch,
     faDownload,
+    faEdit
 } from "@fortawesome/free-solid-svg-icons";
 
 import { Modal, ModalBody, ModalFooter, ModalHeader } from "reactstrap";
 
 class AltaLibros extends React.Component {
-
     state = {
         data: [],
         dataEditorial: [],
         modalInsertar: false,
+        modalEdit: false,
         modalEliminar: false,
         form: {
             id: "",
@@ -28,8 +29,11 @@ class AltaLibros extends React.Component {
             capital_bursatil: "",
             tipoModal: "",
         },
+        formEdit: {
+            id: "",
+            nombre: ""
+        },
     };
-
     peticionGet = () => {
         let config = {
             method: "GET",
@@ -50,14 +54,7 @@ class AltaLibros extends React.Component {
             })
             .catch((error) => { });
     };
-
     peticionPost = async () => {
-        /*delete this.state.form.id;
-        console.log(this.state.form);
-        this.state.data.push(this.state.form);
-        this.modalInsertar();
-        this.peticionGet();
-        */
         console.log(this.state.form);
         let url = "https://appi-books.herokuapp.com/api/libros";
         axios
@@ -71,7 +68,6 @@ class AltaLibros extends React.Component {
                 console.log(error);
             });
     };
-
     downloadMARC = (data) => {
         let name = ""
         if (data.autor === 1) {
@@ -127,6 +123,7 @@ class AltaLibros extends React.Component {
         link.href = url;
         link.click();
     };
+
     peticionPut = () => {
         let url = "https://appi-books.herokuapp.com/api/libros";
         axios.put(url + this.state.form.id, this.state.form).then((response) => {
@@ -134,7 +131,18 @@ class AltaLibros extends React.Component {
             this.peticionGet();
         });
     };
+    peticionEdit = (libro) => {
+        let url = "https://appi-books.herokuapp.com/api/libros/" + libro.isbn;
+        axios
+            .get(url)
+            .then((response) => {
+                this.setState({ modalEditar: !this.state.modalEditar });
+                this.setState({ formEdit: response.data });
+                console.log(this.state.formEdit)
+            })
+            .catch((error) => { });
 
+    }
     peticionDelete = (libro) => {
         console.log(libro);
         swal({
@@ -175,15 +183,12 @@ class AltaLibros extends React.Component {
                 swal("Acción cancelada");
             }
         });
-        /*    
-        //  axios.delete(url + this.state.form.id).then((response) => {
-        this.setState({ modalEliminar: false });    
-        //    });
-        */
     };
-
     modalInsertar = () => {
         this.setState({ modalInsertar: !this.state.modalInsertar });
+    };
+    modalEditar = () => {
+        this.setState({ modalEditar: !this.state.modalEditar });
     };
     loadData = () => {
         console.log("ENTRO2");
@@ -235,7 +240,6 @@ class AltaLibros extends React.Component {
             },
         });
     };
-
     handleChange = async (e) => {
         e.persist();
         await this.setState({
@@ -245,11 +249,16 @@ class AltaLibros extends React.Component {
             },
         });
     };
-
+    updateInputValue = async (e) => {
+        this.state.formEdit[e.target.name] = e.target.value;
+        e.persist();
+        await this.setState({
+            formEdit: this.state.formEdit
+        });
+    };
     componentDidMount() {
         this.loadData();
     }
-
     render() {
         const { form } = this.state;
         return (
@@ -263,7 +272,7 @@ class AltaLibros extends React.Component {
 
                         <div className="col-md-3 col-sm-3">
                             <div className="form-group">
-                                <label>ISSN/ISBN</label>
+                                <label>ISBN/ISSN</label>
                                 <input
                                     className="form-control"
                                     type="text"
@@ -358,20 +367,19 @@ class AltaLibros extends React.Component {
                                                 <td>
                                                     <button
                                                         className="btn btn-primary"
-                                                        onClick={() => {
-                                                            this.downloadMARC(libro);
-                                                        }}
-                                                    >
+                                                        onClick={() => { this.downloadMARC(libro); }}>
                                                         <FontAwesomeIcon icon={faDownload} />
                                                     </button>
-
+                                                    {"   "}
+                                                    <button
+                                                        className="btn btn-warning text-white"
+                                                        onClick={() => { this.peticionEdit(libro); }}>
+                                                        <FontAwesomeIcon icon={faEdit} />
+                                                    </button>
                                                     {"   "}
                                                     <button
                                                         className="btn btn-danger"
-                                                        onClick={() => {
-                                                            this.peticionDelete(libro);
-                                                        }}
-                                                    >
+                                                        onClick={() => { this.peticionDelete(libro); }}>
                                                         <FontAwesomeIcon icon={faTrashAlt} />
                                                     </button>
                                                 </td>
@@ -388,8 +396,7 @@ class AltaLibros extends React.Component {
                             onClick={() => {
                                 this.setState({ form: null, tipoModal: "insertar" });
                                 this.modalInsertar();
-                            }}
-                        >
+                            }}>
                             <FontAwesomeIcon icon={faPlus} />
                         </button>
                     </div>
@@ -404,7 +411,6 @@ class AltaLibros extends React.Component {
                             <FontAwesomeIcon icon={faTimes} />
                         </span>
                     </ModalHeader>
-
                     <ModalBody>
                         <div className="row">
                             <div className="col-md-4 col-sm-4">
@@ -420,7 +426,6 @@ class AltaLibros extends React.Component {
                                     />
                                 </div>
                             </div>
-
                             <div className="col-md-4 col-sm-4">
                                 <div className="form-group">
                                     <label htmlFor="nombre">Autor</label>
@@ -454,7 +459,7 @@ class AltaLibros extends React.Component {
                             </div>
                             <div className="col-md-4 col-sm-4">
                                 <div className="form-group">
-                                    <label htmlFor="nombre">ISSN/ISBN</label>
+                                    <label htmlFor="nombre">ISBN/ISSN</label>
                                     <input
                                         className="form-control"
                                         type="text"
@@ -462,19 +467,6 @@ class AltaLibros extends React.Component {
                                         id="isbn"
                                         onChange={this.handleChange}
                                         value={form ? form.isbn : ""}
-                                    />
-                                </div>
-                            </div>
-                            <div className="col-md-4 col-sm-4">
-                                <div className="form-group">
-                                    <label htmlFor="nombre">Lugar de piblicación</label>
-                                    <input
-                                        className="form-control"
-                                        type="text"
-                                        name="placePub"
-                                        id="placePub"
-                                        onChange={this.handleChange}
-                                        value={form ? form.placePub : ""}
                                     />
                                 </div>
                             </div>
@@ -499,97 +491,147 @@ class AltaLibros extends React.Component {
                                     </select>
                                 </div>
                             </div>
+                        </div>
+                    </ModalBody>
+                    <ModalFooter>
+                        <button
+                            onClick={() => this.peticionPost()}
+                            className="btn btn-primary">
+                            Guardar
+                        </button>
+                        <button
+                            className="btn btn-danger"
+                            onClick={() => this.modalInsertar()}>
+                            Cancelar
+                        </button>
+                    </ModalFooter>
+                </Modal>
+
+                <Modal isOpen={this.state.modalEditar} className="modal-xl">
+                    <ModalHeader style={{ display: "block" }}>
+                        Editar Libro
+                        <span
+                            style={{ float: "right" }}
+                            onClick={() => this.modalEditar()}
+                        >
+                            <FontAwesomeIcon icon={faTimes} />
+                        </span>
+                    </ModalHeader>
+
+                    <ModalBody>
+                        <div className="row">
+                            <div className="col-md-4 col-sm-4">
+                                <div className="form-group">
+                                    <label htmlFor="nombre">Identificador único de proveedor</label>
+                                    <input className="form-control" type="text" name="idProv" onChange={this.updateInputValue}
+                                        id="idProvEdit" value={this.state.formEdit.idProv} />
+                                </div>
+                            </div>
+
+                            <div className="col-md-4 col-sm-4">
+                                <div className="form-group">
+                                    <label htmlFor="nombre">Autor</label>
+                                    <select className="form-control" name="autor" onChange={this.updateInputValue}
+                                        id="autor" value={this.state.formEdit.autor} >
+                                        <option value="">Seleccione una opción</option>
+                                        <option value="1">Alvarez, Rolando</option>
+                                        <option value="2">Salinas de Gortari, Carlos</option>
+                                        <option value="3">Pichardo Pagaza, Ignacio</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div className="col-md-4 col-sm-4">
+                                <div className="form-group">
+                                    <label htmlFor="nombre">Titulo</label>
+                                    <input className="form-control" type="text" name="titulo" onChange={this.updateInputValue}
+                                        id="tituloEdit" value={this.state.formEdit.titulo} />
+                                </div>
+                            </div>
+                            <div className="col-md-4 col-sm-4">
+                                <div className="form-group">
+                                    <label htmlFor="nombre">ISBN/ISSN</label>
+                                    <input className="form-control" type="text" name="isbn" onChange={this.updateInputValue}
+                                        id="isbnEdit" value={this.state.formEdit.isbn} />
+                                </div>
+                            </div>
+                            <div className="col-md-4 col-sm-4">
+                                <div className="form-group">
+                                    <label htmlFor="nombre">Lugar de piblicación</label>
+                                    <input className="form-control" type="text" name="placePub" onChange={this.updateInputValue}
+                                        id="placePubEdit" value={this.state.formEdit.placePub} />
+                                </div>
+                            </div>
+                            <div className="col-md-4 col-sm-4">
+                                <div className="form-group">
+                                    <label htmlFor="nombre">Editorial</label>
+                                    <select className="form-control" name="editorial" onChange={this.updateInputValue}
+                                        id="editorialEdit" value={this.state.formEdit.editorial} >
+                                        <option value="">Seleccione una opción</option>
+                                        {this.state.dataEditorial.map((editorial, i) => {
+                                            return (
+                                                <option key={i} value={editorial.ideditorial}>
+                                                    {editorial.editorialName}
+                                                </option>
+                                            );
+                                        })}
+                                    </select>
+                                </div>
+                            </div>
                             <div className="col-md-4 col-sm-4">
                                 <div className="form-group">
                                     <label htmlFor="nombre">Año de publicación</label>
-                                    <input
-                                        className="form-control"
-                                        type="number"
-                                        name="anio"
-                                        id="anio"
-                                        onChange={this.handleChange}
-                                        value={form ? form.anio : ""}
-                                    />
+                                    <input className="form-control" type="number" name="anio" onChange={this.updateInputValue}
+                                        id="anio" value={this.state.formEdit.anio} />
                                 </div>
                             </div>
                             <div className="col-md-4 col-sm-4">
                                 <div className="form-group">
                                     <label htmlFor="nombre">Fecha</label>
-                                    <input
-                                        className="form-control"
-                                        type="date"
-                                        name="fecha"
-                                        id="fecha"
-                                        onChange={this.handleChange}
-                                        value={form ? form.date : ""}
-                                    />
+                                    <input className="form-control" type="date" name="fecha" onChange={this.updateInputValue}
+                                        id="fechaEdit" value={this.state.formEdit.fecha} />
                                 </div>
                             </div>
                             <div className="col-md-4 col-sm-4">
                                 <div className="form-group">
                                     <label htmlFor="nombre">Precio</label>
-                                    <input
-                                        className="form-control"
-                                        type="number"
-                                        name="precio"
-                                        id="precio"
-                                        onChange={this.handleChange}
-                                        value={form ? form.precio : ""}
-                                    />
+                                    <input className="form-control" type="number" name="precio" onChange={this.updateInputValue}
+                                        id="precioEdit" value={this.state.formEdit.precio} />
                                 </div>
                             </div>
                             <div className="col-md-4 col-sm-4">
                                 <div className="form-group">
                                     <label htmlFor="nombre"># Factura</label>
-                                    <input
-                                        className="form-control"
-                                        type="number"
-                                        name="numFact"
-                                        id="numFact"
-                                        onChange={this.handleChange}
-                                        value={form ? form.numFact : ""}
-                                    />
+                                    <input className="form-control" type="number" onChange={this.updateInputValue}
+                                        name="numFact" id="numFactEdit" value={this.state.formEdit.numFact} />
                                 </div>
                             </div>
                             <div className="col-md-4 col-sm-4">
                                 <div className="form-group">
                                     <label htmlFor="nombre"># Copias</label>
-                                    <input
-                                        className="form-control"
-                                        type="number"
-                                        value="1"
-                                        name="numCopy"
-                                        id="numCopy"
-                                        onChange={this.handleChange}
-                                        value={form ? form.numCopy : 1}
-                                    />
+                                    <input className="form-control" type="number" onChange={this.updateInputValue}
+                                        name="numCopy" id="numCopyEdit" value={this.state.formEdit.numCopy} />
                                 </div>
                             </div>
                             <div className="col-md-12 col-sm-12">
                                 <div className="form-group">
                                     <label htmlFor="nombre">Descripción</label>
-                                    <textarea
-                                        className="form-control"
-                                        name="descripcion"
-                                        id="descripcion"
-                                        onChange={this.handleChange}
-                                        value={form ? form.descripcion : ""}
-                                        rows="3"
-                                    ></textarea>
+                                    <textarea className="form-control" name="descripcion" id="descripcionEdit"
+                                        value={this.state.formEdit.descripcion} onChange={this.updateInputValue} rows="3"></textarea>
                                 </div>
                             </div>
                         </div>
                     </ModalBody>
                     <ModalFooter>
                         <button
-                            onClick={() => this.peticionPost()}
+                            onClick={() => this.peticionPut()}
                             className="btn btn-primary"
                         >
                             Guardar
                         </button>
                         <button
                             className="btn btn-danger"
-                            onClick={() => this.modalInsertar()}
+                            onClick={() => this.modalEditar()}
                         >
                             Cancelar
                         </button>
@@ -599,5 +641,4 @@ class AltaLibros extends React.Component {
         )
     }
 }
-
 export default AltaLibros;

@@ -314,7 +314,7 @@ class App extends Component {
 
             <div className="col-md-3 col-sm-3">
               <div className="form-group">
-                <label>ISSN/ISBN</label>
+                <label>ISBN/ISSN/</label>
                 <input
                   className="form-control"
                   type="text"
@@ -391,7 +391,7 @@ class App extends Component {
               <table className="table ">
                 <thead>
                   <tr>
-                    <th>ISBN/ISSN</th>
+                    <th>ISSN/ISBN</th>
                     <th>Titulo</th>
                     <th>Editorial(s)</th>
                     <th>Año</th>
@@ -505,7 +505,7 @@ class App extends Component {
               </div>
               <div className="col-md-4 col-sm-4">
                 <div className="form-group">
-                  <label htmlFor="nombre">ISSN/ISBN</label>
+                  <label htmlFor="nombre">ISBN/ISSN</label>
                   <input
                     className="form-control"
                     type="text"
