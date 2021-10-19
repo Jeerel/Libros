@@ -6,6 +6,7 @@ import Perfiles from './pages/Perfiles';
 import Facturas from './pages/Facturas';
 import Pedidos from './pages/Pedidos';
 import Cotizacion from './pages/Cotizacion';
+import Editoriales from "./pages/Editoriales"
 
 import Layout from "./components/Layout";
 
@@ -24,7 +25,8 @@ function App() {
         <BrowserRouter>
             <Layout>
                 <Switch>
-                    <Route exact path="/alta/libros" component={AltaLibros} />
+                    <Route exact path="/libros" component={AltaLibros} />
+                    <Route exact path="/editoriales" component={Editoriales} />
                     <Route exact path="/perfiles" component={Perfiles} />
                     <Route exact path="/pedidos" component={Pedidos} />
                     <Route exact path="/cotizacion" component={Cotizacion} />

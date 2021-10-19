@@ -34,6 +34,7 @@ class AltaLibros extends React.Component {
             nombre: ""
         },
     };
+
     peticionGet = () => {
         let config = {
             method: "GET",
@@ -283,7 +284,7 @@ class AltaLibros extends React.Component {
                         </div>
                         <div className="col-md-3 col-sm-3">
                             <div className="form-group">
-                                <label>Titulo</label>
+                                <label>Título</label>
                                 <input
                                     className="form-control"
                                     type="text"
@@ -318,7 +319,7 @@ class AltaLibros extends React.Component {
                                 </select>
                             </div>
                         </div>
-                        <div className="col-md-4 col-sm-4">
+                        <div className="col-md-3 col-sm-3">
                             <div className="form-group">
                                 <label>Año</label>
                                 <input
@@ -329,7 +330,47 @@ class AltaLibros extends React.Component {
                                 />
                             </div>
                         </div>
-                        <div className="col-md-4 col-sm-4">
+                        <div className="col-md-3 col-sm-3">
+                            <div className="form-group">
+                                <label>Estado</label>
+                                <select className="form-control">
+                                    <option selected disabled>Seleccione una opción</option>
+                                    <option value="Aguascalientes">Aguascalientes</option>
+                                    <option value="Baja California">Baja California</option>
+                                    <option value="Baja California Sur">Baja California Sur</option>
+                                    <option value="Campeche">Campeche</option>
+                                    <option value="Chiapas">Chiapas</option>
+                                    <option value="Chihuahua">Chihuahua</option>
+                                    <option value="CDMX">Ciudad de México</option>
+                                    <option value="Coahuila">Coahuila</option>
+                                    <option value="Colima">Colima</option>
+                                    <option value="Durango">Durango</option>
+                                    <option value="Estado de México">Estado de México</option>
+                                    <option value="Guanajuato">Guanajuato</option>
+                                    <option value="Guerrero">Guerrero</option>
+                                    <option value="Hidalgo">Hidalgo</option>
+                                    <option value="Jalisco">Jalisco</option>
+                                    <option value="Michoacán">Michoacán</option>
+                                    <option value="Morelos">Morelos</option>
+                                    <option value="Nayarit">Nayarit</option>
+                                    <option value="Nuevo León">Nuevo León</option>
+                                    <option value="Oaxaca">Oaxaca</option>
+                                    <option value="Puebla">Puebla</option>
+                                    <option value="Querétaro">Querétaro</option>
+                                    <option value="Quintana Roo">Quintana Roo</option>
+                                    <option value="San Luis Potosí">San Luis Potosí</option>
+                                    <option value="Sinaloa">Sinaloa</option>
+                                    <option value="Sonora">Sonora</option>
+                                    <option value="Tabasco">Tabasco</option>
+                                    <option value="Tamaulipas">Tamaulipas</option>
+                                    <option value="Tlaxcala">Tlaxcala</option>
+                                    <option value="Veracruz">Veracruz</option>
+                                    <option value="Yucatán">Yucatán</option>
+                                    <option value="Zacatecas">Zacatecas</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div className="col-md-3 col-sm-3">
                             <div className="form-group">
                                 <label>Palabras Clave</label>
                                 <input
@@ -340,7 +381,7 @@ class AltaLibros extends React.Component {
                                 />
                             </div>
                         </div>
-                        <div className="col-md-4 col-sm-4">
+                        <div className="col-md-3 col-sm-3">
                             <button className="btn btn-primary btnTop">
                                 <FontAwesomeIcon icon={faSearch} />
                             </button>
@@ -349,9 +390,10 @@ class AltaLibros extends React.Component {
                             <table className="table ">
                                 <thead>
                                     <tr>
-                                        <th>ISBN/ISSN</th>
-                                        <th>Titulo</th>
+                                        <th>Autor</th>
+                                        <th>Título</th>
                                         <th>Editorial(s)</th>
+                                        <th>ISBN/ISSN</th>
                                         <th>Año</th>
                                         <th>Acciones</th>
                                     </tr>
@@ -360,9 +402,11 @@ class AltaLibros extends React.Component {
                                     {this.state.data.map((libro, i) => {
                                         return (
                                             <tr key={i}>
-                                                <td>{libro.isbn}</td>
+                                                <td>{libro.autor}</td>
+                                                {console.log(libro)}
                                                 <td>{libro.titulo}</td>
                                                 <td>{libro.editorialName}</td>
+                                                <td>{libro.isbn}</td>
                                                 <td>{libro.anio}</td>
                                                 <td>
                                                     <button
@@ -401,6 +445,7 @@ class AltaLibros extends React.Component {
                         </button>
                     </div>
                 </div>
+
                 <Modal isOpen={this.state.modalInsertar} className="modal-xl">
                     <ModalHeader style={{ display: "block" }}>
                         Nuevo Libro
@@ -413,7 +458,7 @@ class AltaLibros extends React.Component {
                     </ModalHeader>
                     <ModalBody>
                         <div className="row">
-                            <div className="col-md-4 col-sm-4">
+                            {/*<div className="col-md-4 col-sm-4">
                                 <div className="form-group">
                                     <label htmlFor="nombre">Identificador único de proveedor</label>
                                     <input
@@ -425,28 +470,24 @@ class AltaLibros extends React.Component {
                                         value={form ? form.idProv : ""}
                                     />
                                 </div>
-                            </div>
+                        </div>*/}
                             <div className="col-md-4 col-sm-4">
                                 <div className="form-group">
                                     <label htmlFor="nombre">Autor</label>
-                                    <select
+                                    <input
                                         className="form-control"
+                                        type="text"
                                         name="autor"
                                         id="autor"
                                         onChange={this.handleChange}
                                         value={form ? form.autor : ""}
-                                    >
-                                        <option value="">Seleccione una opción</option>
-                                        <option value="1">Alvarez, Rolando</option>
-                                        <option value="2">Salinas de Gortari, Carlos</option>
-                                        <option value="3">Pichardo Pagaza, Ignacio</option>
-                                    </select>
+                                    />
                                 </div>
                             </div>
 
                             <div className="col-md-4 col-sm-4">
                                 <div className="form-group">
-                                    <label htmlFor="nombre">Titulo</label>
+                                    <label htmlFor="nombre">Título</label>
                                     <input
                                         className="form-control"
                                         type="text"
@@ -454,19 +495,6 @@ class AltaLibros extends React.Component {
                                         id="titulo"
                                         onChange={this.handleChange}
                                         value={form ? form.titulo : ""}
-                                    />
-                                </div>
-                            </div>
-                            <div className="col-md-4 col-sm-4">
-                                <div className="form-group">
-                                    <label htmlFor="nombre">ISBN/ISSN</label>
-                                    <input
-                                        className="form-control"
-                                        type="text"
-                                        name="isbn"
-                                        id="isbn"
-                                        onChange={this.handleChange}
-                                        value={form ? form.isbn : ""}
                                     />
                                 </div>
                             </div>
@@ -489,6 +517,19 @@ class AltaLibros extends React.Component {
                                             );
                                         })}
                                     </select>
+                                </div>
+                            </div>
+                            <div className="col-md-4 col-sm-4">
+                                <div className="form-group">
+                                    <label htmlFor="nombre">ISBN/ISSN</label>
+                                    <input
+                                        className="form-control"
+                                        type="text"
+                                        name="isbn"
+                                        id="isbn"
+                                        onChange={this.handleChange}
+                                        value={form ? form.isbn : ""}
+                                    />
                                 </div>
                             </div>
                         </div>
@@ -520,46 +561,28 @@ class AltaLibros extends React.Component {
 
                     <ModalBody>
                         <div className="row">
-                            <div className="col-md-4 col-sm-4">
+
+                            {/*<div className="col-md-4 col-sm-4">
                                 <div className="form-group">
                                     <label htmlFor="nombre">Identificador único de proveedor</label>
                                     <input className="form-control" type="text" name="idProv" onChange={this.updateInputValue}
                                         id="idProvEdit" value={this.state.formEdit.idProv} />
                                 </div>
-                            </div>
+                            </div>*/}
 
                             <div className="col-md-4 col-sm-4">
                                 <div className="form-group">
                                     <label htmlFor="nombre">Autor</label>
-                                    <select className="form-control" name="autor" onChange={this.updateInputValue}
-                                        id="autor" value={this.state.formEdit.autor} >
-                                        <option value="">Seleccione una opción</option>
-                                        <option value="1">Alvarez, Rolando</option>
-                                        <option value="2">Salinas de Gortari, Carlos</option>
-                                        <option value="3">Pichardo Pagaza, Ignacio</option>
-                                    </select>
+                                    <input className="form-control" type="text" name="autor" onChange={this.updateInputValue}
+                                        id="autor" value={this.state.formEdit.autor} />
                                 </div>
                             </div>
 
                             <div className="col-md-4 col-sm-4">
                                 <div className="form-group">
-                                    <label htmlFor="nombre">Titulo</label>
+                                    <label htmlFor="nombre">Título</label>
                                     <input className="form-control" type="text" name="titulo" onChange={this.updateInputValue}
                                         id="tituloEdit" value={this.state.formEdit.titulo} />
-                                </div>
-                            </div>
-                            <div className="col-md-4 col-sm-4">
-                                <div className="form-group">
-                                    <label htmlFor="nombre">ISBN/ISSN</label>
-                                    <input className="form-control" type="text" name="isbn" onChange={this.updateInputValue}
-                                        id="isbnEdit" value={this.state.formEdit.isbn} />
-                                </div>
-                            </div>
-                            <div className="col-md-4 col-sm-4">
-                                <div className="form-group">
-                                    <label htmlFor="nombre">Lugar de piblicación</label>
-                                    <input className="form-control" type="text" name="placePub" onChange={this.updateInputValue}
-                                        id="placePubEdit" value={this.state.formEdit.placePub} />
                                 </div>
                             </div>
                             <div className="col-md-4 col-sm-4">
@@ -578,6 +601,64 @@ class AltaLibros extends React.Component {
                                     </select>
                                 </div>
                             </div>
+                            <div className="col-md-4 col-sm-4">
+                                <div className="form-group">
+                                    <label htmlFor="nombre">ISBN/ISSN</label>
+                                    <input className="form-control" type="text" name="isbn" onChange={this.updateInputValue}
+                                        id="isbnEdit" value={this.state.formEdit.isbn} />
+                                </div>
+                            </div>
+                            <div className="col-md-4 col-sm-4">
+                                <div className="form-group">
+                                    <label htmlFor="nombre">Lugar de publicación</label>
+                                    <select className="form-control" name="placePubEdit" id="placePubEdit" onChange={this.updateInputValue} value={this.state.formEdit.placePub}>
+                                        <option selected disabled>Seleccione una opción</option>
+                                        <option value="Aguascalientes">Aguascalientes</option>
+                                        <option value="Baja California">Baja California</option>
+                                        <option value="Baja California Sur">Baja California Sur</option>
+                                        <option value="Campeche">Campeche</option>
+                                        <option value="Chiapas">Chiapas</option>
+                                        <option value="Chihuahua">Chihuahua</option>
+                                        <option value="CDMX">Ciudad de México</option>
+                                        <option value="Coahuila">Coahuila</option>
+                                        <option value="Colima">Colima</option>
+                                        <option value="Durango">Durango</option>
+                                        <option value="Estado de México">Estado de México</option>
+                                        <option value="Guanajuato">Guanajuato</option>
+                                        <option value="Guerrero">Guerrero</option>
+                                        <option value="Hidalgo">Hidalgo</option>
+                                        <option value="Jalisco">Jalisco</option>
+                                        <option value="Michoacán">Michoacán</option>
+                                        <option value="Morelos">Morelos</option>
+                                        <option value="Nayarit">Nayarit</option>
+                                        <option value="Nuevo León">Nuevo León</option>
+                                        <option value="Oaxaca">Oaxaca</option>
+                                        <option value="Puebla">Puebla</option>
+                                        <option value="Querétaro">Querétaro</option>
+                                        <option value="Quintana Roo">Quintana Roo</option>
+                                        <option value="San Luis Potosí">San Luis Potosí</option>
+                                        <option value="Sinaloa">Sinaloa</option>
+                                        <option value="Sonora">Sonora</option>
+                                        <option value="Tabasco">Tabasco</option>
+                                        <option value="Tamaulipas">Tamaulipas</option>
+                                        <option value="Tlaxcala">Tlaxcala</option>
+                                        <option value="Veracruz">Veracruz</option>
+                                        <option value="Yucatán">Yucatán</option>
+                                        <option value="Zacatecas">Zacatecas</option>
+                                    </select>
+                                    {/*<input className="form-control" type="text" name="placePub" onChange={this.updateInputValue}
+                                    id="placePubEdit" value={this.state.formEdit.placePub} />*/}
+                                </div>
+                            </div>
+
+                            <div className="col-md-4 col-sm-4">
+                                <div className="form-group">
+                                    <label htmlFor="nombre">Coordinadores / Antalogadores / Compiladores</label>
+                                    <textarea className="form-control" type="text" onChange={this.updateInputValue}
+                                        name="coordinadores" id="coordinadoresEdit" value={this.state.formEdit.coordinadores} />
+                                </div>
+                            </div>
+
                             <div className="col-md-4 col-sm-4">
                                 <div className="form-group">
                                     <label htmlFor="nombre">Año de publicación</label>
@@ -613,11 +694,46 @@ class AltaLibros extends React.Component {
                                         name="numCopy" id="numCopyEdit" value={this.state.formEdit.numCopy} />
                                 </div>
                             </div>
+                            <div className="col-md-4 col-sm-4">
+                                <div className="form-group">
+                                    <label htmlFor="nombre"># Páginas</label>
+                                    <input className="form-control" type="number" onChange={this.updateInputValue}
+                                        name="numPag" id="numPagEdit" value={this.state.formEdit.numPag} />
+                                </div>
+                            </div>
+                            <div className="col-md-4 col-sm-4">
+                                <div className="form-group">
+                                    <label htmlFor="nombre">Dimensiones</label>
+                                    <input className="form-control" type="number" onChange={this.updateInputValue}
+                                        name="dimensiones" id="dimensionesEdit" value={this.state.formEdit.dimensiones} />
+                                </div>
+                            </div>
+                            <div className="col-md-4 col-sm-4">
+                                <div className="form-group">
+                                    <label htmlFor="nombre">Colección / Serie</label>
+                                    <input className="form-control" type="text" onChange={this.updateInputValue}
+                                        name="coleccionSerie" id="coleccionSerieEdit" value={this.state.formEdit.coleccionSerie} />
+                                </div>
+                            </div>
+                            <div className="col-md-4 col-sm-4">
+                                <div className="form-group">
+                                    <label htmlFor="nombre">Tema</label>
+                                    <input className="form-control" type="text" onChange={this.updateInputValue}
+                                        name="tema" id="temaEdit" value={this.state.formEdit.tema} />
+                                </div>
+                            </div>
+                            <div className="col-md-12 col-sm-12">
+                                <div className="form-group">
+                                    <label htmlFor="nombre">Nota bibliográfica</label>
+                                    <textarea className="form-control" name="nota" id="notaEdit"
+                                        value={this.state.formEdit.nota} onChange={this.updateInputValue} rows="3" />
+                                </div>
+                            </div>
                             <div className="col-md-12 col-sm-12">
                                 <div className="form-group">
                                     <label htmlFor="nombre">Descripción</label>
                                     <textarea className="form-control" name="descripcion" id="descripcionEdit"
-                                        value={this.state.formEdit.descripcion} onChange={this.updateInputValue} rows="3"></textarea>
+                                        value={this.state.formEdit.descripcion} onChange={this.updateInputValue} rows="3" />
                                 </div>
                             </div>
                         </div>

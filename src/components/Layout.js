@@ -1,5 +1,5 @@
 import React from "react";
-import Navbar from "./Navbar";
+import NavbarC from "./NavbarC";
 
 function Layout(props) {
 
@@ -7,7 +7,7 @@ function Layout(props) {
 
     return (
         <React.Fragment>
-            <Navbar />
+            <NavbarC />
             {children}
         </React.Fragment>
     )

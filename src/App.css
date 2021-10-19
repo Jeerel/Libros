@@ -70,3 +70,11 @@
   cursor: pointer;
   vertical-align: middle;
 }
+
+.logoLibros{
+  width: 5%;
+}
+
+.black-type{
+  color: black !important;
+}
