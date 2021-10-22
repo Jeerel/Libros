@@ -1,5 +1,6 @@
 import React from "react";
 import "../App.css"
+import PageLoading from "../components/PageLoading";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import axios from "axios";
@@ -17,7 +18,8 @@ import { Modal, ModalBody, ModalFooter, ModalHeader } from "reactstrap";
 
 class AltaLibros extends React.Component {
     state = {
-        data: [],
+        loading: true,
+        data: undefined,
         dataEditorial: [],
         modalInsertar: false,
         modalEdit: false,
@@ -262,6 +264,11 @@ class AltaLibros extends React.Component {
     }
     render() {
         const { form } = this.state;
+
+        if (this.state.loading === true && !this.state.data) {
+            return <PageLoading />
+        }
+
         return (
             <div>
                 <div className="container">

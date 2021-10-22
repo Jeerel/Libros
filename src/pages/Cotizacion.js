@@ -1,10 +1,19 @@
 import React from "react";
+import PageLoading from "../components/PageLoading";
 
 class Cotizacion extends React.Component {
+    state = {
+        loading: true,
+        data: undefined
+    }
+
     render() {
+        if (this.state.loading === true && !this.state.data) {
+            return <PageLoading />
+        }
         return (
             <div>
-                <h1>HOLA Cotizacion</h1>
+
             </div>
         )
     }

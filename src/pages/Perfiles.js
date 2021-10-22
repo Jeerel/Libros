@@ -1,5 +1,6 @@
 import React from "react";
 import "../App.css"
+import PageLoading from "../components/PageLoading";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import axios from "axios";
@@ -15,10 +16,12 @@ import {
 
 import { Modal, ModalBody, ModalFooter, ModalHeader } from "reactstrap";
 
+
 class Perfiles extends React.Component {
 
     state = {
-        data: [],
+        loading: true,
+        data: undefined,
         dataEditorial: [],
         modalEditar: false,
         modalInsertar: false,
@@ -163,6 +166,9 @@ class Perfiles extends React.Component {
     }
 
     render() {
+        if (this.state.loading === true && !this.state.data) {
+            return <PageLoading />
+        }
         const { form, filter } = this.state;
         return (
             <div>
