@@ -20,6 +20,22 @@ class Editoriales extends React.Component {
 
     state = {
         loading: true,
+        modalInsertar: false,
+        modalEdit: false,
+        form: {
+            id: "",
+            nombre: "",
+            estado: "",
+            direccion: "",
+            descripcion: ""
+        },
+        formEdit: {
+            id: "",
+            nombre: "",
+            estado: "",
+            direccion: "",
+            descripcion: ""
+        },
         data: [
             {
                 nombre: 'Almadía',
@@ -42,6 +58,42 @@ class Editoriales extends React.Component {
         ]
     }
 
+    peticionGet = () => {
+        let config = {
+            method: "GET",
+            url: "https://appi-books.herokuapp.com/api/editoriales",
+            headers: {
+                "Access-Control-Allow-Origin": "*",
+                "Access-Control-Allow-Headers":
+                    "POST, GET, PUT, DELETE, OPTIONS, HEAD, Authorization, Origin, Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers, Access-Control-Allow-Origin",
+                "Content-Type": "application/json",
+            },
+        };
+        axios(config).catch((err) => err);
+        let url = "https://appi-books.herokuapp.com/api/editoriales";
+        axios
+            .get(url)
+            .then((response) => {
+                this.setState({ data: response.data });
+            })
+            .catch((error) => { });
+    }
+
+    peticionPost = async () => {
+        console.log(this.state.form);
+        let url = "https://appi-books.herokuapp.com/api/editoriales";
+        axios
+            .post(url, this.state.form)
+            .then((response) => {
+                console.log(response)
+                this.modalInsertar();
+                this.peticionGet();
+            })
+            .catch((error) => {
+                console.log(error);
+            });
+    }
+
     modalInsertar = () => {
         this.setState({ modalInsertar: !this.state.modalInsertar });
     };
@@ -50,7 +102,19 @@ class Editoriales extends React.Component {
         this.setState({ modalEditar: !this.state.modalEditar });
     };
 
+    handleChange = async (e) => {
+        e.persist();
+        await this.setState({
+            form: {
+                ...this.state.form,
+                [e.target.name]: e.target.value
+            },
+        });
+    };
+
     render() {
+
+        const { form } = this.state
 
         if (this.state.loading === true && !this.state.data) {
             return <PageLoading />
@@ -186,16 +250,14 @@ class Editoriales extends React.Component {
                             <div className="col-md-12 col-sm-12">
                                 <div className="form-group">
                                     <label htmlFor="nombre">Nombre</label>
-                                    <input className="form-control" type="text" name="name" id="name" onChange={this.handleChange} />
-                                    {//<input className="form-control" type="text" name="name" id="name" onChange={this.handleChange} value={form ? form.name : ""} />
-                                    }
+                                    <input className="form-control" type="text" name="nombreEditorial" onChange={this.handleChange} value={form ? form.nombre : ""} />
                                 </div>
                             </div>
 
                             <div className="col-md-12 col-sm-12">
                                 <div className="form-group">
                                     <label htmlFor="nombre">Estado</label>
-                                    <select className="form-control" name="estado" id="estado" onChange={this.updateInputValue}>
+                                    <select className="form-control" name="selectEditorialEstado" onChange={this.handleChange} value={form ? form.estado : ""}>
                                         <option selected disabled>Seleccione una opción</option>
                                         <option value="Aguascalientes">Aguascalientes</option>
                                         <option value="Baja California">Baja California</option>
@@ -230,26 +292,20 @@ class Editoriales extends React.Component {
                                         <option value="Yucatán">Yucatán</option>
                                         <option value="Zacatecas">Zacatecas</option>
                                     </select>
-                                    {//<input className="form-control" type="text" name="apellidos" id="email" onChange={this.handleChange} value={form ? form.email : ""} />
-                                    }
                                 </div>
                             </div>
 
                             <div className="col-md-12 col-sm-12">
                                 <div className="form-group">
                                     <label htmlFor="nombre">Dirección</label>
-                                    <input className="form-control" type="text" name="direccion" id="direccion" onChange={this.handleChange} />
-                                    {//<input className="form-control" type="text" name="apellidos" id="email" onChange={this.handleChange} value={form ? form.email : ""} />
-                                    }
+                                    <input className="form-control" type="text" name="direccionEditorial" onChange={this.handleChange} value={form ? form.direccion : ""} />
                                 </div>
                             </div>
 
                             <div className="col-md-12 col-sm-12">
                                 <div className="form-group">
                                     <label htmlFor="nombre">Descripción</label>
-                                    <textarea className="form-control" type="text" name="descripcion" id="descripcion" onChange={this.handleChange} />
-                                    {//<input className="form-control" type="text" name="apellidos" id="email" onChange={this.handleChange} value={form ? form.email : ""} />
-                                    }
+                                    <textarea className="form-control" type="text" name="descripcionEditorial" onChange={this.handleChange} value={form ? form.descripcion : ""} />
                                 </div>
                             </div>
 
