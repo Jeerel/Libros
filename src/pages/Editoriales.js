@@ -10,7 +10,6 @@ import {
     faTrashAlt,
     faPlus,
     faSearch,
-    faDownload,
     faEdit
 } from "@fortawesome/free-solid-svg-icons";
 
@@ -36,32 +35,55 @@ class Editoriales extends React.Component {
             direccion: "",
             descripcion: ""
         },
-        data: [
-            {
-                nombre: 'Almadía',
-                estado: 'CDMX',
-                direccion: 'Av. Patriotismo 165, Escandón II Secc, Miguel Hidalgo, 11800',
-                descripcion: ''
-            },
-            {
-                nombre: 'Antílope',
-                estado: 'CDMX',
-                direccion: 'Tehuantepec #50, Roma Sur, Cuauhtémoc, 06760',
-                descripcion: ''
-            },
-            {
-                nombre: 'Argonáutica',
-                estado: 'Monterrey',
-                direccion: '',
-                descripcion: 'solo compras por internet'
-            }
-        ]
+        data: undefined
     }
+
+    peticionDelete = (editorial) => {
+        console.log(editorial);
+        swal({
+            title: "Deseas eliminar la editorial " + editorial.editorialName + "?",
+            text: "No podra recuperar la información",
+            icon: "warning",
+            buttons: ["Cancelar", "Si, eliminar"],
+            dangerMode: true,
+        }).then((willDelete) => {
+            if (willDelete) {
+                let config = {
+                    method: "DELETE",
+                    url: "https://appi-books.herokuapp.com/api/editorial/" + editorial.ideditorial,
+                    headers: {
+                        "Access-Control-Allow-Origin": "*",
+                        "Access-Control-Allow-Headers":
+                            "POST, GET, PUT, DELETE, OPTIONS, HEAD, Authorization, Origin, Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers, Access-Control-Allow-Origin",
+                        "Content-Type": "application/json",
+                    },
+                };
+                axios(config).catch((err) => err);
+                let url = "https://appi-books.herokuapp.com/api/editorial/" + editorial.ideditorial;
+                axios
+                    .delete(url)
+                    .then((response) => {
+                        swal("Editorial eliminada correctamente", {
+                            icon: "success",
+                        });
+                        this.peticionGet();
+                    })
+                    .catch((error) => {
+                        console.log(error);
+                        swal("Error en el sistema", {
+                            icon: "error",
+                        });
+                    });
+            } else {
+                swal("Acción cancelada");
+            }
+        });
+    };
 
     peticionGet = () => {
         let config = {
             method: "GET",
-            url: "https://appi-books.herokuapp.com/api/editoriales",
+            url: "https://appi-books.herokuapp.com/api/editorial",
             headers: {
                 "Access-Control-Allow-Origin": "*",
                 "Access-Control-Allow-Headers":
@@ -70,7 +92,7 @@ class Editoriales extends React.Component {
             },
         };
         axios(config).catch((err) => err);
-        let url = "https://appi-books.herokuapp.com/api/editoriales";
+        let url = "https://appi-books.herokuapp.com/api/editorial";
         axios
             .get(url)
             .then((response) => {
@@ -81,7 +103,7 @@ class Editoriales extends React.Component {
 
     peticionPost = async () => {
         console.log(this.state.form);
-        let url = "https://appi-books.herokuapp.com/api/editoriales";
+        let url = "https://appi-books.herokuapp.com/api/editorial";
         axios
             .post(url, this.state.form)
             .then((response) => {
@@ -111,6 +133,63 @@ class Editoriales extends React.Component {
             },
         });
     };
+
+    loadData = () => {
+        console.log("ENTRO2");
+        let config = {
+            method: "GET",
+            url: "https://appi-books.herokuapp.com/api/editorial",
+            headers: {
+                "Access-Control-Allow-Origin": "*",
+                "Access-Control-Allow-Headers":
+                    "POST, GET, PUT, DELETE, OPTIONS, HEAD, Authorization, Origin, Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers, Access-Control-Allow-Origin",
+                "Content-Type": "application/json",
+            },
+        };
+        axios(config).catch((err) => err);
+        let url = "https://appi-books.herokuapp.com/api/editorial";
+        axios
+            .get(url)
+            .then((response) => {
+                this.setState({ data: response.data });
+            })
+            .catch((error) => { });
+    };
+
+    peticionEdit = (editorial) => {
+        let url = "https://appi-books.herokuapp.com/api/editorial/" + editorial.ideditorial;
+        axios
+            .get(url)
+            .then((response) => {
+                this.setState({ modalEditar: !this.state.modalEditar });
+                this.setState({ formEdit: response.data });
+                console.log(this.state.formEdit)
+            })
+            .catch((error) => { });
+
+    }
+
+    updateInputValue = async (e) => {
+        this.state.formEdit[e.target.name] = e.target.value;
+        e.persist();
+        await this.setState({
+            formEdit: this.state.formEdit
+        });
+    };
+
+    peticionPut = () => {
+        console.log('entrandoput')
+        let url = "https://appi-books.herokuapp.com/api/editorial";
+        axios.put(url + this.state.form.id, this.state.form).then((response) => {
+            this.modalInsertar();
+            this.peticionGet();
+        });
+    };
+
+    componentDidMount() {
+        this.loadData();
+    };
+
 
     render() {
 
@@ -200,14 +279,14 @@ class Editoriales extends React.Component {
                                     {this.state.data.map((editorials, i) => {
                                         return (
                                             <tr key={i}>
-                                                <td>{editorials.nombre}</td>
-                                                <td>{editorials.estado}</td>
-                                                <td>{editorials.direccion}</td>
-                                                <td>{editorials.descripcion}</td>
+                                                <td>{editorials.editorialName}</td>
+                                                <td>{editorials.editorialState}</td>
+                                                <td>{editorials.editorialAddress}</td>
+                                                <td>{editorials.editorialDescription}</td>
                                                 <td>
                                                     <button
                                                         className="btn btn-warning text-white"
-                                                        onClick={() => { this.modalEditar(editorials); }}>
+                                                        onClick={() => { this.peticionEdit(editorials); }}>
                                                         <FontAwesomeIcon icon={faEdit} />
                                                     </button>
                                                     {"   "}
@@ -250,15 +329,15 @@ class Editoriales extends React.Component {
                             <div className="col-md-12 col-sm-12">
                                 <div className="form-group">
                                     <label htmlFor="nombre">Nombre</label>
-                                    <input className="form-control" type="text" name="nombreEditorial" onChange={this.handleChange} value={form ? form.nombre : ""} />
+                                    <input className="form-control" type="text" name="nombre" onChange={this.handleChange} value={form ? form.nombre : ""} />
                                 </div>
                             </div>
 
                             <div className="col-md-12 col-sm-12">
                                 <div className="form-group">
                                     <label htmlFor="nombre">Estado</label>
-                                    <select className="form-control" name="selectEditorialEstado" onChange={this.handleChange} value={form ? form.estado : ""}>
-                                        <option selected disabled>Seleccione una opción</option>
+                                    <select className="form-control" name="estado" onChange={this.handleChange} value={form ? form.estado : ""}>
+                                        <option value="" selected disabled>Seleccione una opción</option>
                                         <option value="Aguascalientes">Aguascalientes</option>
                                         <option value="Baja California">Baja California</option>
                                         <option value="Baja California Sur">Baja California Sur</option>
@@ -298,14 +377,14 @@ class Editoriales extends React.Component {
                             <div className="col-md-12 col-sm-12">
                                 <div className="form-group">
                                     <label htmlFor="nombre">Dirección</label>
-                                    <input className="form-control" type="text" name="direccionEditorial" onChange={this.handleChange} value={form ? form.direccion : ""} />
+                                    <input className="form-control" type="text" name="direccion" onChange={this.handleChange} value={form ? form.direccion : ""} />
                                 </div>
                             </div>
 
                             <div className="col-md-12 col-sm-12">
                                 <div className="form-group">
                                     <label htmlFor="nombre">Descripción</label>
-                                    <textarea className="form-control" type="text" name="descripcionEditorial" onChange={this.handleChange} value={form ? form.descripcion : ""} />
+                                    <textarea className="form-control" type="text" name="descripcion" onChange={this.handleChange} value={form ? form.descripcion : ""} />
                                 </div>
                             </div>
 
@@ -339,16 +418,18 @@ class Editoriales extends React.Component {
                             <div className="col-md-12 col-sm-12">
                                 <div className="form-group">
                                     <label htmlFor="nombre">Nombre</label>
-                                    <input className="form-control" type="text" name="name" id="name" onChange={this.handleChange} />
-                                    {//<input className="form-control" type="text" name="name" id="name" onChange={this.handleChange} value={form ? form.name : ""} />
-                                    }
+                                    <input className="form-control" type="text" name="editorialName" onChange={this.updateInputValue} value={this.state.formEdit.editorialName} />
+                                    {/*
+                                        <input className="form-control" type="text" name="autor" onChange={this.updateInputValue}
+                                        id="autor" value={this.state.formEdit.autor} />
+                                    */}
                                 </div>
                             </div>
 
                             <div className="col-md-12 col-sm-12">
                                 <div className="form-group">
                                     <label htmlFor="nombre">Estado</label>
-                                    <select className="form-control" name="estado" id="estado" onChange={this.updateInputValue}>
+                                    <select className="form-control" name="editorialState" onChange={this.updateInputValue} value={this.state.formEdit.editorialState}>
                                         <option selected disabled>Seleccione una opción</option>
                                         <option value="Aguascalientes">Aguascalientes</option>
                                         <option value="Baja California">Baja California</option>
@@ -383,26 +464,20 @@ class Editoriales extends React.Component {
                                         <option value="Yucatán">Yucatán</option>
                                         <option value="Zacatecas">Zacatecas</option>
                                     </select>
-                                    {//<input className="form-control" type="text" name="apellidos" id="email" onChange={this.handleChange} value={form ? form.email : ""} />
-                                    }
                                 </div>
                             </div>
 
                             <div className="col-md-12 col-sm-12">
                                 <div className="form-group">
                                     <label htmlFor="nombre">Dirección</label>
-                                    <input className="form-control" type="text" name="direccion" id="direccion" onChange={this.handleChange} />
-                                    {//<input className="form-control" type="text" name="apellidos" id="email" onChange={this.handleChange} value={form ? form.email : ""} />
-                                    }
+                                    <input className="form-control" type="text" name="direccion" id="editorialAddress" onChange={this.updateInputValue} value={this.state.formEdit.editorialAddress} />
                                 </div>
                             </div>
 
                             <div className="col-md-12 col-sm-12">
                                 <div className="form-group">
                                     <label htmlFor="nombre">Descripción</label>
-                                    <textarea className="form-control" type="text" name="descripcion" id="descripcion" onChange={this.handleChange} />
-                                    {//<input className="form-control" type="text" name="apellidos" id="email" onChange={this.handleChange} value={form ? form.email : ""} />
-                                    }
+                                    <textarea className="form-control" type="text" name="descripcion" id="editorialDescription" onChange={this.updateInputValue} value={this.state.formEdit.editorialDescription} />
                                 </div>
                             </div>
 
@@ -410,7 +485,7 @@ class Editoriales extends React.Component {
                     </ModalBody>
                     <ModalFooter>
                         <button
-
+                            onClick={() => this.peticionPut()}
                             className="btn btn-primary">
                             Guardar
                         </button>
