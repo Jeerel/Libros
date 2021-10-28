@@ -22,6 +22,9 @@ class Perfiles extends React.Component {
     state = {
         loading: true,
         data: undefined,
+        tipoFilter:"",
+        emailFilter:"",
+        nameFilter:"",
         dataEditorial: [],
         modalEditar: false,
         modalInsertar: false,
@@ -35,13 +38,36 @@ class Perfiles extends React.Component {
             name: "",
             email: "",
             type: ""
-        },
-        filter: {
-            nameFilter: "",
-            emailFilter: "",
-            typeFilter: ""
         }
     };
+    peticionAvanced = () => {
+        let obj={};
+        if(this.state.nameFilter){
+            obj["nombre"]=this.state.nameFilter;
+        }
+        if(this.state.emailFilter){
+            obj["correo"]=this.state.emailFilter;
+        }
+        if(this.state.tipoFilter){
+            obj["tipo"]=this.state.tipoFilter;
+        }
+        let url = "https://appi-books.herokuapp.com/api/filters/users";
+        axios
+            .post(url,obj)
+            .then((response) => {    
+                this.setState({ data: response.data });
+            })
+            .catch((error) => {
+            });
+    }
+
+    searchFilter = async (e) => {
+        this.state[e.target.name] = e.target.value;
+        let obj={};
+        obj[e.target.name]=this.state[e.target.name];
+        e.persist();        
+        await this.setState(obj);
+    }
 
     modalInsertar = () => {
         this.setState({ modalInsertar: !this.state.modalInsertar });
@@ -67,7 +93,6 @@ class Perfiles extends React.Component {
                 [e.target.name]: e.target.value,
             },
         });
-        console.log(this.state);
     };
     peticionDelete = async (user) => {
         swal({
@@ -161,10 +186,6 @@ class Perfiles extends React.Component {
             });
     }
 
-    searchFilter = async () => {
-        alert("Enter");
-    }
-
     render() {
         if (this.state.loading === true && !this.state.data) {
             return <PageLoading />
@@ -182,29 +203,29 @@ class Perfiles extends React.Component {
                         <div className="col-md-3 col-sm-3">
                             <div className="form-group">
                                 <label>Nombre</label>
-                                <input className="form-control" type="text" name="nameFilter" id="nameFilter" onChange={this.handleChangeFilter} value={filter ? filter.name : ""} />
+                                <input className="form-control" type="text" name="nameFilter" id="nameFilter" onChange={this.searchFilter} value={this.state.nameFilter} />
 
                             </div>
                         </div>
                         <div className="col-md-3 col-sm-3">
                             <div className="form-group">
                                 <label>Correo</label>
-                                <input className="form-control" type="email" name="emailFilter" id="emailFilter" />
+                                <input className="form-control" type="email"onChange={this.searchFilter} value={this.state.emailFilter}  name="emailFilter" id="emailFilter" />
                             </div>
                         </div>
                         <div className="col-md-3 col-sm-3">
                             <div className="form-group">
                                 <label>Tipo</label>
-                                <select className="form-control" name="tipoFilter" id="tipoFilter">
+                                <select className="form-control" onChange={this.searchFilter} value={this.state.tipoFilter}  name="tipoFilter" id="tipoFilter">
                                     <option value="">Seleccione una opción</option>
                                     <option value="Administrador">Administrador</option>
-                                    <option value="Ususario">Usuario</option>
+                                    <option value="Usuario">Usuario</option>
                                     <option value="Invitado">Invitado</option>
                                 </select>
                             </div>
                         </div>
                         <div className="col-md-3 col-sm-3">
-                            <button onClick={() => this.searchFilter()} className="btn btn-primary btnTop">
+                            <button onClick={() => this.peticionAvanced()} className="btn btn-primary btnTop">
                                 <FontAwesomeIcon icon={faSearch} />
                             </button>
                         </div>
@@ -342,7 +363,7 @@ class Perfiles extends React.Component {
                                     <select className="form-control" name="tipo" id="typeEdit" value={this.state.formEdit.tipo} onChange={this.updateInputValue}>
                                         <option value="">Seleccione una opción</option>
                                         <option value="Administrador">Administrador</option>
-                                        <option value="Ususario">Usuario</option>
+                                        <option value="Usuario">Usuario</option>
                                         <option value="Invitado">Invitado</option>
                                     </select>
                                 </div>

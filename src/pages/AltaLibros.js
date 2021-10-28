@@ -31,6 +31,7 @@ class AltaLibros extends React.Component {
             capital_bursatil: "",
             tipoModal: "",
         },
+        formFilter: {},
         formEdit: {
             id: "",
             nombre: ""
@@ -58,17 +59,14 @@ class AltaLibros extends React.Component {
             .catch((error) => { });
     };
     peticionPost = async () => {
-        console.log(this.state.form);
         let url = "https://appi-books.herokuapp.com/api/libros";
         axios
             .post(url, this.state.form)
             .then((response) => {
-                console.log(response);
                 this.modalInsertar();
                 this.peticionGet();
             })
             .catch((error) => {
-                console.log(error);
             });
     };
     downloadMARC = (data) => {
@@ -87,8 +85,6 @@ class AltaLibros extends React.Component {
             month = "0" + month;
         }
         var day = date.getDay();
-        console.log(year + month.toString() + day.toString())
-        console.log(name)
         var datasAll = JSON.stringify(data)
         const fileData = "MARC 001, 035" + data.idProv
             + "\n----------------------------------"
@@ -128,10 +124,15 @@ class AltaLibros extends React.Component {
     };
 
     peticionPut = () => {
-        let url = "https://appi-books.herokuapp.com/api/libros";
-        axios.put(url + this.state.form.id, this.state.form).then((response) => {
-            this.modalInsertar();
+        let url = "https://appi-books.herokuapp.com/api/libros/" + this.state.formEdit.isbn;
+        axios.put(url + this.state.form.id, this.state.formEdit).then((response) => {
+            swal("Libro Editado", { icon: "success", });
+            this.modalEditar();
             this.peticionGet();
+        }).catch((error) => {
+            swal("Error en el sistema", {
+                icon: "error",
+            });
         });
     };
     peticionEdit = (libro) => {
@@ -141,13 +142,11 @@ class AltaLibros extends React.Component {
             .then((response) => {
                 this.setState({ modalEditar: !this.state.modalEditar });
                 this.setState({ formEdit: response.data });
-                console.log(this.state.formEdit)
             })
             .catch((error) => { });
 
     }
     peticionDelete = (libro) => {
-        console.log(libro);
         swal({
             title: "Deseas eliminar el libro " + libro.titulo + "?",
             text: "No podra recuperar la información",
@@ -177,7 +176,6 @@ class AltaLibros extends React.Component {
                         this.peticionGet();
                     })
                     .catch((error) => {
-                        console.log(error);
                         swal("Error en el sistema", {
                             icon: "error",
                         });
@@ -194,7 +192,6 @@ class AltaLibros extends React.Component {
         this.setState({ modalEditar: !this.state.modalEditar });
     };
     loadData = () => {
-        console.log("ENTRO2");
         let config = {
             method: "GET",
             url: "https://appi-books.herokuapp.com/api/libros",
@@ -252,6 +249,32 @@ class AltaLibros extends React.Component {
             },
         });
     };
+
+    handleChangeFilter = async (e) => {
+        e.persist();
+        await this.setState({
+            formFilter: {
+                ...this.state.formFilter,
+                [e.target.name]: e.target.value,
+            },
+        });
+    };
+    peticionAvanced = () => {
+        let obj = {}
+        for (let i in this.state.formFilter) {
+            if (this.state.formFilter[i]) {
+                obj[i] = this.state.formFilter[i];
+            }
+        }
+        let url = "https://appi-books.herokuapp.com/api/filters/libros";
+        axios
+            .post(url, obj)
+            .then((response) => {
+                this.setState({ data: response.data });
+            })
+            .catch((error) => {
+            });
+    }
     updateInputValue = async (e) => {
         this.state.formEdit[e.target.name] = e.target.value;
         e.persist();
@@ -263,7 +286,7 @@ class AltaLibros extends React.Component {
         this.loadData();
     }
     render() {
-        const { form } = this.state;
+        const { form, formFilter } = this.state;
 
         if (this.state.loading === true && !this.state.data) {
             return <PageLoading />
@@ -284,8 +307,10 @@ class AltaLibros extends React.Component {
                                 <input
                                     className="form-control"
                                     type="text"
-                                    name="ISSNFilter"
+                                    name="isbn"
                                     id="ISSNFilter"
+                                    onChange={this.handleChangeFilter}
+                                    value={formFilter ? formFilter.isbn : ""}
                                 />
                             </div>
                         </div>
@@ -295,8 +320,10 @@ class AltaLibros extends React.Component {
                                 <input
                                     className="form-control"
                                     type="text"
-                                    name="TituloLibroFilter"
+                                    name="titulo"
                                     id="TituloLibroFilter"
+                                    onChange={this.handleChangeFilter}
+                                    value={formFilter ? formFilter.titulo : ""}
                                 />
                             </div>
                         </div>
@@ -306,15 +333,18 @@ class AltaLibros extends React.Component {
                                 <input
                                     className="form-control"
                                     type="text"
-                                    name="AutorFilter"
+                                    name="autor"
                                     id="AutorFilter"
+                                    onChange={this.handleChangeFilter}
+                                    value={formFilter ? formFilter.autor : ""}
                                 />
                             </div>
                         </div>
                         <div className="col-md-3 col-sm-3">
                             <div className="form-group">
                                 <label>Editorial</label>
-                                <select className="form-control">
+                                <select className="form-control" name="editorial" onChange={this.handleChangeFilter}
+                                    value={formFilter ? formFilter.editorial : ""}>
                                     <option value="">Seleccione una opción</option>
                                     {this.state.dataEditorial.map((editorial, i) => {
                                         return (
@@ -332,15 +362,18 @@ class AltaLibros extends React.Component {
                                 <input
                                     className="form-control"
                                     type="number"
-                                    name="anioFilter"
+                                    name="anio"
                                     id="anioFilter"
+                                    onChange={this.handleChangeFilter}
+                                    value={formFilter ? formFilter.anio : ""}
                                 />
                             </div>
                         </div>
                         <div className="col-md-3 col-sm-3">
                             <div className="form-group">
                                 <label>Estado</label>
-                                <select className="form-control">
+                                <select className="form-control" name="placePub" onChange={this.handleChangeFilter}
+                                    value={formFilter ? formFilter.placePub : ""}>
                                     <option selected disabled>Seleccione una opción</option>
                                     <option value="Aguascalientes">Aguascalientes</option>
                                     <option value="Baja California">Baja California</option>
@@ -385,11 +418,12 @@ class AltaLibros extends React.Component {
                                     type="text"
                                     name="palabraClaveFilter"
                                     id="palabraClaveFilter"
+
                                 />
                             </div>
                         </div>
                         <div className="col-md-3 col-sm-3">
-                            <button className="btn btn-primary btnTop">
+                            <button className="btn btn-primary btnTop" onClick={() => this.peticionAvanced()}>
                                 <FontAwesomeIcon icon={faSearch} />
                             </button>
                         </div>
@@ -410,7 +444,6 @@ class AltaLibros extends React.Component {
                                         return (
                                             <tr key={i}>
                                                 <td>{libro.autor}</td>
-                                                {console.log(libro)}
                                                 <td>{libro.titulo}</td>
                                                 <td>{libro.editorialName}</td>
                                                 <td>{libro.isbn}</td>
@@ -618,7 +651,7 @@ class AltaLibros extends React.Component {
                             <div className="col-md-4 col-sm-4">
                                 <div className="form-group">
                                     <label htmlFor="nombre">Lugar de publicación</label>
-                                    <select className="form-control" name="placePubEdit" id="placePubEdit" onChange={this.updateInputValue} value={this.state.formEdit.placePub}>
+                                    <select className="form-control" name="placePub" id="placePubEdit" onChange={this.updateInputValue} value={this.state.formEdit.placePub}>
                                         <option selected disabled>Seleccione una opción</option>
                                         <option value="Aguascalientes">Aguascalientes</option>
                                         <option value="Baja California">Baja California</option>
@@ -698,14 +731,14 @@ class AltaLibros extends React.Component {
                                 <div className="form-group">
                                     <label htmlFor="nombre"># Copias</label>
                                     <input className="form-control" type="number" onChange={this.updateInputValue}
-                                        name="numCopy" id="numCopyEdit" value={this.state.formEdit.numCopy} />
+                                        name="numCopias" id="numCopyEdit" value={this.state.formEdit.numCopias} />
                                 </div>
                             </div>
                             <div className="col-md-4 col-sm-4">
                                 <div className="form-group">
                                     <label htmlFor="nombre"># Páginas</label>
                                     <input className="form-control" type="number" onChange={this.updateInputValue}
-                                        name="numPag" id="numPagEdit" value={this.state.formEdit.numPag} />
+                                        name="paginas" id="numPagEdit" value={this.state.formEdit.paginas} />
                                 </div>
                             </div>
                             <div className="col-md-4 col-sm-4">
