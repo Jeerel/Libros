@@ -558,16 +558,16 @@ class AltaLibros extends React.Component {
                                                     <ExcelFile element={
                                                         <button
                                                             className="btn btn-primary"
-                                                            onClick={() => libroObj = libro}>{/*onClick={() => { this.downloadMARC(libro); }} onClick={() => libroArray.push(libro)}*/}
+                                                            onClick={() => libroArray.push(libro)}>{/*onClick={() => { this.downloadMARC(libro); }} */}
                                                             <FontAwesomeIcon icon={faDownload} />
                                                         </button>
                                                     } filename="MARC">
-                                                        <ExcelSheet dataSet={multiDataSet}>
-                                                            {/*<ExcelSheet data={libroArray} name={libro.titulo + "MARC"}>
+                                                        {/*<ExcelSheet dataSet={multiDataSet}>*/}
+                                                        <ExcelSheet data={libroArray} name={libro.titulo + "MARC"}>
                                                             <ExcelColumn label="autor" value="autor" />
                                                             <ExcelColumn label="titulo" value="titulo" />
                                                             <ExcelColumn label="isbn" value="isbn" />
-                                                            <ExcelColumn label="anio" value="anio" />*/}
+                                                            <ExcelColumn label="anio" value="anio" />
                                                         </ExcelSheet>
                                                     </ExcelFile>
                                                     {/* FIXME:*/}
