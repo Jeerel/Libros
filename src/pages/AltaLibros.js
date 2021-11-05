@@ -1,6 +1,7 @@
 import React from "react";
 import "../App.css"
 import PageLoading from "../components/PageLoading";
+import ExportExcel from 'react-export-excel';
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import axios from "axios";
@@ -17,6 +18,7 @@ import {
 import { Modal, ModalBody, ModalFooter, ModalHeader } from "reactstrap";
 
 class AltaLibros extends React.Component {
+
     state = {
         loading: true,
         data: undefined,
@@ -286,6 +288,109 @@ class AltaLibros extends React.Component {
         this.loadData();
     }
     render() {
+
+        const ExcelFile = ExportExcel.ExcelFile;
+        let ExcelSheet = ExportExcel.ExcelSheet;
+        let ExcelColumn = ExportExcel.ExcelColumn;
+        let libroArray = [];
+        let libroObj = {};
+        const multiDataSet = [
+            {
+                columns: [
+
+                    { title: 'autor', style: { font: { sz: "18", bold: true } }, width: { wpx: 125 } },
+                    { title: 'año', style: { font: { sz: "18", bold: true } }, width: { wpx: 125 } }
+
+                ],
+                data: [
+                    { value: 'jeerel', style: { font: { sz: "14" } } },
+                    { value: '2020', style: { font: { sz: "14" } } }
+                ]
+            }
+        ];
+        const styledMultiDataSet = [
+            {
+                columns: [
+                    {
+                        value: "Headings",
+                        widthPx: 160,
+                        style: { font: { sz: "24", bold: true } },
+                    },
+                    {
+                        value: "Text Style",
+                        widthPx: 180,
+                        style: { font: { sz: "24", bold: true } },
+                    },
+                    {
+                        value: "Colors",
+                        style: { font: { sz: "24", bold: true } }, // if no width set, default excel column width will be used ( 64px )
+                    },
+                ],
+                data: [
+                    [
+                        { value: "H1", style: { font: { sz: "24", bold: true } } },
+                        { value: "Bold", style: { font: { bold: true } } },
+                        {
+                            value: "Red",
+                            style: {
+                                fill: { patternType: "solid", fgColor: { rgb: "FFFF0000" } },
+                            },
+                        },
+                    ],
+                    [
+                        { value: "H2", style: { font: { sz: "18", bold: true } } },
+                        { value: "underline", style: { font: { underline: true } } },
+                        {
+                            value: "Blue",
+                            style: {
+                                fill: { patternType: "solid", fgColor: { rgb: "FF0000FF" } },
+                            },
+                        },
+                    ],
+                    [
+                        { value: "H3", style: { font: { sz: "14", bold: true } } },
+                        { value: "italic", style: { font: { italic: true } } },
+                        {
+                            value: "Green",
+                            style: {
+                                fill: { patternType: "solid", fgColor: { rgb: "FF00FF00" } },
+                            },
+                        },
+                    ],
+                    [
+                        { value: "H4", style: { font: { sz: "12", bold: true } } },
+                        { value: "strike", style: { font: { strike: true } } },
+                        {
+                            value: "Orange",
+                            style: {
+                                fill: { patternType: "solid", fgColor: { rgb: "FFF86B00" } },
+                            },
+                        },
+                    ],
+                    [
+                        { value: "H5", style: { font: { sz: "10.5", bold: true } } },
+                        { value: "outline", style: { font: { outline: true } } },
+                        {
+                            value: "Yellow",
+                            style: {
+                                fill: { patternType: "solid", fgColor: { rgb: "FFFFFF00" } },
+                            },
+                        },
+                    ],
+                    [
+                        { value: "H6", style: { font: { sz: "7.5", bold: true } } },
+                        { value: "shadow", style: { font: { shadow: true } } },
+                        {
+                            value: "Light Blue",
+                            style: {
+                                fill: { patternType: "solid", fgColor: { rgb: "FFCCEEFF" } },
+                            },
+                        },
+                    ],
+                ],
+            },
+        ];
+
         const { form, formFilter } = this.state;
 
         if (this.state.loading === true && !this.state.data) {
@@ -449,18 +554,28 @@ class AltaLibros extends React.Component {
                                                 <td>{libro.isbn}</td>
                                                 <td>{libro.anio}</td>
                                                 <td>
-                                                    <button
-                                                        className="btn btn-primary"
-                                                        onClick={() => { this.downloadMARC(libro); }}>
-                                                        <FontAwesomeIcon icon={faDownload} />
-                                                    </button>
-                                                    {"   "}
+                                                    {/*TODO:*/}
+                                                    <ExcelFile element={
+                                                        <button
+                                                            className="btn btn-primary"
+                                                            onClick={() => libroObj = libro}>{/*onClick={() => { this.downloadMARC(libro); }} onClick={() => libroArray.push(libro)}*/}
+                                                            <FontAwesomeIcon icon={faDownload} />
+                                                        </button>
+                                                    } filename="MARC">
+                                                        <ExcelSheet dataSet={multiDataSet}>
+                                                            {/*<ExcelSheet data={libroArray} name={libro.titulo + "MARC"}>
+                                                            <ExcelColumn label="autor" value="autor" />
+                                                            <ExcelColumn label="titulo" value="titulo" />
+                                                            <ExcelColumn label="isbn" value="isbn" />
+                                                            <ExcelColumn label="anio" value="anio" />*/}
+                                                        </ExcelSheet>
+                                                    </ExcelFile>
+                                                    {/* FIXME:*/}
                                                     <button
                                                         className="btn btn-warning text-white"
                                                         onClick={() => { this.peticionEdit(libro); }}>
                                                         <FontAwesomeIcon icon={faEdit} />
                                                     </button>
-                                                    {"   "}
                                                     <button
                                                         className="btn btn-danger"
                                                         onClick={() => { this.peticionDelete(libro); }}>
