@@ -308,88 +308,6 @@ class AltaLibros extends React.Component {
                 ]
             }
         ];
-        const styledMultiDataSet = [
-            {
-                columns: [
-                    {
-                        value: "Headings",
-                        widthPx: 160,
-                        style: { font: { sz: "24", bold: true } },
-                    },
-                    {
-                        value: "Text Style",
-                        widthPx: 180,
-                        style: { font: { sz: "24", bold: true } },
-                    },
-                    {
-                        value: "Colors",
-                        style: { font: { sz: "24", bold: true } }, // if no width set, default excel column width will be used ( 64px )
-                    },
-                ],
-                data: [
-                    [
-                        { value: "H1", style: { font: { sz: "24", bold: true } } },
-                        { value: "Bold", style: { font: { bold: true } } },
-                        {
-                            value: "Red",
-                            style: {
-                                fill: { patternType: "solid", fgColor: { rgb: "FFFF0000" } },
-                            },
-                        },
-                    ],
-                    [
-                        { value: "H2", style: { font: { sz: "18", bold: true } } },
-                        { value: "underline", style: { font: { underline: true } } },
-                        {
-                            value: "Blue",
-                            style: {
-                                fill: { patternType: "solid", fgColor: { rgb: "FF0000FF" } },
-                            },
-                        },
-                    ],
-                    [
-                        { value: "H3", style: { font: { sz: "14", bold: true } } },
-                        { value: "italic", style: { font: { italic: true } } },
-                        {
-                            value: "Green",
-                            style: {
-                                fill: { patternType: "solid", fgColor: { rgb: "FF00FF00" } },
-                            },
-                        },
-                    ],
-                    [
-                        { value: "H4", style: { font: { sz: "12", bold: true } } },
-                        { value: "strike", style: { font: { strike: true } } },
-                        {
-                            value: "Orange",
-                            style: {
-                                fill: { patternType: "solid", fgColor: { rgb: "FFF86B00" } },
-                            },
-                        },
-                    ],
-                    [
-                        { value: "H5", style: { font: { sz: "10.5", bold: true } } },
-                        { value: "outline", style: { font: { outline: true } } },
-                        {
-                            value: "Yellow",
-                            style: {
-                                fill: { patternType: "solid", fgColor: { rgb: "FFFFFF00" } },
-                            },
-                        },
-                    ],
-                    [
-                        { value: "H6", style: { font: { sz: "7.5", bold: true } } },
-                        { value: "shadow", style: { font: { shadow: true } } },
-                        {
-                            value: "Light Blue",
-                            style: {
-                                fill: { patternType: "solid", fgColor: { rgb: "FFCCEEFF" } },
-                            },
-                        },
-                    ],
-                ],
-            },
-        ];
 
         const { form, formFilter } = this.state;
 
@@ -561,14 +479,20 @@ class AltaLibros extends React.Component {
                                                             onClick={() => libroArray.push(libro)}>{/*onClick={() => { this.downloadMARC(libro); }} */}
                                                             <FontAwesomeIcon icon={faDownload} />
                                                         </button>
-                                                    } filename="MARC">
-                                                        {/*<ExcelSheet dataSet={multiDataSet}>*/}
+                                                    } >
                                                         <ExcelSheet data={libroArray} name={libro.titulo + "MARC"}>
-                                                            <ExcelColumn label="autor" value="autor" />
-                                                            <ExcelColumn label="titulo" value="titulo" />
-                                                            <ExcelColumn label="isbn" value="isbn" />
-                                                            <ExcelColumn label="anio" value="anio" />
+                                                            <ExcelColumn label="Language" value={'spa'} />
+                                                            <ExcelColumn label="ISBN" value="isbn" />
+                                                            <ExcelColumn label="Author" value="autor" />
+                                                            <ExcelColumn label="Title" value="titulo" />
+                                                            <ExcelColumn label="Subtitle" value="subtitle" />
+                                                            <ExcelColumn label="Edition" value="edicion" />
+                                                            <ExcelColumn label="Place of publication" value="placePub" />
+                                                            <ExcelColumn label="Publisher" value="editorialName" />
+                                                            <ExcelColumn label="Date of publication" value="fecha" />
+                                                            <ExcelColumn label="Physical description" value="descripcion" />
                                                         </ExcelSheet>
+
                                                     </ExcelFile>
                                                     {/* FIXME:*/}
                                                     <button

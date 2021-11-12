@@ -6,7 +6,8 @@ import Perfiles from './pages/Perfiles';
 import Facturas from './pages/Facturas';
 import Pedidos from './pages/Pedidos';
 import Cotizacion from './pages/Cotizacion';
-import Editoriales from "./pages/Editoriales"
+import Editoriales from "./pages/Editoriales";
+import Pruebas from "./pages/Pruebas";
 
 import Layout from "./components/Layout";
 
@@ -31,6 +32,7 @@ function App() {
                     <Route exact path="/pedidos" component={Pedidos} />
                     <Route exact path="/cotizacion" component={Cotizacion} />
                     <Route exact path="/facturas" component={Facturas} />
+                    <Route exact path="/pruebas" component={Pruebas} />
                 </Switch>
             </Layout>
         </BrowserRouter>
