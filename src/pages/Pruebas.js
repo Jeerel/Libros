@@ -1,88 +1,26 @@
 import React, { Component } from 'react';
 import { CSVLink } from 'react-csv'
 
-/*
-import ExportExcel from 'react-export-excel';
-const ExcelFile = ExportExcel.ExcelFile;
-const ExcelSheet = ExportExcel.ExcelSheet;
-const ExcelColumn = ExportExcel.ExcelColumn;
-*/
-
-/*const multiDataSet = [
-    {
-        columns: [
-            { title: "Headings", width: { wpx: 80 } },//pixels width 
-            { title: "Text Style", width: { wch: 40 } },//char width 
-            { title: "Colors", width: { wpx: 90 } },
-        ],
-        data: [
-            [
-                { value: "H1", style: { font: { sz: "24", bold: true } } },
-                { value: "Bold", style: { font: { bold: true } } },
-                { value: "Red", style: { fill: { patternType: "solid", fgColor: { rgb: "FFFF0000" } } } },
-            ],
-            [
-                { value: "H2", style: { font: { sz: "18", bold: true } } },
-                { value: "underline", style: { font: { underline: true } } },
-                { value: "Blue", style: { fill: { patternType: "solid", fgColor: { rgb: "FF0000FF" } } } },
-            ]
-        ]
-    }
-];*/
-
-/*const ciudades = [
-    {
-        columns: [
-            { title: "Ciudad", style: { font: { sz: "18", bold: true } }, width: { wpx: 125 } },
-            { title: "Poblacion", style: { font: { sz: "18", bold: true } }, width: { wch: 30 } },
-            { title: "Entidad", style: { font: { sz: "18", bold: true } }, width: { wpx: 100 } },
-            { title: "Pais", style: { font: { sz: "18", bold: true } }, width: { wpx: 125 } },
-        ],
-
-        data: [
-
-            {
-                value: "Mexico"
-            },
-            {
-                value: "España"
-            },
-            {
-                value: "Region"
-            },
-            {
-                value: "Religion"
-            }
-
-            {
-                 ciudad: "Ciudad de México",
-                 poblacion: 7685282,
-                 entidad: "Ciudad de Mexico",
-                 pais: "México"
-             },
-             {
-                 ciudad: "Ecatepec",
-                 poblacion: 23213,
-                 entidad: "Edo. de Mex",
-                 pais: "México"
-             },
-             {
-                 ciudad: "Tijuana",
-                 poblacion: 12342,
-                 entidad: "Baja California",
-                 pais: "México"
-             },
-             {
-                 ciudad: "Puebla",
-                 poblacion: 948283,
-                 entidad: "Puebla",
-                 pais: "México"
-             }
-
-        ]
-    }
-
-]*/
+//MARC 001, 035	100$a	245$a	20$a	20$a	260$a	260$b	260$c	300		980$a	980$b	980$c	980$e	980$f	980$g	981$a	981$b	981$c
+/*Uniquevendoridentifier: , 
+Author:, 
+Title:, 
+ISBNhardcover:, 
+ISBNpaperback:, 
+Placeofpublication:, 
+Publisher:, 
+Dateofpublication:, 
+Physicaldescription:, 
+Language:, 
+ma:, 
+US:, 
+USshipping:, 
+Netamount:, 
+Invoicenumber:, 
+Numberofcopies:, 
+Vendorcode:, 
+Fundcode:, 
+Location:*/
 
 const headers = [
     { label: "*Unique vendor identifier", key: "Uniquevendoridentifier" },
@@ -106,27 +44,6 @@ const headers = [
     { label: "*Location (two letter location code from order)", key: "Location" },
 
 ];
-
-//MARC 001, 035	100$a	245$a	20$a	20$a	260$a	260$b	260$c	300		980$a	980$b	980$c	980$e	980$f	980$g	981$a	981$b	981$c
-/*Uniquevendoridentifier: , 
-Author:, 
-Title:, 
-ISBNhardcover:, 
-ISBNpaperback:, 
-Placeofpublication:, 
-Publisher:, 
-Dateofpublication:, 
-Physicaldescription:, 
-Language:, 
-ma:, 
-US:, 
-USshipping:, 
-Netamount:, 
-Invoicenumber:, 
-Numberofcopies:, 
-Vendorcode:, 
-Fundcode:, 
-Location:*/
 
 const libro = {
     Uniquevendoridentifier: "mjse",

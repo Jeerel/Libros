@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import "../App.css"
 import PageLoading from "../components/PageLoading";
 import { CSVLink } from 'react-csv'
@@ -20,7 +20,6 @@ import { Modal, ModalBody, ModalFooter, ModalHeader } from "reactstrap";
 class AltaLibros extends React.Component {
 
     state = {
-        dataLibros: [],
         loading: true,
         data: undefined,
         dataEditorial: [],
@@ -339,44 +338,6 @@ class AltaLibros extends React.Component {
 
         ];
 
-        const downloadMARC21 = async (libro) => {
-            console.log('aqui')
-            console.log(libro)
-            let libroObj = {
-                Uniquevendoridentifier: 'mjse',
-                Author: libro.autor,
-                Title: libro.titulo,
-                ISBNhardcover: libro.isbn,
-                ISBNpaperback: '',
-                Placeofpublication: libro.placePub,
-                Publisher: libro.editorialName,
-                Dateofpublication: libro.anio,
-                Physicaldescription: libro.descripcion,
-                Language: libro.Language,
-                ma: libro.ma,
-                US: libro.precio,
-                USshipping: '',
-                Netamount: libro.precio,
-                Invoicenumber: libro.numFact,
-                Numberofcopies: libro.numCopias,
-                Vendorcode: 'mjse',
-                Fundcode: 'mexia',
-                Location: 'ma'
-            }
-
-            await data.push(libroObj)
-
-            await this.setState({ ...this.state, dataLibros: data })
-
-            console.log(data)
-
-            return (
-                <CSVLink data={data} headers={headers} >
-                </CSVLink>
-            )
-
-        }
-
         const { form, formFilter } = this.state;
 
         if (this.state.loading === true && !this.state.data) {
@@ -541,16 +502,27 @@ class AltaLibros extends React.Component {
                                                 <td>{libro.anio}</td>
                                                 <td>
                                                     {/*TODO:*/}
-                                                    {
-                                                        //<CSVLink data={this.state.dataLibros} headers={headers} >
-                                                    }
-                                                    <button className="btn btn-primary" onClick={() => { downloadMARC21(libro) }}>
-                                                        <FontAwesomeIcon icon={faDownload} />
-                                                    </button>
-                                                    {
-                                                        //</CSVLink>
-                                                    }
+                                                    <ExcelFile element={
+                                                        <button
+                                                            className="btn btn-primary"
+                                                            onClick={() => libroArray.push(libro)}>{/*onClick={() => { this.downloadMARC(libro); }} */}
+                                                            <FontAwesomeIcon icon={faDownload} />
+                                                        </button>
+                                                    } >
+                                                        <ExcelSheet data={libroArray} name={libro.titulo + "MARC"}>
+                                                            <ExcelColumn label="Language" value={'spa'} />
+                                                            <ExcelColumn label="ISBN" value="isbn" />
+                                                            <ExcelColumn label="Author" value="autor" />
+                                                            <ExcelColumn label="Title" value="titulo" />
+                                                            <ExcelColumn label="Subtitle" value="subtitle" />
+                                                            <ExcelColumn label="Edition" value="edicion" />
+                                                            <ExcelColumn label="Place of publication" value="placePub" />
+                                                            <ExcelColumn label="Publisher" value="editorialName" />
+                                                            <ExcelColumn label="Date of publication" value="fecha" />
+                                                            <ExcelColumn label="Physical description" value="descripcion" />
+                                                        </ExcelSheet>
 
+                                                    </ExcelFile>
                                                     {/* FIXME:*/}
                                                     <button
                                                         className="btn btn-warning text-white"
