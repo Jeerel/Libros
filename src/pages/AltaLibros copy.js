@@ -358,7 +358,7 @@ class AltaLibros extends React.Component {
                 USshipping: '',
                 Netamount: libro.precio,
                 Invoicenumber: libro.numFact,
-                Numberofcopies: libro.Numberofcopies,
+                Numberofcopies: libro.numCopias,
                 Vendorcode: 'mjse',
                 Fundcode: 'mexia',
                 Location: 'ma'
@@ -541,11 +541,15 @@ class AltaLibros extends React.Component {
                                                 <td>{libro.anio}</td>
                                                 <td>
                                                     {/*TODO:*/}
-                                                    <CSVLink data={this.state.dataLibros} headers={headers} >
-                                                        <button className="btn btn-primary" onClick={() => { downloadMARC21(libro) }}>
-                                                            <FontAwesomeIcon icon={faDownload} />
-                                                        </button>
-                                                    </CSVLink>
+                                                    {
+                                                        //<CSVLink data={this.state.dataLibros} headers={headers} >
+                                                    }
+                                                    <button className="btn btn-primary" onClick={() => { downloadMARC21(libro) }}>
+                                                        <FontAwesomeIcon icon={faDownload} />
+                                                    </button>
+                                                    {
+                                                        //</CSVLink>
+                                                    }
 
                                                     {/* FIXME:*/}
                                                     <button

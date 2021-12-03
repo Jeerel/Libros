@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { CSVLink } from 'react-csv'
+import ModalAddLibro from '../components/modals/libros/addBook';
 
 //MARC 001, 035	100$a	245$a	20$a	20$a	260$a	260$b	260$c	300		980$a	980$b	980$c	980$e	980$f	980$g	981$a	981$b	981$c
 /*Uniquevendoridentifier: , 
@@ -115,12 +116,23 @@ const data = [
 ];
 
 class Pruebas extends Component {
+
+    state = {
+        trigger: false
+    }
+
+    clickHere = () => {
+
+        this.setState({ ...this.state, trigger: true })
+        console.log(this.state)
+
+    }
+
     render() {
         return (
             <div>
-                <CSVLink data={data} headers={headers} >
-                    Download me
-                </CSVLink>;
+                <ModalAddLibro trigger={this.state.trigger} />
+                <button onClick={this.clickHere} >hola</button>
             </div>
         );
     }
