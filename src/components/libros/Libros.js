@@ -215,52 +215,31 @@ class BookTable extends React.Component {
     render() {
 
         const headers = [
-            { label: "*Unique vendor identifier", key: "Uniquevendoridentifier" },
-            { label: "*Author", key: "Author" },
-            { label: "*Title", key: "Title" },
-            { label: "ISBN - hardcover", key: "ISBNhardcover" },
-            { label: "ISBN - paperback", key: "ISBNpaperback" },
-            { label: "*Place of publication", key: "Placeofpublication" },
-            { label: "*Publisher", key: "Publisher" },
-            { label: "*Date of publication", key: "Dateofpublication" },
-            { label: "*Physical description", key: "Physicaldescription" },
-            { label: "*Language", key: "Language" },
-            { label: "*ma (yymmdd)", key: "ma" },
-            { label: "*US$ (no decimal format)", key: "US" },
-            { label: "*US shipping$ (no decimal format)", key: "USshipping" },
-            { label: "Net amount $ (no decimal format)", key: "Netamount" },
-            { label: "*Invoice number", key: "Invoicenumber" },
-            { label: "*Number of copies (default is 1)", key: "Numberofcopies" },
-            { label: "*Vendor code", key: "Vendorcode" },
-            { label: "*Fund code", key: "Fundcode" },
-            { label: "*Location (two letter location code from order)", key: "Location" },
-
+            { label: "Code", key: "code" },
+            { label: "*Text", key: "text" },
+            /* { label: "*Unique vendor identifier", key: "Uniquevendoridentifier" },
+             { label: "*Author", key: "Author" },
+             /* { label: "*Title", key: "Title" },
+             { label: "ISBN - hardcover", key: "ISBNhardcover" },
+             { label: "ISBN - paperback", key: "ISBNpaperback" },
+             { label: "*Place of publication", key: "Placeofpublication" },
+             { label: "*Publisher", key: "Publisher" },
+             { label: "*Date of publication", key: "Dateofpublication" },
+             { label: "*Physical description", key: "Physicaldescription" },
+             { label: "*Language", key: "Language" },
+             { label: "*ma (yymmdd)", key: "ma" },
+             { label: "*US$ (no decimal format)", key: "US" },
+             { label: "*US shipping$ (no decimal format)", key: "USshipping" },
+             { label: "Net amount $ (no decimal format)", key: "Netamount" },
+             { label: "*Invoice number", key: "Invoicenumber" },
+             { label: "*Number of copies (default is 1)", key: "Numberofcopies" },
+             { label: "*Vendor code", key: "Vendorcode" },
+             { label: "*Fund code", key: "Fundcode" },
+             { label: "*Location (two letter location code from order)", key: "Location" },
+             */
         ];
 
-        let data = [
-            {
-                Uniquevendoridentifier: "MARC 001, 035",
-                Author: "100$a",
-                Title: "245$a",
-                ISBNhardcover: "20$a",
-                ISBNpaperback: "20$a",
-                Placeofpublication: "260$a",
-                Publisher: "260$b",
-                Dateofpublication: "260$c",
-                Physicaldescription: "300",
-                Language: "",
-                ma: "980$a",
-                US: "980$b",
-                USshipping: "980$c",
-                Netamount: "980$e",
-                Invoicenumber: "980$f",
-                Numberofcopies: "980$g",
-                Vendorcode: "981$a",
-                Fundcode: "981$b",
-                Location: "981$c"
-            }
-
-        ];
+        let data = [];
 
         const peticionDelete = async (libro) => {
             swal({
@@ -305,6 +284,7 @@ class BookTable extends React.Component {
         const peticionEdit = async (libro) => {
             let url = "https://appi-books.herokuapp.com/api/libros/" + libro.idLibro;
             await axios.get(url).then((response) => {
+                console.log(response.data)
                 this.setState({ triggerEditModal: !this.state.triggerEditModal, formEdit: response.data });
             }).catch((error) => {
                 return error
@@ -313,34 +293,76 @@ class BookTable extends React.Component {
 
         const downloadMARC21 = async (libro) => {
 
-            let libroObj = {
-                Uniquevendoridentifier: 'mjse',
-                Author: libro.autor,
-                Title: libro.titulo,
-                ISBNhardcover: libro.isbn,
-                ISBNpaperback: '',
-                Placeofpublication: libro.placePub,
-                Publisher: libro.editorialName,
-                Dateofpublication: libro.anio,
-                Physicaldescription: libro.descripcion,
-                Language: libro.Language,
-                ma: libro.ma,
-                US: libro.precio,
-                USshipping: '',
-                Netamount: libro.precio,
-                Invoicenumber: libro.numFact,
-                Numberofcopies: libro.Numberofcopies,
-                Vendorcode: 'mjse',
-                Fundcode: 'mexia',
-                Location: 'ma'
+            data = []
+            if (libro.isbn) {
+                data.push({
+                    code: "020",
+                    text: "## $a " + libro.isbn
+                })
             }
-
-            await data.push(libroObj)
-
+            if (libro.issn) {
+                data.push({
+                    code: "022",
+                    text: "## $a " + libro.issn
+                })
+            }
+            data.push({
+                code: "041",
+                text: "## $a spa"
+            })
+            data.push({
+                code: "044",
+                text: "## $a mx"
+            })
+            if (libro.autor) {
+                data.push({
+                    code: "100",
+                    text: "0# $a " + libro.autor
+                })
+            }
+            if (libro.titulo) {
+                data.push({
+                    code: "130",
+                    text: "0# $a " + libro.titulo + " $f " + libro.anio
+                })
+            }
+            data.push({
+                code: "257",
+                text: "## $a Mexico"
+            })
+            data.push({
+                code: "257",
+                text: "## $a Mexico"
+            })
+            if (libro.placePub) {
+                data.push({
+                    code: "260",
+                    text: "## $a "+libro.placePub
+                })
+            }
+            if (libro.descripcion) {
+                data.push({
+                    code: "300",
+                    text: "## $a "+libro.descripcion
+                })
+            }
+            if (libro.anio) {
+                data.push({
+                    code: "362",
+                    text: "0#$a "+libro.anio
+                })
+            }
+            if (libro.nota) {
+                data.push({
+                    code: "500",
+                    text: "0#$a "+libro.nota
+                })
+            }
+            
             await this.setState({ ...this.state, dataLibros: data })
 
             return (
-                <CSVLink data={data} headers={headers} >
+                <CSVLink data={data} >
                 </CSVLink>
             )
 
@@ -353,7 +375,7 @@ class BookTable extends React.Component {
                 <Table responsive>
                     <thead>
                         <tr>
-                            <th>Autor</th>
+                            <th>Autors</th>
                             <th>Título</th>
                             <th>Editorial(s)</th>
                             <th>ISBN/ISSN</th>
@@ -370,7 +392,7 @@ class BookTable extends React.Component {
                                 <td>{libro.isbn}</td>
                                 <td>{libro.anio}</td>
                                 <td>
-                                    <CSVLink data={this.state.dataLibros} headers={headers} >
+                                    <CSVLink data={this.state.dataLibros} headers={headers} filename={'MARC21-' + libro.titulo + '.csv'}>
                                         <button className="btn btn-primary btn-xs" onClick={() => { downloadMARC21(libro) }}>
                                             <FontAwesomeIcon icon={faDownload} />
                                         </button>
