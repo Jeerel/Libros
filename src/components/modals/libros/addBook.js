@@ -68,30 +68,20 @@ class ModalAddLibro extends React.Component {
                                     <label>
                                         Editorial
                                     </label>
-
-                                    <select
-                                        className="form-control"
-                                        name="editorial"
-                                        id="editorial"
-                                        onChange={this.handleChange}
-                                        value={form ? form.editorial : ""}
-                                        required>
-                                        <option value="" selected disabled>Seleccione una opción</option>
-                                        {this.props.editoriales.map((editorial, i) => {
-                                            return (
-                                                <option key={i} value={editorial.ideditorial}>
-                                                    {editorial.editorialName}
-                                                </option>
-                                            );
-                                        })}
-                                    </select>
-
+                                    <input className="form-control" type="tex" name="editorial"
+                                        id="editorial" onChange={this.handleChange} value={form ? form.editorial : ""} required autoComplete="off" />                                   
                                 </Col>
                                 <Col xs={12} md={3}>
                                     <label>
-                                        ISBN / ISSN
+                                        ISBN
                                     </label>
                                     <input className="form-control" type="tex" name="isbn" id="isbn" onChange={this.handleChange} value={form ? form.isbn : ""} required autoComplete="off" />
+                                </Col>
+                                <Col xs={12} md={3}>
+                                    <label>
+                                         ISSN
+                                    </label>
+                                    <input className="form-control" type="tex" name="issn" id="issn" onChange={this.handleChange} value={form ? form.issn : ""} required autoComplete="off" />
                                 </Col>
                             </Row>
                         </Container>

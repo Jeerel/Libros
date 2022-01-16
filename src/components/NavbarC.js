@@ -39,12 +39,7 @@ const NavbarC = (props) => {
                             <Link className="nav-link" to="/editoriales">
                                 Editoriales
                             </Link>
-                        </NavItem>
-                        <NavItem>
-                            <Link className="nav-link" to="/perfiles">
-                                Perfiles
-                            </Link>
-                        </NavItem>
+                        </NavItem>                        
                         <NavItem>
                             <Link className="nav-link" to="/cotizacion">
                                 Cotización
@@ -58,6 +53,16 @@ const NavbarC = (props) => {
                         <NavItem>
                             <Link className="nav-link" to="/pedidos">
                                 Pedidos
+                            </Link>
+                        </NavItem>
+                        <NavItem>
+                            <Link className="nav-link" to="/clientes">
+                                Clientes
+                            </Link>
+                        </NavItem>
+                        <NavItem>
+                            <Link className="nav-link" to="/perfiles">
+                                Perfiles
                             </Link>
                         </NavItem>
                     </Nav>

@@ -2,6 +2,7 @@ import React from "react";
 import { BrowserRouter, Route, Switch } from "react-router-dom";
 
 import AltaLibros from "./pages/AltaLibros";
+import clientes from "./components/clientes/Clientes"
 import Perfiles from './pages/Perfiles';
 import Facturas from './pages/Facturas';
 import Pedidos from './pages/Pedidos';
@@ -27,6 +28,7 @@ function App() {
             <Layout>
                 <Switch>
                     <Route exact path="/libros" component={AltaLibros} />
+                    <Route exact path="/clientes" component={clientes} />
                     <Route exact path="/editoriales" component={Editoriales} />
                     <Route exact path="/perfiles" component={Perfiles} />
                     <Route exact path="/pedidos" component={Pedidos} />

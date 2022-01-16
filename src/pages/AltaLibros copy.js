@@ -369,12 +369,33 @@ class AltaLibros extends React.Component {
             await this.setState({ ...this.state, dataLibros: data })
 
             console.log(data)
-
+            const prettyLink = {
+                backgroundColor: '#8dc63f',
+                fontSize: 14,
+                fontWeight: 500,
+                height: 52,
+                padding: '0 48px',
+                borderRadius: 5,
+                color: '#fff'
+            };
+            const data = [
+                ['firstname', 'lastname', 'email'],
+                ['Ahmed', 'Tomi', 'ah@smthing.co.com'],
+                ['Raed', 'Labes', 'rl@smthing.co.com'],
+                ['Yezzi', 'Min l3b', 'ymin@cocococo.com']
+            ];
+            /*
             return (
                 <CSVLink data={data} headers={headers} >
                 </CSVLink>
             )
+            */
 
+            return(
+                <span>
+Download <CSVLink data={data} style={prettyLink}>CSV ⬇</CSVLink> to download CSV
+</span>
+            )
         }
 
         const { form, formFilter } = this.state;
