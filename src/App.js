@@ -1,9 +1,8 @@
-//Comentario JEEREL
 import React from "react";
 import { BrowserRouter, Route, Switch } from "react-router-dom";
 
 import AltaLibros from "./pages/AltaLibros";
-import clientes from "./components/clientes/Clientes"
+import clientes from "./pages/Clientes"
 import Perfiles from './pages/Perfiles';
 import Facturas from './pages/Facturas';
 import Pedidos from './pages/Pedidos';
