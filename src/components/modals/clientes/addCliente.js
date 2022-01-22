@@ -39,12 +39,18 @@ class ModalAddCliente extends React.Component {
             });
     }
 
+    cleanModal = async () => {
+        await this.setState({ form: {} });
+        this.props.onCloseModal();
+    }
+
     render() {
+
         const form = this.state.form;
 
         return (
             <Modal show={this.props.modalIsOpen} backdrop="static" keyboard={false} size="lg" aria-labelledby="contained-modal-title-vcenter"
-                centered onHide={this.props.onCloseModal}>
+                centered onHide={this.cleanModal}>
                 <Form onSubmit={this.peticionPost}>
                     <Modal.Header closeButton>
                         <Modal.Title>
@@ -88,7 +94,7 @@ class ModalAddCliente extends React.Component {
                         </button>
                         <button
                             className="btn btn-danger"
-                            onClick={this.props.onCloseModal}>
+                            onClick={this.cleanModal}>
                             Cancelar
                         </button>
                     </Modal.Footer>

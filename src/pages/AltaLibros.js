@@ -98,7 +98,6 @@ class AltaLibros extends React.Component {
     render() {
 
 
-
         if (this.state.loading === true && !this.state.data && !this.state.dataEditorial) {
 
             return <PageLoading />

@@ -36,13 +36,18 @@ class ModalAddLibro extends React.Component {
             });
     }
 
+    cleanModal = async () => {
+        await this.setState({ form: {} });
+        this.props.onCloseModal();
+    }
+
     render() {
 
         const form = this.state.form
 
         return (
             <Modal show={this.props.modalIsOpen} backdrop="static" keyboard={false} size="xl" aria-labelledby="contained-modal-title-vcenter"
-                centered onHide={this.props.onCloseModal}>
+                centered onHide={this.cleanModal}>
                 <Form onSubmit={this.peticionPost}>
                     <Modal.Header closeButton>
                         <Modal.Title>
@@ -69,7 +74,7 @@ class ModalAddLibro extends React.Component {
                                         Editorial
                                     </label>
                                     <input className="form-control" type="tex" name="editorial"
-                                        id="editorial" onChange={this.handleChange} value={form ? form.editorial : ""} required autoComplete="off" />                                   
+                                        id="editorial" onChange={this.handleChange} value={form ? form.editorial : ""} required autoComplete="off" />
                                 </Col>
                                 <Col xs={12} md={3}>
                                     <label>
@@ -79,7 +84,7 @@ class ModalAddLibro extends React.Component {
                                 </Col>
                                 <Col xs={12} md={3}>
                                     <label>
-                                         ISSN
+                                        ISSN
                                     </label>
                                     <input className="form-control" type="tex" name="issn" id="issn" onChange={this.handleChange} value={form ? form.issn : ""} required autoComplete="off" />
                                 </Col>
@@ -93,7 +98,7 @@ class ModalAddLibro extends React.Component {
                         </button>
                         <button
                             className="btn btn-danger"
-                            onClick={this.props.onCloseModal}>
+                            onClick={this.cleanModal}>
                             Cancelar
                         </button>
                     </Modal.Footer>

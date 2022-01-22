@@ -1,10 +1,11 @@
 import React, { Fragment } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faSearch, faDownload, faEdit, faTrashAlt } from "@fortawesome/free-solid-svg-icons";
+import { faEdit, faTrashAlt } from "@fortawesome/free-solid-svg-icons";
 import { Table } from "react-bootstrap";
-import { CSVLink } from 'react-csv';
 import axios from "axios";
 import swal from "sweetalert";
+
+import ModalEditarCliente from "../modals/clientes/editCliente";
 
 class ClientsContent extends React.Component {
 
@@ -24,8 +25,6 @@ class ClientsContent extends React.Component {
     }
 
     render() {
-
-        console.log(this.props)
 
         const formFilter = this.state.formFilter;
         const clientes = this.state.data;
@@ -105,9 +104,72 @@ class ClientsTable extends React.Component {
         triggerEditModal: false
     };
 
+    handleCloseModal = (event) => {
+        event.preventDefault();
+        this.setState({ triggerEditModal: false })
+    }
+
+    handleCloseModalx = e => {
+        this.setState({ triggerEditModal: false })
+    }
+
+    handleOpenModal = e => {
+        this.setState({ triggerEditModal: true });
+    };
+
     render() {
 
         let data = [];
+
+        const peticionDelete = async (cliente) => {
+            swal({
+                title: "Deseas eliminar a " + cliente.nombre + "?",
+                text: "No podra recuperar la información",
+                icon: "warning",
+                buttons: ["Cancelar", "Si, eliminar"],
+                dangerMode: true,
+            }).then((willDelete) => {
+                if (willDelete) {
+                    let config = {
+                        method: "DELETE",
+                        url: "https://appi-books.herokuapp.com/api/cliente/" + cliente.idcliente,
+                        headers: {
+                            "Access-Control-Allow-Origin": "*",
+                            "Access-Control-Allow-Headers":
+                                "POST, GET, PUT, DELETE, OPTIONS, HEAD, Authorization, Origin, Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers, Access-Control-Allow-Origin",
+                            "Content-Type": "application/json",
+                        },
+                    }
+                    axios(config).catch((err) => err);
+                    let url = "https://appi-books.herokuapp.com/api/cliente/" + cliente.idcliente;
+                    axios
+                        .delete(url)
+                        .then((response) => {
+                            swal("Cliente eliminado correctamente", {
+                                icon: "success",
+                            });
+                            functionFetchData();
+                        })
+                        .catch((error) => {
+                            swal("Error en el sistema", {
+                                icon: "error",
+                            });
+                        });
+                } else {
+                    swal("Acción cancelada")
+                }
+            });
+        }
+
+        const peticionEdit = async (cliente) => {
+            let url = "https://appi-books.herokuapp.com/api/cliente/" + cliente.idcliente;
+            await axios.get(url).then((response) => {
+                console.log(response.data)
+                this.setState({ triggerEditModal: !this.state.triggerEditModal, formEdit: response.data });
+            }).catch((error) => {
+                return error
+            });
+        }
 
         const functionFetchData = this.props.functionFetchData;
 
@@ -135,12 +197,12 @@ class ClientsTable extends React.Component {
                                     <td>
                                         <button
                                             className="btn btn-warning text-white"
-                                            onClick={() => { /*peticionEdit(libro); */ }}>
+                                            onClick={() => { peticionEdit(cliente); }}>
                                             <FontAwesomeIcon icon={faEdit} />
                                         </button>
                                         <button
                                             className="btn btn-danger btn-xs"
-                                            onClick={() => { /*peticionDelete(libro); */ }}>
+                                            onClick={() => { peticionDelete(cliente); }}>
                                             <FontAwesomeIcon icon={faTrashAlt} />
                                         </button>
                                     </td>
@@ -149,6 +211,14 @@ class ClientsTable extends React.Component {
                         })}
                     </tbody>
                 </Table>
+                <ModalEditarCliente
+                    onCloseModalx={this.handleCloseModalx}
+                    onCloseModal={this.handleCloseModal}
+                    onOpenModal={this.handleOpenModal}
+                    modalIsOpen={this.state.triggerEditModal}
+                    data={this.state.formEdit}
+                    fetchDataClientes={functionFetchData}
+                />
             </Fragment>
 
         );
