@@ -5,13 +5,13 @@ import { Table } from "react-bootstrap";
 import axios from "axios";
 import swal from "sweetalert";
 
-import ModalEditarCliente from "../modals/clientes/editCliente";
+import ModalEditarPerfil from "../modals/perfiles/editPerfil";
 
-class ClientsContent extends React.Component {
+class PerfilesContent extends React.Component {
 
     state = {
         formFilter: {},
-        data: this.props.clientes.clientes
+        data: this.props.perfiles.perfiles
     };
 
     handleChangeFilter = async (e) => {
@@ -27,8 +27,8 @@ class ClientsContent extends React.Component {
     render() {
 
         const formFilter = this.state.formFilter;
-        const clientes = this.state.data;
-        const functionFetchData = this.props.clientes.fetchDataClientes
+        const perfiles = this.state.data;
+        const functionFetchData = this.props.perfiles.fetchDataPerfiles
 
         return (
             <Fragment>
@@ -47,58 +47,42 @@ class ClientsContent extends React.Component {
                 </div>
                 <div className="col-xs-12 col-md-3 mt-2">
                     <div className="form-group">
-                        <label>Dirección</label>
-                        <input
-                            className="form-control mt-2"
-                            type="text"
-                            value={formFilter ? formFilter.direccion : ""}
-                            name="direccion"
-                            id="direccionFilter"
-                            onChange={this.handleChangeFilter}
-                        />
-                    </div>
-                </div>
-                <div className="col-xs-12 col-md-3 mt-2">
-                    <div className="form-group">
-                        <label>Teléfono</label>
-                        <input
-                            className="form-control mt-2"
-                            type="number"
-                            value={formFilter ? formFilter.telefono : ""}
-                            name="telefono"
-                            id="telefonoFilter"
-                            onChange={this.handleChangeFilter}
-                        />
-                    </div>
-                </div>
-                <div className="col-xs-12 col-md-3 mt-2">
-                    <div className="form-group">
-                        <label>E-mail</label>
+                        <label>Correo</label>
                         <input
                             className="form-control mt-2"
                             type="email"
-                            value={formFilter ? formFilter.email : ""}
-                            name="email"
-                            id="emailFilter"
+                            value={formFilter ? formFilter.correo : ""}
+                            name="correo"
+                            id="correoFilter"
                             onChange={this.handleChangeFilter}
                         />
                     </div>
                 </div>
+                <div className="col-xs-12 col-md-3 mt-2">
+                    <div className="form-group">
+                        <label>Tipo</label>
+                        <select className="form-control" name="tipoFilter" id="tipoFilter" onChange={this.handleChangeFilter} value={formFilter ? formFilter.tipo : ""}>
+                            <option selected disabled value="">Seleccione una opción</option>
+                            <option value="Administrador">Administrador</option>
+                            <option value="Usuario">Usuario</option>
+                            <option value="Invitado">Invitado</option>
+                        </select>
+                    </div>
+                </div>
                 <div className="col-xs-12 col-md-12 mt-2">
-                    <ClientsTable clientes={clientes} functionFetchData={functionFetchData} />
+                    <PerfilesTable perfiles={perfiles} functionFetchData={functionFetchData} />
                 </div>
             </Fragment>
-        );
+        )
 
     }
 
 }
 
-
-class ClientsTable extends React.Component {
+class PerfilesTable extends React.Component {
 
     state = {
-        dataClientes: [],
+        dataPerfiles: [],
         modalEditar: false,
         formEdit: undefined,
         triggerEditModal: false
@@ -114,9 +98,9 @@ class ClientsTable extends React.Component {
 
     render() {
 
-        const peticionDelete = async (cliente) => {
+        const peticionDelete = async (perfil) => {
             swal({
-                title: "Deseas eliminar a " + cliente.nombre + "?",
+                title: "Deseas eliminar a " + perfil.nombre + "?",
                 text: "No podra recuperar la información",
                 icon: "warning",
                 buttons: ["Cancelar", "Si, eliminar"],
@@ -125,7 +109,7 @@ class ClientsTable extends React.Component {
                 if (willDelete) {
                     let config = {
                         method: "DELETE",
-                        url: "https://appi-books.herokuapp.com/api/cliente/" + cliente.idcliente,
+                        url: "https://appi-books.herokuapp.com/api/empleoyes/" + perfil.id,
                         headers: {
                             "Access-Control-Allow-Origin": "*",
                             "Access-Control-Allow-Headers":
@@ -134,11 +118,11 @@ class ClientsTable extends React.Component {
                         },
                     }
                     axios(config).catch((err) => err);
-                    let url = "https://appi-books.herokuapp.com/api/cliente/" + cliente.idcliente;
+                    let url = "https://appi-books.herokuapp.com/api/empleoyes/" + perfil.id;
                     axios
                         .delete(url)
                         .then((response) => {
-                            swal("Cliente eliminado correctamente", {
+                            swal("Perfil eliminado correctamente", {
                                 icon: "success",
                             });
                             functionFetchData();
@@ -154,8 +138,8 @@ class ClientsTable extends React.Component {
             });
         }
 
-        const peticionEdit = async (cliente) => {
-            let url = "https://appi-books.herokuapp.com/api/cliente/" + cliente.idcliente;
+        const peticionEdit = async (perfil) => {
+            let url = "https://appi-books.herokuapp.com/api/empleoyes/" + perfil.id;
             await axios.get(url).then((response) => {
                 this.setState({ triggerEditModal: !this.state.triggerEditModal, formEdit: response.data });
             }).catch((error) => {
@@ -166,35 +150,32 @@ class ClientsTable extends React.Component {
         const functionFetchData = this.props.functionFetchData;
 
         return (
-
             <Fragment>
                 <Table responsive>
                     <thead>
                         <tr>
                             <th>Nombre</th>
-                            <th>Dirección</th>
-                            <th>Teléfono</th>
-                            <th>E-mail</th>
+                            <th>Correo</th>
+                            <th>Tipo</th>
                             <th>Acciones</th>
                         </tr>
                     </thead>
                     <tbody>
-                        {this.props.clientes.map((cliente, i) => {
+                        {this.props.perfiles.map((perfil, i) => {
                             return (
                                 <tr key={i}>
-                                    <td>{cliente.nombre}</td>
-                                    <td>{cliente.direccion}</td>
-                                    <td>{cliente.telefono}</td>
-                                    <td>{cliente.email}</td>
+                                    <td>{perfil.nombre}</td>
+                                    <td>{perfil.correo}</td>
+                                    <td>{perfil.tipo}</td>
                                     <td>
                                         <button
                                             className="btn btn-warning text-white"
-                                            onClick={() => { peticionEdit(cliente); }}>
+                                            onClick={() => { peticionEdit(perfil); }}>
                                             <FontAwesomeIcon icon={faEdit} />
                                         </button>
                                         <button
                                             className="btn btn-danger btn-xs"
-                                            onClick={() => { peticionDelete(cliente); }}>
+                                            onClick={() => { peticionDelete(perfil); }}>
                                             <FontAwesomeIcon icon={faTrashAlt} />
                                         </button>
                                     </td>
@@ -203,29 +184,28 @@ class ClientsTable extends React.Component {
                         })}
                     </tbody>
                 </Table>
-                <ModalEditarCliente
+                <ModalEditarPerfil
                     onCloseModal={this.handleCloseModal}
                     onOpenModal={this.handleOpenModal}
                     modalIsOpen={this.state.triggerEditModal}
                     data={this.state.formEdit}
-                    fetchDataClientes={functionFetchData}
+                    fetchDataPerfiles={functionFetchData}
                 />
             </Fragment>
-
         );
 
     }
 
 }
 
-function ClientesM(props) {
+function PerfilesM(props) {
 
     return (
         <Fragment>
-            <ClientsContent clientes={props} />
+            <PerfilesContent perfiles={props} />
         </Fragment>
-    );
+    )
 
 }
 
-export default ClientesM
+export default PerfilesM;

@@ -3,7 +3,7 @@ import { Col, Container, Modal, Row, Form } from "react-bootstrap";
 import swal from "sweetalert";
 import axios from "axios";
 
-class ModalEditarCliente extends React.Component {
+class ModalEditarPerfil extends React.Component {
 
     //definimos el estado
     state = {
@@ -21,13 +21,18 @@ class ModalEditarCliente extends React.Component {
     };
 
     peticionPut = async (event) => {
+        const obj = {
+            id: this.state.form.id,
+            name: this.state.form.nombre,
+            email: this.state.form.email,
+            type: this.state.form.tipo
+        }
         event.preventDefault();
-
-        let url = "https://appi-books.herokuapp.com/api/cliente/" + this.state.form.idcliente;
-        axios.put(url, this.state.form).then((response) => {
-            swal("Cliente Editado", { icon: "success", });
+        let url = "https://appi-books.herokuapp.com/api/empleoyes/" + obj.id;
+        axios.put(url, obj).then((response) => {
+            swal("Perfil Editado", { icon: "success", });
             this.props.onCloseModal();
-            this.props.fetchDataClientes();
+            this.props.fetchDataPerfiles();
         }).catch((error) => {
             swal("Error en el sistema", {
                 icon: "error",
@@ -41,7 +46,7 @@ class ModalEditarCliente extends React.Component {
 
     }
 
-    fetchDataClientesModalEdit = async () => {
+    fetchDataPerfilesModalEdit = async () => {
 
         await this.setState({ form: this.props.data })
 
@@ -50,7 +55,7 @@ class ModalEditarCliente extends React.Component {
     render() {
 
         if (this.state.form === undefined && this.props.modalIsOpen === true) {
-            this.fetchDataClientesModalEdit();
+            this.fetchDataPerfilesModalEdit();
         }
 
         const form = this.state.form;
@@ -62,7 +67,7 @@ class ModalEditarCliente extends React.Component {
                     <Form onSubmit={this.peticionPut}>
                         <Modal.Header closeButton>
                             <Modal.Title>
-                                Editar Cliente
+                                Editar Perfil
                             </Modal.Title>
                         </Modal.Header>
                         <Modal.Body>
@@ -76,21 +81,20 @@ class ModalEditarCliente extends React.Component {
                                     </Col>
                                     <Col xs={12} md={12}>
                                         <label>
-                                            Dirección
+                                            Correo
                                         </label>
-                                        <input className="form-control" type="tex" name="direccion" id="direccion" onChange={this.handleChange} value={form ? form.direccion : ""} required autoComplete="off" />
+                                        <input className="form-control" type="email" name="nombre" id="nombre" onChange={this.handleChange} value={form ? form.correo : ""} required autoComplete="off" />
                                     </Col>
                                     <Col xs={12} md={6}>
                                         <label>
-                                            Teléfono
+                                            Tipo
                                         </label>
-                                        <input className="form-control" type="number" name="telefono" id="telefono" onChange={this.handleChange} value={form ? form.telefono : ""} required autoComplete="off" />
-                                    </Col>
-                                    <Col xs={12} md={6}>
-                                        <label>
-                                            E-mail
-                                        </label>
-                                        <input className="form-control" type="email" name="email" id="email" onChange={this.handleChange} value={form ? form.email : ""} required autoComplete="off" />
+                                        <select className="form-control" name="tipo" id="tipo" onChange={this.handleChange} value={form ? form.tipo : ""} required>
+                                            <option selected disabled value="">Seleccione una opción</option>
+                                            <option value="Administrador">Administrador</option>
+                                            <option value="Usuario">Usuario</option>
+                                            <option value="Invitado">Invitado</option>
+                                        </select>
                                     </Col>
                                 </Row>
                             </Container>
@@ -116,4 +120,4 @@ class ModalEditarCliente extends React.Component {
 
 }
 
-export default ModalEditarCliente
+export default ModalEditarPerfil;

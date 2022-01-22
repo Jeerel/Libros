@@ -25,7 +25,7 @@ class ModalEditLibro extends React.Component {
         let url = "https://appi-books.herokuapp.com/api/libros/" + this.state.form.idLibro;
         axios.put(url, this.state.form).then((response) => {
             swal("Libro Editado", { icon: "success", });
-            this.props.onCloseModalx()
+            this.props.onCloseModal();
             this.props.fetchDataLibros();
         }).catch((error) => {
             swal("Error en el sistema", {
@@ -34,18 +34,30 @@ class ModalEditLibro extends React.Component {
         });
     }
 
+    cleanModal = () => {
+        this.setState({ form: undefined })
+        this.props.onCloseModal();
+
+    }
+
+    fetchDataLibroModalEdit = async () => {
+
+        await this.setState({ form: this.props.data })
+
+    }
+
 
     render() {
 
 
         if (this.state.form === undefined && this.props.modalIsOpen === true)
-            this.setState({ form: this.props.data })
+            this.fetchDataLibroModalEdit();
 
         const form = this.state.form;
 
         return (
             <Modal show={this.props.modalIsOpen} backdrop="static" keyboard={false} size="xl" aria-labelledby="contained-modal-title-vcenter"
-                centered onHide={this.props.onCloseModalx}>
+                centered onHide={this.cleanModal}>
                 <Form onSubmit={this.peticionPut}>
                     <Modal.Header closeButton>
                         <Modal.Title>
@@ -223,7 +235,7 @@ class ModalEditLibro extends React.Component {
                         </button>
                         <button
                             className="btn btn-danger"
-                            onClick={this.props.onCloseModal}>
+                            onClick={this.cleanModal}>
                             Cancelar
                         </button>
                     </Modal.Footer>

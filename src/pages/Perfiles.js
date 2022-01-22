@@ -1,392 +1,107 @@
-import React from "react";
-import "../App.css"
-import PageLoading from "../components/PageLoading";
-
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import React, { Fragment } from "react";
 import axios from "axios";
-import swal from "sweetalert";
-import {
-    faTimes,
-    faTrashAlt,
-    faPlus,
-    faSearch,
-    faDownload,
-    faEdit
-} from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faPlus } from "@fortawesome/free-solid-svg-icons";
+import "../App.css"
 
-import { Modal, ModalBody, ModalFooter, ModalHeader } from "reactstrap";
-
+//components
+import PageLoading from "../components/PageLoading";
+import PerfilesM from "../components/perfiles/Perfiles";
+import ModalAddPerfil from "../components/modals/perfiles/addPerfil";
 
 class Perfiles extends React.Component {
 
+    //estado de la pagina de los perfiles
     state = {
         loading: true,
+        error: null,
         data: undefined,
-        tipoFilter:"",
-        emailFilter:"",
-        nameFilter:"",
-        dataEditorial: [],
-        modalEditar: false,
         modalInsertar: false,
-        modalEliminar: false,
-        form: {
-            name: "",
-            email: "",
-            type: ""
-        },
-        formEdit: {
-            name: "",
-            email: "",
-            type: ""
-        }
-    };
-    peticionAvanced = () => {
-        let obj={};
-        if(this.state.nameFilter){
-            obj["nombre"]=this.state.nameFilter;
-        }
-        if(this.state.emailFilter){
-            obj["correo"]=this.state.emailFilter;
-        }
-        if(this.state.tipoFilter){
-            obj["tipo"]=this.state.tipoFilter;
-        }
-        let url = "https://appi-books.herokuapp.com/api/filters/users";
-        axios
-            .post(url,obj)
-            .then((response) => {    
-                this.setState({ data: response.data });
-            })
-            .catch((error) => {
-            });
-    }
-
-    searchFilter = async (e) => {
-        this.state[e.target.name] = e.target.value;
-        let obj={};
-        obj[e.target.name]=this.state[e.target.name];
-        e.persist();        
-        await this.setState(obj);
-    }
-
-    modalInsertar = () => {
-        this.setState({ modalInsertar: !this.state.modalInsertar });
-    };
-    modalEditar = () => {
-        this.setState({ modalEditar: !this.state.modalEditar });
-    };
-    handleChange = async (e) => {
-        e.persist();
-        await this.setState({
-            form: {
-                ...this.state.form,
-                [e.target.name]: e.target.value,
-            },
-        });
     };
 
-    handleChangeFilter = async (e) => {
-        e.persist();
-        await this.setState({
-            filter: {
-                ...this.state.filter,
-                [e.target.name]: e.target.value,
-            },
-        });
-    };
-    peticionDelete = async (user) => {
-        swal({
-            title: "Deseas eliminar al usuario " + user.nombre + "?",
-            text: "No podra recuperar la información",
-            icon: "warning",
-            buttons: ["Cancelar", "Si, eliminar"],
-            dangerMode: true,
-        }).then((willDelete) => {
-            if (willDelete) {
-                let url = "https://appi-books.herokuapp.com/api/empleoyes/" + user.id;
-                axios
-                    .delete(url)
-                    .then((response) => {
-                        swal("Usuario eliminado correctamente", {
-                            icon: "success",
-                        });
-                        this.loadData();
-                    })
-                    .catch((error) => {
-                        swal("Error en el sistema", {
-                            icon: "error",
-                        });
-                    });
-            } else {
-                swal("Acción cancelada");
-            }
-        });
-    }
-    getUser = async (user) => {
-        let url = "https://appi-books.herokuapp.com/api/empleoyes/" + user.id;
-        axios
-            .get(url)
-            .then((response) => {
-                this.setState({ modalEditar: !this.state.modalEditar });
-                this.setState({ formEdit: response.data });
-            })
-            .catch((error) => { });
-    }
-    peticionPost = async () => {
-        let url = "https://appi-books.herokuapp.com/api/empleoyes";
-        axios
-            .post(url, this.state.form)
-            .then((response) => {
-                swal("Usuario agregado", {
-                    icon: "success",
-                });
-                this.modalInsertar();
-                this.loadData();
-            })
-            .catch((error) => {
-            });
-    }
-    loadData = () => {
-        let url = "https://appi-books.herokuapp.com/api/empleoyes";
-        axios
-            .get(url)
-            .then((response) => {
-                this.setState({ data: response.data });
-            })
-            .catch((error) => { });
-    }
+    //definicion de sus metodos
+
     componentDidMount() {
-        this.loadData();
+        this.fetchDataPerfiles();
     }
-    updateInputValue = async (e) => {
-        this.state.formEdit[e.target.name] = e.target.value;
-        e.persist();
-        await this.setState({
-            formEdit: this.state.formEdit
+
+    fetchDataPerfiles = async () => {
+        const url = "https://appi-books.herokuapp.com/api/empleoyes";
+        let config = {
+            method: "GET",
+            url: url,
+            headers: {
+                "Access-Control-Allow-Origin": "*",
+                "Access-Control-Allow-Headers":
+                    "POST, GET, PUT, DELETE, OPTIONS, HEAD, Authorization, Origin, Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers, Access-Control-Allow-Origin",
+                "Content-Type": "application/json",
+            },
+        };
+        axios(config).catch((err) => err);
+
+        this.setState({ loading: true, error: null });
+
+        await axios.get(url).then((response) => {
+            this.setState({ loading: false, data: response.data })
+        }).catch((error) => {
+            this.setState({ loading: false, error: error });
         });
-    };
-    peticionPut = async () => {
-        let obj = {
-            id: this.state.formEdit.id,
-            name: this.state.formEdit.nombre,
-            email: this.state.formEdit.email,
-            type: this.state.formEdit.tipo
-        }
-        let url = "https://appi-books.herokuapp.com/api/empleoyes/" + obj.id;
-        axios
-            .put(url, obj)
-            .then((response) => {
-                swal("Usuario Editado", {
-                    icon: "success",
-                });
-                this.modalEditar();
-                this.loadData();
-            })
-            .catch((error) => {
-            });
     }
+
+    modalInsertar() {
+        this.setState({ form: null, modalInsertar: !this.state.modalInsertar })
+    }
+
+    handleOpenModal = e => {
+        this.setState({ modalInsertar: true });
+    };
+
+    handleCloseModal = e => {
+        this.setState({ modalInsertar: false });
+    };
 
     render() {
+
         if (this.state.loading === true && !this.state.data) {
             return <PageLoading />
         }
-        const { form, filter } = this.state;
-        return (
-            <div>
-                <div className="container">
-                    <div className="row">
-                        <div className="col-md-6 col-sm-11 rigth">
-                            <h2>Perfiles</h2>
-                        </div>
-                        <div className="col-md-6 col-sm-1"></div>
 
-                        <div className="col-md-3 col-sm-3">
-                            <div className="form-group">
-                                <label>Nombre</label>
-                                <input className="form-control" type="text" name="nameFilter" id="nameFilter" onChange={this.searchFilter} value={this.state.nameFilter} />
+        if (this.state.error) {
+            //pagina de error
+        }
 
+        if (this.state.loading === false && this.state.data) {
+            return (
+                <Fragment>
+                    <div className="container mt-3">
+                        <div className="row">
+                            <div className="col-xs-12 col-md-12">
+                                <h1>Perfiles</h1>
                             </div>
+                            <PerfilesM perfiles={this.state.data} fetchDataPerfiles={this.fetchDataPerfiles} />
                         </div>
-                        <div className="col-md-3 col-sm-3">
-                            <div className="form-group">
-                                <label>Correo</label>
-                                <input className="form-control" type="email"onChange={this.searchFilter} value={this.state.emailFilter}  name="emailFilter" id="emailFilter" />
-                            </div>
-                        </div>
-                        <div className="col-md-3 col-sm-3">
-                            <div className="form-group">
-                                <label>Tipo</label>
-                                <select className="form-control" onChange={this.searchFilter} value={this.state.tipoFilter}  name="tipoFilter" id="tipoFilter">
-                                    <option value="">Seleccione una opción</option>
-                                    <option value="Administrador">Administrador</option>
-                                    <option value="Usuario">Usuario</option>
-                                    <option value="Invitado">Invitado</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div className="col-md-3 col-sm-3">
-                            <button onClick={() => this.peticionAvanced()} className="btn btn-primary btnTop">
-                                <FontAwesomeIcon icon={faSearch} />
-                            </button>
-                        </div>
-                        <div className="col-md-12 col-sm-12">
-                            <table className="table ">
-                                <thead>
-                                    <tr>
-                                        <th>Nombre</th>
-                                        <th>Correo</th>
-                                        <th>Tipo</th>
-                                        <th>Acciones</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {this.state.data.map((users, i) => {
-                                        return (
-                                            <tr key={i}>
-                                                <td>{users.nombre}</td>
-                                                <td>{users.correo}</td>
-                                                <td>{users.tipo}</td>
-                                                <td>
-                                                    <button
-                                                        className="btn btn-warning text-white"
-                                                        onClick={() => { this.getUser(users); }}>
-                                                        <FontAwesomeIcon icon={faEdit} />
-                                                    </button>
-                                                    {"   "}
-                                                    <button
-                                                        className="btn btn-danger"
-                                                        onClick={() => { this.peticionDelete(users); }}>
-                                                        <FontAwesomeIcon icon={faTrashAlt} />
-                                                    </button>
-                                                </td>
-                                            </tr>
-                                        );
-                                    })}
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                    <div className="fixed-action-btn">
-                        <button
-                            className="btn-floating"
-                            onClick={() => {
-                                this.setState({ form: null, tipoModal: "insertar" });
+                        <div className="fixed-action-btn">
+                            <button className="btn-floating" onClick={() => {
                                 this.modalInsertar();
                             }}>
-                            <FontAwesomeIcon icon={faPlus} />
-                        </button>
+                                <FontAwesomeIcon icon={faPlus} />
+                            </button>
+                        </div>
                     </div>
-                </div>
-                <Modal isOpen={this.state.modalInsertar} className="modal-md">
-                    <ModalHeader style={{ display: "block" }}>
-                        Nuevo Usuario
-                        <span
-                            style={{ float: "right" }}
-                            onClick={() => this.modalInsertar()}
-                        >
-                            <FontAwesomeIcon icon={faTimes} />
-                        </span>
-                    </ModalHeader>
-                    <ModalBody>
-                        <div className="row">
-                            <div className="col-md-12 col-sm-12">
-                                <div className="form-group">
-                                    <label htmlFor="nombre">Nombre</label>
-                                    <input className="form-control" type="text" name="name" id="name" onChange={this.handleChange} value={form ? form.name : ""} />
-                                </div>
-                            </div>
+                    <ModalAddPerfil
+                        onCloseModal={this.handleCloseModal}
+                        onOpenModal={this.handleOpenModal}
+                        modalIsOpen={this.state.modalInsertar}
+                        fetchDataPerfiles={this.fetchDataPerfiles}
+                    />
+                </Fragment>
+            )
+        }
 
-                            <div className="col-md-12 col-sm-12">
-                                <div className="form-group">
-                                    <label htmlFor="nombre">Correo</label>
-                                    <input className="form-control" type="email" name="email" id="email" onChange={this.handleChange} value={form ? form.email : ""} />
-                                </div>
-                            </div>
+        return null;
 
-                            <div className="col-md-12 col-sm-12">
-                                <div className="form-group">
-                                    <label htmlFor="nombre">Tipo</label>
-                                    <select className="form-control" name="type" id="type" onChange={this.handleChange} value={form ? form.type : ""}>
-                                        <option value="">Seleccione una opción</option>
-                                        <option value="Administrador">Administrador</option>
-                                        <option value="Ususario">Usuario</option>
-                                        <option value="Invitado">Invitado</option>
-                                    </select>
-                                </div>
-                            </div>
-
-                        </div>
-                    </ModalBody>
-                    <ModalFooter>
-                        <button
-                            onClick={() => this.peticionPost()}
-                            className="btn btn-primary">
-                            Guardar
-                        </button>
-                        <button
-                            className="btn btn-danger"
-                            onClick={() => this.modalInsertar()}>
-                            Cancelar
-                        </button>
-                    </ModalFooter>
-                </Modal>
-
-                <Modal isOpen={this.state.modalEditar} className="modal-md">
-                    <ModalHeader style={{ display: "block" }}>
-                        Editar Usuario
-                        <span
-                            style={{ float: "right" }}
-                            onClick={() => this.modalEditar()}
-                        >
-                            <FontAwesomeIcon icon={faTimes} />
-                        </span>
-                    </ModalHeader>
-                    <ModalBody>
-                        <div className="row">
-                            <div className="col-md-12 col-sm-12">
-                                <div className="form-group">
-                                    <label htmlFor="nombre">Nombre</label>
-                                    <input className="form-control" type="text" name="nombre" id="nameEdit" value={this.state.formEdit.nombre} onChange={this.updateInputValue} />
-                                </div>
-                            </div>
-
-                            <div className="col-md-12 col-sm-12">
-                                <div className="form-group">
-                                    <label htmlFor="nombre">Correo</label>
-                                    <input className="form-control" type="email" name="correo" id="emailEdit" value={this.state.formEdit.correo} onChange={this.updateInputValue} />
-                                </div>
-                            </div>
-
-                            <div className="col-md-12 col-sm-12">
-                                <div className="form-group">
-                                    <label htmlFor="nombre">Tipo</label>
-                                    <select className="form-control" name="tipo" id="typeEdit" value={this.state.formEdit.tipo} onChange={this.updateInputValue}>
-                                        <option value="">Seleccione una opción</option>
-                                        <option value="Administrador">Administrador</option>
-                                        <option value="Usuario">Usuario</option>
-                                        <option value="Invitado">Invitado</option>
-                                    </select>
-                                </div>
-                            </div>
-
-                        </div>
-                    </ModalBody>
-                    <ModalFooter>
-                        <button
-                            onClick={() => this.peticionPut()}
-                            className="btn btn-primary">
-                            Guardar
-                        </button>
-                        <button
-                            className="btn btn-danger"
-                            onClick={() => this.modalEditar()}>
-                            Cancelar
-                        </button>
-                    </ModalFooter>
-                </Modal>
-            </div>
-        )
     }
+
 }
 
 export default Perfiles;

@@ -199,13 +199,9 @@ class BookTable extends React.Component {
         triggerEditModal: false
     };
 
-    handleCloseModal = (event) => {
-        event.preventDefault();
-        this.setState({ triggerEditModal: false })
-    }
+    handleCloseModal = async () => {
 
-    handleCloseModalx = e => {
-        this.setState({ triggerEditModal: false })
+        await this.setState({ triggerEditModal: false })
     }
 
     handleOpenModal = e => {
@@ -284,7 +280,6 @@ class BookTable extends React.Component {
         const peticionEdit = async (libro) => {
             let url = "https://appi-books.herokuapp.com/api/libros/" + libro.idLibro;
             await axios.get(url).then((response) => {
-                console.log(response.data)
                 this.setState({ triggerEditModal: !this.state.triggerEditModal, formEdit: response.data });
             }).catch((error) => {
                 return error
@@ -337,28 +332,28 @@ class BookTable extends React.Component {
             if (libro.placePub) {
                 data.push({
                     code: "260",
-                    text: "## $a "+libro.placePub
+                    text: "## $a " + libro.placePub
                 })
             }
             if (libro.descripcion) {
                 data.push({
                     code: "300",
-                    text: "## $a "+libro.descripcion
+                    text: "## $a " + libro.descripcion
                 })
             }
             if (libro.anio) {
                 data.push({
                     code: "362",
-                    text: "0#$a "+libro.anio
+                    text: "0#$a " + libro.anio
                 })
             }
             if (libro.nota) {
                 data.push({
                     code: "500",
-                    text: "0#$a "+libro.nota
+                    text: "0#$a " + libro.nota
                 })
             }
-            
+
             await this.setState({ ...this.state, dataLibros: data })
 
             return (
@@ -414,7 +409,6 @@ class BookTable extends React.Component {
                     </tbody>
                 </Table>
                 <ModalEditLibro
-                    onCloseModalx={this.handleCloseModalx}
                     onCloseModal={this.handleCloseModal}
                     onOpenModal={this.handleOpenModal}
                     modalIsOpen={this.state.triggerEditModal}
