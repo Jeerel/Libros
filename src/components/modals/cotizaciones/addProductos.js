@@ -9,7 +9,8 @@ class ModalAddCliente extends React.Component {
     //declaramos el estado
     state = {
         form: {},
-        dataLibros: undefined
+        dataLibros: undefined,
+        arrayPrueba: []
     };
 
     //declaramos sus metodos
@@ -53,9 +54,12 @@ class ModalAddCliente extends React.Component {
         })
     }
 
-    pushData(obj) {
-        
-        console.log(obj)
+    pushData = async (obj) => {
+
+        //console.log(obj)
+        await this.setState({ arrayPrueba: [...this.state.arrayPrueba, obj] })
+        await this.props.pruebaFuncion(this.state.arrayPrueba)
+        //console.log(this.state)
     }
     render() {
         console.log("Antes")
