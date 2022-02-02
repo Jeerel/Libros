@@ -3,6 +3,7 @@ import { Col, Container, Modal, Row, Form } from "react-bootstrap";
 import axios from "axios";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
+import swal from "sweetalert";
 
 class ModalAddCliente extends React.Component {
 
@@ -34,7 +35,7 @@ class ModalAddCliente extends React.Component {
 
                 if (response.data === 'Enviado') {
                     this.props.onCloseModal();
-                    this.props.fetchDataClientes();
+                    this.props.fetchDataLibros();
                 }
 
             })
@@ -55,16 +56,30 @@ class ModalAddCliente extends React.Component {
     }
 
     pushData = async (obj) => {
-
-        //console.log(obj)
+        let flag=true;
+        var data=this.state.arrayPrueba;
+        for(let i=0;i<data.length;i++){
+            if(data[i].idLibro == obj.idLibro){
+                flag=false;
+                break;
+            }
+        }
+        if(flag){
+        obj.cantidad = 1;
+        if (obj.precio) {
+            obj.precio = parseFloat(obj.precio);
+        } else {
+            obj.precio = 1
+        }
         await this.setState({ arrayPrueba: [...this.state.arrayPrueba, obj] })
-        await this.props.pruebaFuncion(this.state.arrayPrueba)
-        //console.log(this.state)
+        await this.props.addProducto(this.state.arrayPrueba)
+    }else{
+        swal("Ya se agrego el libro con id: " + obj.idLibro, {icon: "error",});
     }
+    }
+
     render() {
-        console.log("Antes")
         if (this.state.dataLibros === undefined && this.props.modalIsOpen === true) {
-            console.log("ENTRO")
             this.fechGetDataLibros()
         }
         const form = this.state.form;
@@ -100,19 +115,19 @@ class ModalAddCliente extends React.Component {
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            {this.state.dataLibros.map((producto, i) => {
+                                            {this.state.dataLibros.map((libro, i) => {
                                                 return (
                                                     <tr key={(i)}>
                                                         <td>{i + 1}</td>
-                                                        <td>{producto.titulo}</td>
+                                                        <td>{libro.titulo}</td>
                                                         <td>
-                                                            <input className="form-control" type="number" min="1" />
+                                                            <input className="form-control" type="number"name="nombre{i}" id="nombre{i}" value={libro.cantidad} onChange={this.handleChange} min="1" />
                                                         </td>
-                                                        <td>{producto.precio}</td>
-                                                        <td>{producto.precio * 2}</td>
+                                                        <td>{libro.precio}</td>
+                                                        <td>{libro.precio * 2}</td>
                                                         <td>
                                                             <button
-                                                                className="btn btn-primary btn-xs" onClick={() => { this.pushData(producto); }}>
+                                                                className="btn btn-primary btn-xs" onClick={() => { this.pushData(libro); }}>
                                                                 <FontAwesomeIcon icon={faPlus} />
                                                             </button>
                                                         </td>

@@ -49,12 +49,7 @@ const NavbarC = (props) => {
                             <Link className="nav-link" to="/facturas">
                                 Facturas
                             </Link>
-                        </NavItem>
-                        <NavItem>
-                            <Link className="nav-link" to="/pedidos">
-                                Pedidos
-                            </Link>
-                        </NavItem>
+                        </NavItem>                        
                         <NavItem>
                             <Link className="nav-link" to="/clientes">
                                 Clientes

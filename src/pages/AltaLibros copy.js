@@ -339,9 +339,7 @@ class AltaLibros extends React.Component {
 
         ];
 
-        const downloadMARC21 = async (libro) => {
-            console.log('aqui')
-            console.log(libro)
+        const downloadMARC21 = async (libro) => {            
             let libroObj = {
                 Uniquevendoridentifier: 'mjse',
                 Author: libro.autor,
@@ -367,8 +365,6 @@ class AltaLibros extends React.Component {
             await data.push(libroObj)
 
             await this.setState({ ...this.state, dataLibros: data })
-
-            console.log(data)
             const prettyLink = {
                 backgroundColor: '#8dc63f',
                 fontSize: 14,

@@ -124,8 +124,7 @@ class Pruebas extends Component {
     clickHere = () => {
 
         this.setState({ ...this.state, trigger: true })
-        console.log(this.state)
-
+        
     }
 
     render() {

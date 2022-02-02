@@ -38,19 +38,12 @@ class AltaLibros extends React.Component {
             },
         };
         axios(config).catch((err) => err);
-
-
-
         this.setState({ loading: true, error: null });
-
-
         await axios.get(url).then((response) => {
             this.setState({ loading: false, data: response.data })
-
         }).catch((error) => {
             this.setState({ loading: false, error: error });
         })
-
     };
 
     fetchDataEditorial = async () => {
@@ -66,19 +59,12 @@ class AltaLibros extends React.Component {
             },
         };
         axios(config).catch((err) => err);
-
-
-
         this.setState({ loading: true, error: null });
-
-
         await axios.get(url).then((response) => {
             this.setState({ loading: false, dataEditorial: response.data });
-
         }).catch((error) => {
             this.setState({ loading: false, error: error });
         })
-
     };
 
     modalInsertar() {
@@ -93,18 +79,10 @@ class AltaLibros extends React.Component {
         this.setState({ modalInsertar: false });
     };
 
-
-
     render() {
-
-
         if (this.state.loading === true && !this.state.data && !this.state.dataEditorial) {
-
             return <PageLoading />
-
         }
-
-
 
         if (this.state.error) {
             //pagina de error
@@ -140,9 +118,7 @@ class AltaLibros extends React.Component {
                 </Fragment>
             )
         }
-
         return null;
     }
-
 }
 export default AltaLibros;
