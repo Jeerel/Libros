@@ -26,28 +26,29 @@ class ClientsContent extends React.Component {
         });
     }
 
-    setClientes(objs){        
+    setClientes(objs) {
     }
 
     handleChange = async (e) => {
-        var splitData=e.target.value.split("@@")
+        var splitData = e.target.value.split("@@")
         await this.setState({
-              infoCliene:{ ... this.state.infoCliene,
-                id:splitData[0],
-                telefono:splitData[2],  
-                email:splitData[3]
+            infoCliene: {
+                ... this.state.infoCliene,
+                id: splitData[0],
+                telefono: splitData[2],
+                email: splitData[3]
             }
         });
-        await this.props.clientes.setClienteState(this.state.infoCliene)    
+        await this.props.clientes.setClienteState(this.state.infoCliene)
         //setClienteState
     }
 
-    
+
     getCliente = async (obj) => {
         /* await this.setState({ arrayPrueba: [...this.state.arrayPrueba, obj] })
         await this.props.addProducto(this.state.arrayPrueba)   */
     }
-    render() {        
+    render() {
         const formFilter = this.state.formFilter;
         const infoCliene = this.state.infoCliene;
         const clientes = this.state.data;
@@ -56,7 +57,18 @@ class ClientsContent extends React.Component {
         const options = this.props.clientes.clientesArray
         const peticionEdit = async () => {
             let url = "https://appi-books.herokuapp.com/api/libros/";
-            await axios.get(url).then((response) => {
+            let config = {
+                method: "GET",
+                url: url,
+                headers: {
+                    'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNjQ1Mjc5MTcwLCJleHAiOjE2NDUzMDc5NzB9.HWcMBHnPQpWH7O7vsvNuXnWQJob8Q4LLz6_grOnSFRU',
+                    "Access-Control-Allow-Origin": "*",
+                    "Access-Control-Allow-Headers":
+                        "POST, GET, PUT, DELETE, OPTIONS, HEAD, Authorization, Origin, Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers, Access-Control-Allow-Origin",
+                    "Content-Type": "application/json",
+                },
+            };
+            await axios(config).then((response) => {
                 this.setState({ triggerEditModal: !this.state.triggerEditModal, formEdit: response.data });
             }).catch((error) => {
                 return error
@@ -72,12 +84,12 @@ class ClientsContent extends React.Component {
                                 <select className="form-control" onBlur={this.handleChange} name="idCliente" id="idCliente" >
                                     <option selected disabled value="">Seleccione una opción</option>
                                     {options.map((option) => (
-                                        <option value={option.idcliente+"@@"+option.nombre+"@@"+option.telefono+"@@"+option.email} >{option.nombre}</option>
+                                        <option value={option.idcliente + "@@" + option.nombre + "@@" + option.telefono + "@@" + option.email} >{option.nombre}</option>
                                     ))}
                                 </select>
                             </div>
                         </div>
-                        
+
                         <div className="col-xs-12 col-md-6 mt-2">
                             <div className="form-group">
                                 <label>Teléfono</label>
@@ -124,10 +136,10 @@ class ClientsTable extends React.Component {
         modalEditar: false,
         formEdit: undefined,
         triggerEditModal: false,
-        dataProductos:[{id:2}]
+        dataProductos: [{ id: 2 }]
     };
     componentDidUpdate() {
-        
+
     }
     handleCloseModal = async () => {
         await this.setState({ triggerEditModal: false, formEdit: undefined })
@@ -152,16 +164,14 @@ class ClientsTable extends React.Component {
                         method: "DELETE",
                         url: "https://appi-books.herokuapp.com/api/cliente/" + cliente.idcliente,
                         headers: {
+                            'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNjQ1Mjc5MTcwLCJleHAiOjE2NDUzMDc5NzB9.HWcMBHnPQpWH7O7vsvNuXnWQJob8Q4LLz6_grOnSFRU',
                             "Access-Control-Allow-Origin": "*",
                             "Access-Control-Allow-Headers":
                                 "POST, GET, PUT, DELETE, OPTIONS, HEAD, Authorization, Origin, Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers, Access-Control-Allow-Origin",
                             "Content-Type": "application/json",
                         },
                     }
-                    axios(config).catch((err) => err);
-                    let url = "https://appi-books.herokuapp.com/api/cliente/" + cliente.idcliente;
-                    axios
-                        .delete(url)
+                    axios(config)
                         .then((response) => {
                             swal("Cliente eliminado correctamente", {
                                 icon: "success",
@@ -180,15 +190,26 @@ class ClientsTable extends React.Component {
         }
         const peticionEdit = async (cliente) => {
             let url = "https://appi-books.herokuapp.com/api/libros/";
-            await axios.get(url).then((response) => {
+            let config = {
+                method: "GET",
+                url: url,
+                headers: {
+                    'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNjQ1Mjc5MTcwLCJleHAiOjE2NDUzMDc5NzB9.HWcMBHnPQpWH7O7vsvNuXnWQJob8Q4LLz6_grOnSFRU',
+                    "Access-Control-Allow-Origin": "*",
+                    "Access-Control-Allow-Headers":
+                        "POST, GET, PUT, DELETE, OPTIONS, HEAD, Authorization, Origin, Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers, Access-Control-Allow-Origin",
+                    "Content-Type": "application/json",
+                },
+            };
+            await axios(config).then((response) => {
                 this.setState({ triggerEditModal: !this.state.triggerEditModal, formEdit: response.data });
             }).catch((error) => {
                 return error
             });
         }
-       /*  this.setState({
-            dataProductos:[{id:2},{id:22}]
-        }) */
+        /*  this.setState({
+             dataProductos:[{id:2},{id:22}]
+         }) */
         const functionFetchData = this.props.fetchDataLibros;
         return (
             <Fragment>

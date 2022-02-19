@@ -35,11 +35,11 @@ const NavbarC = (props) => {
                                 Libros
                             </Link>
                         </NavItem>
-                        <NavItem>
+                        {/*<NavItem>
                             <Link className="nav-link" to="/editoriales">
                                 Editoriales
                             </Link>
-                        </NavItem>                        
+                        </NavItem>*/}
                         <NavItem>
                             <Link className="nav-link" to="/cotizacion">
                                 Cotización
@@ -49,7 +49,7 @@ const NavbarC = (props) => {
                             <Link className="nav-link" to="/facturas">
                                 Facturas
                             </Link>
-                        </NavItem>                        
+                        </NavItem>
                         <NavItem>
                             <Link className="nav-link" to="/clientes">
                                 Clientes

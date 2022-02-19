@@ -20,17 +20,17 @@ class Facturas extends React.Component {
             method: "GET",
             url: url,
             headers: {
+                'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNjQ1Mjc5MTcwLCJleHAiOjE2NDUzMDc5NzB9.HWcMBHnPQpWH7O7vsvNuXnWQJob8Q4LLz6_grOnSFRU',
                 "Access-Control-Allow-Origin": "*",
                 "Access-Control-Allow-Headers":
                     "POST, GET, PUT, DELETE, OPTIONS, HEAD, Authorization, Origin, Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers, Access-Control-Allow-Origin",
                 "Content-Type": "application/json",
             },
         };
-        axios(config).catch((err) => err);
 
         this.setState({ loading: true, error: null });
 
-        await axios.get(url).then((response) => {
+        await axios(config).then((response) => {
             this.setState({ loading: false, data: response.data })
         }).catch((error) => {
             this.setState({ loading: false, error: error });
@@ -41,6 +41,7 @@ class Facturas extends React.Component {
         if (this.state.loading === true && !this.state.data) {
             return <PageLoading />
         }
+        console.log(this.state.data)
         return (
             <Fragment>
                 <div className="container mt-3">

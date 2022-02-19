@@ -21,8 +21,8 @@ class Editoriales extends React.Component {
         loading: true,
         modalInsertar: false,
         modalEdit: false,
-        nameFilter:"",
-        estadoFilter:"",
+        nameFilter: "",
+        estadoFilter: "",
         form: {
             id: "",
             nombre: "",
@@ -53,16 +53,14 @@ class Editoriales extends React.Component {
                     method: "DELETE",
                     url: "https://appi-books.herokuapp.com/api/editorial/" + editorial.ideditorial,
                     headers: {
+                        'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNjQ1Mjc5MTcwLCJleHAiOjE2NDUzMDc5NzB9.HWcMBHnPQpWH7O7vsvNuXnWQJob8Q4LLz6_grOnSFRU',
                         "Access-Control-Allow-Origin": "*",
                         "Access-Control-Allow-Headers":
                             "POST, GET, PUT, DELETE, OPTIONS, HEAD, Authorization, Origin, Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers, Access-Control-Allow-Origin",
                         "Content-Type": "application/json",
                     },
                 };
-                axios(config).catch((err) => err);
-                let url = "https://appi-books.herokuapp.com/api/editorial/" + editorial.ideditorial;
-                axios
-                    .delete(url)
+                axios(config)
                     .then((response) => {
                         swal("Editorial eliminada correctamente", {
                             icon: "success",
@@ -85,16 +83,14 @@ class Editoriales extends React.Component {
             method: "GET",
             url: "https://appi-books.herokuapp.com/api/editorial",
             headers: {
+                'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNjQ1Mjc5MTcwLCJleHAiOjE2NDUzMDc5NzB9.HWcMBHnPQpWH7O7vsvNuXnWQJob8Q4LLz6_grOnSFRU',
                 "Access-Control-Allow-Origin": "*",
                 "Access-Control-Allow-Headers":
                     "POST, GET, PUT, DELETE, OPTIONS, HEAD, Authorization, Origin, Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers, Access-Control-Allow-Origin",
                 "Content-Type": "application/json",
             },
         };
-        axios(config).catch((err) => err);
-        let url = "https://appi-books.herokuapp.com/api/editorial";
-        axios
-            .get(url)
+        axios(config)
             .then((response) => {
                 this.setState({ data: response.data });
             })
@@ -136,16 +132,14 @@ class Editoriales extends React.Component {
             method: "GET",
             url: "https://appi-books.herokuapp.com/api/editorial",
             headers: {
+                'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNjQ1Mjc5MTcwLCJleHAiOjE2NDUzMDc5NzB9.HWcMBHnPQpWH7O7vsvNuXnWQJob8Q4LLz6_grOnSFRU',
                 "Access-Control-Allow-Origin": "*",
                 "Access-Control-Allow-Headers":
                     "POST, GET, PUT, DELETE, OPTIONS, HEAD, Authorization, Origin, Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers, Access-Control-Allow-Origin",
                 "Content-Type": "application/json",
             },
         };
-        axios(config).catch((err) => err);
-        let url = "https://appi-books.herokuapp.com/api/editorial";
-        axios
-            .get(url)
+        axios(config)
             .then((response) => {
                 this.setState({ data: response.data });
             })
@@ -165,44 +159,44 @@ class Editoriales extends React.Component {
     }
     searchFilter = async (e) => {
         this.state[e.target.name] = e.target.value;
-        let obj={};
-        obj[e.target.name]=this.state[e.target.name];
-        e.persist();        
+        let obj = {};
+        obj[e.target.name] = this.state[e.target.name];
+        e.persist();
         await this.setState(obj);
     }
     updateInputValue = async (e) => {
         this.state.formEdit[e.target.name] = e.target.value;
-        e.persist();        
+        e.persist();
         await this.setState({
             formEdit: this.state.formEdit
         });
     };
     peticionAvanced = () => {
-        let obj={};
-        if(this.state.nameFilter){
-            obj["editorialName"]=this.state.nameFilter;
+        let obj = {};
+        if (this.state.nameFilter) {
+            obj["editorialName"] = this.state.nameFilter;
         }
-        if(this.state.estadoFilter){
-            obj["editorialState"]=this.state.estadoFilter;
+        if (this.state.estadoFilter) {
+            obj["editorialState"] = this.state.estadoFilter;
         }
         let url = "https://appi-books.herokuapp.com/api/filters/editorial";
         axios
-            .post(url,obj)
-            .then((response) => {    
+            .post(url, obj)
+            .then((response) => {
                 this.setState({ data: response.data });
             })
             .catch((error) => {
             });
     }
     peticionPut = () => {
-        let obj={
+        let obj = {
             direccion: this.state.formEdit.editorialAddress,
             descripcion: this.state.formEdit.editorialDescription,
             nombre: this.state.formEdit.editorialName,
             estado: this.state.formEdit.editorialState
-            
+
         }
-        let url = "https://appi-books.herokuapp.com/api/editorial/"+this.state.formEdit.ideditorial;
+        let url = "https://appi-books.herokuapp.com/api/editorial/" + this.state.formEdit.ideditorial;
         axios.put(url, obj).then((response) => {
             swal("Usuario Editado", {
                 icon: "success",
@@ -210,8 +204,8 @@ class Editoriales extends React.Component {
             this.modalEditar();
             this.loadData();
         })
-        .catch((error) => {
-        });
+            .catch((error) => {
+            });
     };
 
     componentDidMount() {
@@ -285,7 +279,7 @@ class Editoriales extends React.Component {
                             </div>
                         </div>
                         <div className="col-md-3 col-sm-3">
-                            <button  onClick={() => this.peticionAvanced()} className="btn btn-primary btnTop">
+                            <button onClick={() => this.peticionAvanced()} className="btn btn-primary btnTop">
                                 <FontAwesomeIcon icon={faSearch} />
                             </button>
                         </div>

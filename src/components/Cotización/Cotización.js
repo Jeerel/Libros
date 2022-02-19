@@ -1,6 +1,6 @@
 import React, { Fragment } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {faMoneyBill } from "@fortawesome/free-solid-svg-icons";
+import { faMoneyBill } from "@fortawesome/free-solid-svg-icons";
 import { Table } from "react-bootstrap";
 import { CSVLink } from 'react-csv';
 import axios from "axios";
@@ -25,10 +25,9 @@ class ClientsContent extends React.Component {
     }
 
     render() {
-        console.log(this.props)
         const formFilter = this.state.formFilter;
         const cotizacion = this.state.data;
-        const fetchDataCotizaciones = this.props.cotizacion.fetchDataCotizaciones
+        const functionFetchData = this.props.cotizacion.fetchDataCotizaciones
 
         return (
             <Fragment>
@@ -45,10 +44,8 @@ class ClientsContent extends React.Component {
                         />
                     </div>
                 </div>
-                <div className="col-xs-12 col-md-3 mt-2">
-                </div>
                 <div className="col-xs-12 col-md-12 mt-2">
-                    <FacturaTable cotizacion={cotizacion} fetchDataCotizaciones={fetchDataCotizaciones} />
+                    <FacturaTable cotizacion={cotizacion} functionFetchData={functionFetchData} />
                 </div>
             </Fragment>
         );
@@ -57,6 +54,7 @@ class ClientsContent extends React.Component {
 
 
 class FacturaTable extends React.Component {
+
     state = {
         dataClientes: [],
         modalEditar: false,
@@ -64,47 +62,45 @@ class FacturaTable extends React.Component {
         triggerEditModal: false,
         dataLibros: [],
     };
+
     handleCloseModal = async () => {
         await this.setState({ triggerEditModal: false, formEdit: undefined })
     }
+
     handleOpenModal = e => {
         this.setState({ triggerEditModal: true });
-    };    
+    };
+
+    peticionPutFactura = async (cotizacion) => {
+
+        const url = "https://appi-books.herokuapp.com/api/factura/" + cotizacion.id_cotizacion;
+        let config = {
+            method: "PUT",
+            url: url,
+            headers: {
+                'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNjQ1Mjc5MTcwLCJleHAiOjE2NDUzMDc5NzB9.HWcMBHnPQpWH7O7vsvNuXnWQJob8Q4LLz6_grOnSFRU',
+                "Access-Control-Allow-Origin": "*",
+                "Access-Control-Allow-Headers":
+                    "POST, GET, PUT, DELETE, OPTIONS, HEAD, Authorization, Origin, Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers, Access-Control-Allow-Origin",
+                "Content-Type": "application/json",
+            },
+        };
+
+        this.setState({ loading: true, error: null });
+
+        await axios(config).then((response) => {
+            swal("Se genero la factura #" + response.data.factura, {
+                icon: "success",
+            })
+            this.props.functionFetchData();
+
+        }).catch((error) => {
+            this.setState({ loading: false, error: error });
+        });
+    }
 
     render() {
-        console.log(this.props)
-        const functionFetchData = this.props.fetchDataCotizaciones;
 
-        const peticionPutFactura = async (cotizacion) => {
-            console.log(cotizacion)
-            console.log(cotizacion.id_cotizacion)
-            const url = "https://appi-books.herokuapp.com/api/factura/"+cotizacion.id_cotizacion;
-            let config = {
-                method: "PUT",
-                url: url,
-                headers: {
-                    "Access-Control-Allow-Origin": "*",
-                    "Access-Control-Allow-Headers":
-                        "POST, GET, PUT, DELETE, OPTIONS, HEAD, Authorization, Origin, Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers, Access-Control-Allow-Origin",
-                    "Content-Type": "application/json",
-                },
-            };
-            axios(config).catch((err) => err);
-    
-            this.setState({ loading: true, error: null });
-    
-            await axios.put(url).then((response) => {
-                console.log(response)
-                swal("Se genero la factura #"+response.data.factura, {
-                    icon: "success",
-                });
-                this.props.cotizacion.fetchDataCotizaciones()
-                
-            }).catch((error) => {
-                this.setState({ loading: false, error: error });
-            });
-        }
-        
         return (
             <Fragment>
                 <Table responsive>
@@ -128,11 +124,11 @@ class FacturaTable extends React.Component {
                                     <td>{cotizacion.telefono}</td>
                                     <td>{cotizacion.email}</td>
                                     <td>
-                                           <button
-                                                className="btn btn-primary text-white" 
-                                                onClick={() => { peticionPutFactura(cotizacion); }}>
-                                                <FontAwesomeIcon icon={faMoneyBill} />
-                                            </button>
+                                        <button
+                                            className="btn btn-primary text-white"
+                                            onClick={() => { this.peticionPutFactura(cotizacion); }}>
+                                            <FontAwesomeIcon icon={faMoneyBill} />
+                                        </button>
                                     </td>
                                 </tr>
                             )
@@ -145,6 +141,7 @@ class FacturaTable extends React.Component {
 }
 
 function FacturasM(props) {
+
     return (
         <Fragment>
             <ClientsContent cotizacion={props} />

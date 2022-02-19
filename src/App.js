@@ -2,13 +2,14 @@ import React from "react";
 import { BrowserRouter, Route, Switch } from "react-router-dom";
 
 import AltaLibros from "./pages/AltaLibros";
-import clientes from "./pages/Clientes"
+import Clientes from "./pages/Clientes"
 import Perfiles from './pages/Perfiles';
 import Facturas from './pages/Facturas';
 import Pedidos from './pages/Pedidos';
 import Cotizacion from './pages/Cotizacion';
-import Editoriales from "./pages/Editoriales";
+//import Editoriales from "./pages/Editoriales";
 import Pruebas from "./pages/Pruebas";
+
 
 import Layout from "./components/Layout";
 
@@ -28,8 +29,10 @@ function App() {
             <Layout>
                 <Switch>
                     <Route exact path="/libros" component={AltaLibros} />
-                    <Route exact path="/clientes" component={clientes} />
-                    <Route exact path="/editoriales" component={Editoriales} />
+                    <Route exact path="/clientes" component={Clientes} />
+                    {
+                        //<Route exact path="/editoriales" component={Editoriales} />
+                    }
                     <Route exact path="/perfiles" component={Perfiles} />
                     <Route exact path="/pedidos" component={Pedidos} />
                     <Route exact path="/cotizacion" component={Cotizacion} />

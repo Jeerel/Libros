@@ -46,6 +46,7 @@ class AltaLibros extends React.Component {
             method: "GET",
             url: "https://appi-books.herokuapp.com/api/libros",
             headers: {
+                'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNjQ1Mjc5MTcwLCJleHAiOjE2NDUzMDc5NzB9.HWcMBHnPQpWH7O7vsvNuXnWQJob8Q4LLz6_grOnSFRU',
                 "Access-Control-Allow-Origin": "*",
                 "Access-Control-Allow-Headers":
                     "POST, GET, PUT, DELETE, OPTIONS, HEAD, Authorization, Origin, Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers, Access-Control-Allow-Origin",
@@ -162,6 +163,7 @@ class AltaLibros extends React.Component {
                     method: "DELETE",
                     url: "https://appi-books.herokuapp.com/api/libros/" + libro.isbn,
                     headers: {
+                        'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNjQ1Mjc5MTcwLCJleHAiOjE2NDUzMDc5NzB9.HWcMBHnPQpWH7O7vsvNuXnWQJob8Q4LLz6_grOnSFRU',
                         "Access-Control-Allow-Origin": "*",
                         "Access-Control-Allow-Headers":
                             "POST, GET, PUT, DELETE, OPTIONS, HEAD, Authorization, Origin, Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers, Access-Control-Allow-Origin",
@@ -199,6 +201,7 @@ class AltaLibros extends React.Component {
             method: "GET",
             url: "https://appi-books.herokuapp.com/api/libros",
             headers: {
+                'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNjQ1Mjc5MTcwLCJleHAiOjE2NDUzMDc5NzB9.HWcMBHnPQpWH7O7vsvNuXnWQJob8Q4LLz6_grOnSFRU',
                 "Access-Control-Allow-Origin": "*",
                 "Access-Control-Allow-Headers":
                     "POST, GET, PUT, DELETE, OPTIONS, HEAD, Authorization, Origin, Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers, Access-Control-Allow-Origin",
@@ -215,6 +218,7 @@ class AltaLibros extends React.Component {
                     method: "GET",
                     url: "https://appi-books.herokuapp.com/api/editorial",
                     headers: {
+                        'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNjQ1Mjc5MTcwLCJleHAiOjE2NDUzMDc5NzB9.HWcMBHnPQpWH7O7vsvNuXnWQJob8Q4LLz6_grOnSFRU',
                         "Access-Control-Allow-Origin": "*",
                         "Access-Control-Allow-Headers":
                             "POST, GET, PUT, DELETE, OPTIONS, HEAD, Authorization, Origin, Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers, Access-Control-Allow-Origin",

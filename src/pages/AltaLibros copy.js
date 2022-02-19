@@ -46,16 +46,14 @@ class AltaLibros extends React.Component {
             method: "GET",
             url: "https://appi-books.herokuapp.com/api/libros",
             headers: {
+                'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNjQ1Mjc5MTcwLCJleHAiOjE2NDUzMDc5NzB9.HWcMBHnPQpWH7O7vsvNuXnWQJob8Q4LLz6_grOnSFRU',
                 "Access-Control-Allow-Origin": "*",
                 "Access-Control-Allow-Headers":
                     "POST, GET, PUT, DELETE, OPTIONS, HEAD, Authorization, Origin, Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers, Access-Control-Allow-Origin",
                 "Content-Type": "application/json",
             },
         };
-        axios(config).catch((err) => err);
-        let url = "https://appi-books.herokuapp.com/api/libros";
-        axios
-            .get(url)
+        axios(config)
             .then((response) => {
                 this.setState({ data: response.data });
             })
@@ -162,16 +160,14 @@ class AltaLibros extends React.Component {
                     method: "DELETE",
                     url: "https://appi-books.herokuapp.com/api/libros/" + libro.isbn,
                     headers: {
+                        'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNjQ1Mjc5MTcwLCJleHAiOjE2NDUzMDc5NzB9.HWcMBHnPQpWH7O7vsvNuXnWQJob8Q4LLz6_grOnSFRU',
                         "Access-Control-Allow-Origin": "*",
                         "Access-Control-Allow-Headers":
                             "POST, GET, PUT, DELETE, OPTIONS, HEAD, Authorization, Origin, Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers, Access-Control-Allow-Origin",
                         "Content-Type": "application/json",
                     },
                 };
-                axios(config).catch((err) => err);
-                let url = "https://appi-books.herokuapp.com/api/libros/" + libro.isbn;
-                axios
-                    .delete(url)
+                axios(config)
                     .then((response) => {
                         swal("Libro eliminado correctamente", {
                             icon: "success",
@@ -199,32 +195,28 @@ class AltaLibros extends React.Component {
             method: "GET",
             url: "https://appi-books.herokuapp.com/api/libros",
             headers: {
+                'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNjQ1Mjc5MTcwLCJleHAiOjE2NDUzMDc5NzB9.HWcMBHnPQpWH7O7vsvNuXnWQJob8Q4LLz6_grOnSFRU',
                 "Access-Control-Allow-Origin": "*",
                 "Access-Control-Allow-Headers":
                     "POST, GET, PUT, DELETE, OPTIONS, HEAD, Authorization, Origin, Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers, Access-Control-Allow-Origin",
                 "Content-Type": "application/json",
             },
         };
-        axios(config).catch((err) => err);
-        let url = "https://appi-books.herokuapp.com/api/libros";
-        axios
-            .get(url)
+        axios(config)
             .then((response) => {
                 this.setState({ data: response.data });
                 config = {
                     method: "GET",
                     url: "https://appi-books.herokuapp.com/api/editorial",
                     headers: {
+                        'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNjQ1Mjc5MTcwLCJleHAiOjE2NDUzMDc5NzB9.HWcMBHnPQpWH7O7vsvNuXnWQJob8Q4LLz6_grOnSFRU',
                         "Access-Control-Allow-Origin": "*",
                         "Access-Control-Allow-Headers":
                             "POST, GET, PUT, DELETE, OPTIONS, HEAD, Authorization, Origin, Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers, Access-Control-Allow-Origin",
                         "Content-Type": "application/json",
                     },
                 };
-                axios(config).catch((err) => err);
-                let url = "https://appi-books.herokuapp.com/api/editorial";
-                axios
-                    .get(url)
+                axios(config)
                     .then((response) => {
                         this.setState({ dataEditorial: response.data });
                     })
@@ -339,7 +331,7 @@ class AltaLibros extends React.Component {
 
         ];
 
-        const downloadMARC21 = async (libro) => {            
+        const downloadMARC21 = async (libro) => {
             let libroObj = {
                 Uniquevendoridentifier: 'mjse',
                 Author: libro.autor,
@@ -387,10 +379,10 @@ class AltaLibros extends React.Component {
             )
             */
 
-            return(
+            return (
                 <span>
-Download <CSVLink data={data} style={prettyLink}>CSV ⬇</CSVLink> to download CSV
-</span>
+                    Download <CSVLink data={data} style={prettyLink}>CSV ⬇</CSVLink> to download CSV
+                </span>
             )
         }
 

@@ -23,7 +23,19 @@ class ModalEditLibro extends React.Component {
         event.preventDefault();
 
         let url = "https://appi-books.herokuapp.com/api/libros/" + this.state.form.idLibro;
-        axios.put(url, this.state.form).then((response) => {
+        let config = {
+            method: "PUT",
+            url: url,
+            headers: {
+                'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNjQ1Mjc5MTcwLCJleHAiOjE2NDUzMDc5NzB9.HWcMBHnPQpWH7O7vsvNuXnWQJob8Q4LLz6_grOnSFRU',
+                "Access-Control-Allow-Origin": "*",
+                "Access-Control-Allow-Headers":
+                    "POST, GET, PUT, DELETE, OPTIONS, HEAD, Authorization, Origin, Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers, Access-Control-Allow-Origin",
+                "Content-Type": "application/json",
+            },
+            data: this.state.form
+        };
+        await axios(config).then((response) => {
             swal("Libro Editado", { icon: "success", });
             this.props.onCloseModal();
             this.props.fetchDataLibros();
@@ -83,23 +95,25 @@ class ModalEditLibro extends React.Component {
                                     <label>
                                         Editorial
                                     </label>
-
-                                    <select
-                                        className="form-control"
-                                        name="editorial"
-                                        id="editorial"
-                                        onChange={this.handleChange}
-                                        value={form ? form.editorial : ""}
-                                        required>
-                                        <option value="" selected disabled>Seleccione una opción</option>
-                                        {this.props.editoriales.map((editorial, i) => {
-                                            return (
-                                                <option key={i} value={editorial.ideditorial}>
-                                                    {editorial.editorialName}
-                                                </option>
-                                            );
-                                        })}
-                                    </select>
+                                    <input className="form-control" type="text" name="editorial" id="editorial" onChange={this.handleChange} value={form ? form.editorial : ""} autoComplete="off" required />
+                                    {
+                                        /*<select
+                                            className="form-control"
+                                            name="editorial"
+                                            id="editorial"
+                                            onChange={this.handleChange}
+                                            value={form ? form.editorial : ""}
+                                            required>
+                                            <option value="" selected disabled>Seleccione una opción</option>
+                                            {this.props.editoriales.map((editorial, i) => {
+                                                return (
+                                                    <option key={i} value={editorial.ideditorial}>
+                                                        {editorial.editorialName}
+                                                    </option>
+                                                );
+                                            })}
+                                        </select>*/
+                                    }
 
                                 </Col>
                                 <Col xs={12} md={3}>

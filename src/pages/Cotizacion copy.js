@@ -17,13 +17,13 @@ class cotizacionProductos extends React.Component {
         loading: true,
         error: null,
         data: [],
-        dataLibros:[],
-        dataClientes:[],
+        dataLibros: [],
+        dataClientes: [],
         dataProductos: [],
         modalInsertar: false,
         count: 0,
         dataPrueba: [],
-        dataCliente:{}
+        dataCliente: {}
     };
 
     //definicion de sus metodos
@@ -33,12 +33,12 @@ class cotizacionProductos extends React.Component {
         this.fetchDataAddProductos();
     }
 
-    setClienteState = async (obj)=>{
-        await this.setState({ dataCliente: obj })        
+    setClienteState = async (obj) => {
+        await this.setState({ dataCliente: obj })
     }
 
     componentDidMount() {
-        this.closeLoader()    
+        this.closeLoader()
     }
     closeLoader = async () => {
         const url = "https://appi-books.herokuapp.com/api/cliente";
@@ -52,18 +52,17 @@ class cotizacionProductos extends React.Component {
                 "Content-Type": "application/json",
             },
         };
-        axios(config).catch((err) => err);
 
         this.setState({ loading: true, error: null });
 
-        await axios.get(url).then((response) => {
+        await axios(config).then((response) => {
             this.setState({ loading: false, dataClientes: response.data })
         }).catch((error) => {
             this.setState({ loading: false, error: error });
         });
     }
     fetchDataAddProductos = async () => {
-            this.setState({ loading: false, dataProductos: this.state.dataPrueba })
+        this.setState({ loading: false, dataProductos: this.state.dataPrueba })
     }
 
     fetchDataLibros = async () => {
@@ -78,11 +77,10 @@ class cotizacionProductos extends React.Component {
                 "Content-Type": "application/json",
             },
         };
-        axios(config).catch((err) => err);
 
-        this.setState({error: null });
+        this.setState({ error: null });
 
-        await axios.get(url).then((response) => {
+        await axios(config).then((response) => {
             this.setState({ loading: false, dataLibros: response.data })
         }).catch((error) => {
             this.setState({ loading: false, error: error });
@@ -92,23 +90,23 @@ class cotizacionProductos extends React.Component {
     fetchDataProductos = async () => {
         this.setState({ loading: false, dataProductos: [] })
     }
-    peticionSaveCoticacion = async () =>{
-        let obj={
-            idCliente:this.state.dataCliente.id,
-            datos:this.state.dataPrueba
+    peticionSaveCoticacion = async () => {
+        let obj = {
+            idCliente: this.state.dataCliente.id,
+            datos: this.state.dataPrueba
         }
         const url = "https://appi-books.herokuapp.com/api/cotizacion";
         axios
             .post(url, obj)
             .then((response) => {
-                let idCotizacion=response.data.idCotizacion;
-                swal("Cotización creada #"+idCotizacion, { icon: "success", });
-                this.setState({ dataPrueba: [],dataCliente:{} })
-                
+                let idCotizacion = response.data.idCotizacion;
+                swal("Cotización creada #" + idCotizacion, { icon: "success", });
+                this.setState({ dataPrueba: [], dataCliente: {} })
+
             })
             .catch((error) => {
                 return error;
-            });        
+            });
     }
 
     peticionGetLibros = async () => {
@@ -123,10 +121,10 @@ class cotizacionProductos extends React.Component {
                 "Content-Type": "application/json",
             },
         };
-        axios(config).catch((err) => err);
+
         this.setState({ error: null });
 
-        await axios.get(url).then((response) => {
+        await axios(config).then((response) => {
             this.setState({ loading: false, modalInsertar: !this.state.modalInsertar, dataLibros: response.data })
         }).catch((error) => {
             this.setState({ loading: false, error: error });
@@ -143,7 +141,7 @@ class cotizacionProductos extends React.Component {
 
     handleCloseModal = e => {
         this.setState({ modalInsertar: false });
-        
+
     };
 
 

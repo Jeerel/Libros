@@ -21,8 +21,19 @@ class ModalAddLibro extends React.Component {
     peticionPost = async (event) => {
         event.preventDefault();
         const url = "https://appi-books.herokuapp.com/api/libros";
-        axios
-            .post(url, this.state.form)
+        let config = {
+            method: "POST",
+            url: url,
+            headers: {
+                'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNjQ1Mjc5MTcwLCJleHAiOjE2NDUzMDc5NzB9.HWcMBHnPQpWH7O7vsvNuXnWQJob8Q4LLz6_grOnSFRU',
+                "Access-Control-Allow-Origin": "*",
+                "Access-Control-Allow-Headers":
+                    "POST, GET, PUT, DELETE, OPTIONS, HEAD, Authorization, Origin, Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers, Access-Control-Allow-Origin",
+                "Content-Type": "application/json",
+            },
+            data: this.state.form
+        };
+        axios(config)
             .then((response) => {
 
                 if (response.data === 'Enviado') {

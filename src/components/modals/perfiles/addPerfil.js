@@ -5,7 +5,9 @@ import axios from "axios";
 class ModalAddPerfil extends React.Component {
     //declaramos el estado
     state = {
-        form: {}
+        form: {
+            pass: 123
+        }
     };
 
     //declaramos sus metodos
@@ -23,8 +25,22 @@ class ModalAddPerfil extends React.Component {
     peticionPost = async (event) => {
         event.preventDefault();
         const url = "https://appi-books.herokuapp.com/api/empleoyes";
-        axios
-            .post(url, this.state.form)
+
+        //const url = "localhost:8000/api/empleoyes";
+        let config = {
+            method: "POST",
+            url: url,
+            headers: {
+                'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNjQ1Mjc5MTcwLCJleHAiOjE2NDUzMDc5NzB9.HWcMBHnPQpWH7O7vsvNuXnWQJob8Q4LLz6_grOnSFRU',
+                "Access-Control-Allow-Origin": "*",
+                "Access-Control-Allow-Headers":
+                    "POST, GET, PUT, DELETE, OPTIONS, HEAD, Authorization, Origin, Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers, Access-Control-Allow-Origin",
+                "Content-Type": "application/json",
+            },
+            data: this.state.form
+        };
+        console.log('antes de hacer post', config)
+        axios(config)
             .then((response) => {
 
                 if (response.data === 'Enviado') {

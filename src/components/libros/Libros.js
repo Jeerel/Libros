@@ -13,7 +13,7 @@ class BooksContent extends React.Component {
     state = {
         formFilter: {},
         data: this.props.libros.libros,
-        dataEditoriales: this.props.libros.editoriales
+        //dataEditoriales: this.props.libros.editoriales
     }
 
     handleChangeFilter = async (e) => {
@@ -46,7 +46,7 @@ class BooksContent extends React.Component {
 
         const formFilter = this.state.formFilter;
         const libros = this.state.data;
-        const editoriales = this.state.dataEditoriales;
+        //const editoriales = this.state.dataEditoriales;
         const functionFetchData = this.props.libros.fetchDataLibros
 
 
@@ -94,7 +94,9 @@ class BooksContent extends React.Component {
                 <div className="col-xs-12 col-md-3 mt-2">
                     <div className="form-group">
                         <label>Editorial</label>
-                        <select
+                        <input className="form-control mt-2" type="text" name="editorial" id="editorial" onChange={this.handleChangeFilter} value={formFilter ? formFilter.editorial : ""} autoComplete="off" required />
+                        {/*
+                            <select
                             className="form-control mt-2"
                             name="editorial"
                             id="editorial"
@@ -108,7 +110,8 @@ class BooksContent extends React.Component {
                                     </option>
                                 );
                             })}
-                        </select>
+                            </select>
+                        */}
                     </div>
                 </div>
                 <div className="col-xs-12 col-md-3 mt-2">
@@ -181,7 +184,8 @@ class BooksContent extends React.Component {
                     </button>
                 </div>
                 <div className="col-xs-12 col-md-12 mt-5">
-                    <BookTable libros={libros} editoriales={editoriales} functionFetchData={functionFetchData} />
+                    <BookTable libros={libros} functionFetchData={functionFetchData} />
+                    {/* editoriales={editoriales} */}
                 </div>
             </Fragment>
         )
@@ -250,16 +254,15 @@ class BookTable extends React.Component {
                         method: "DELETE",
                         url: "https://appi-books.herokuapp.com/api/libros/" + libro.idLibro,
                         headers: {
+                            'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNjQ1Mjc5MTcwLCJleHAiOjE2NDUzMDc5NzB9.HWcMBHnPQpWH7O7vsvNuXnWQJob8Q4LLz6_grOnSFRU',
                             "Access-Control-Allow-Origin": "*",
                             "Access-Control-Allow-Headers":
                                 "POST, GET, PUT, DELETE, OPTIONS, HEAD, Authorization, Origin, Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers, Access-Control-Allow-Origin",
                             "Content-Type": "application/json",
                         },
                     };
-                    axios(config).catch((err) => err);
-                    let url = "https://appi-books.herokuapp.com/api/libros/" + libro.idLibro;
-                    axios
-                        .delete(url)
+
+                    axios(config)
                         .then((response) => {
                             swal("Libro eliminado correctamente", {
                                 icon: "success",
@@ -279,7 +282,18 @@ class BookTable extends React.Component {
 
         const peticionEdit = async (libro) => {
             let url = "https://appi-books.herokuapp.com/api/libros/" + libro.idLibro;
-            await axios.get(url).then((response) => {
+            let config = {
+                method: "GET",
+                url: url,
+                headers: {
+                    'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNjQ1Mjc5MTcwLCJleHAiOjE2NDUzMDc5NzB9.HWcMBHnPQpWH7O7vsvNuXnWQJob8Q4LLz6_grOnSFRU',
+                    "Access-Control-Allow-Origin": "*",
+                    "Access-Control-Allow-Headers":
+                        "POST, GET, PUT, DELETE, OPTIONS, HEAD, Authorization, Origin, Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers, Access-Control-Allow-Origin",
+                    "Content-Type": "application/json",
+                },
+            };
+            await axios(config).then((response) => {
                 this.setState({ triggerEditModal: !this.state.triggerEditModal, formEdit: response.data });
             }).catch((error) => {
                 return error
@@ -383,7 +397,7 @@ class BookTable extends React.Component {
                             return (<tr key={i}>
                                 <td>{libro.autor}</td>
                                 <td>{libro.titulo}</td>
-                                <td>{libro.editorialName}</td>
+                                <td>{libro.editorial}</td>
                                 <td>{libro.isbn}</td>
                                 <td>{libro.anio}</td>
                                 <td>
@@ -412,10 +426,10 @@ class BookTable extends React.Component {
                     onCloseModal={this.handleCloseModal}
                     onOpenModal={this.handleOpenModal}
                     modalIsOpen={this.state.triggerEditModal}
-                    editoriales={this.props.editoriales}
                     data={this.state.formEdit}
                     fetchDataLibros={functionFetchData}
                 />
+                {/* editoriales={this.props.editoriales} */}
             </Fragment>
         )
     }

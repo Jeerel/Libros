@@ -24,7 +24,19 @@ class ModalEditarCliente extends React.Component {
         event.preventDefault();
 
         let url = "https://appi-books.herokuapp.com/api/cliente/" + this.state.form.idcliente;
-        axios.put(url, this.state.form).then((response) => {
+        let config = {
+            method: "PUT",
+            url: url,
+            headers: {
+                'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNjQ1Mjc5MTcwLCJleHAiOjE2NDUzMDc5NzB9.HWcMBHnPQpWH7O7vsvNuXnWQJob8Q4LLz6_grOnSFRU',
+                "Access-Control-Allow-Origin": "*",
+                "Access-Control-Allow-Headers":
+                    "POST, GET, PUT, DELETE, OPTIONS, HEAD, Authorization, Origin, Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers, Access-Control-Allow-Origin",
+                "Content-Type": "application/json",
+            },
+            data: this.state.form
+        };
+        axios(config).then((response) => {
             swal("Cliente Editado", { icon: "success", });
             this.props.onCloseModal();
             this.props.fetchDataClientes();

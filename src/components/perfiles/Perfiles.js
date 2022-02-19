@@ -111,16 +111,14 @@ class PerfilesTable extends React.Component {
                         method: "DELETE",
                         url: "https://appi-books.herokuapp.com/api/empleoyes/" + perfil.id,
                         headers: {
+                            'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNjQ1Mjc5MTcwLCJleHAiOjE2NDUzMDc5NzB9.HWcMBHnPQpWH7O7vsvNuXnWQJob8Q4LLz6_grOnSFRU',
                             "Access-Control-Allow-Origin": "*",
                             "Access-Control-Allow-Headers":
                                 "POST, GET, PUT, DELETE, OPTIONS, HEAD, Authorization, Origin, Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers, Access-Control-Allow-Origin",
                             "Content-Type": "application/json",
                         },
                     }
-                    axios(config).catch((err) => err);
-                    let url = "https://appi-books.herokuapp.com/api/empleoyes/" + perfil.id;
-                    axios
-                        .delete(url)
+                    axios(config)
                         .then((response) => {
                             swal("Perfil eliminado correctamente", {
                                 icon: "success",
@@ -140,7 +138,18 @@ class PerfilesTable extends React.Component {
 
         const peticionEdit = async (perfil) => {
             let url = "https://appi-books.herokuapp.com/api/empleoyes/" + perfil.id;
-            await axios.get(url).then((response) => {
+            let config = {
+                method: "GET",
+                url: url,
+                headers: {
+                    'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNjQ1Mjc5MTcwLCJleHAiOjE2NDUzMDc5NzB9.HWcMBHnPQpWH7O7vsvNuXnWQJob8Q4LLz6_grOnSFRU',
+                    "Access-Control-Allow-Origin": "*",
+                    "Access-Control-Allow-Headers":
+                        "POST, GET, PUT, DELETE, OPTIONS, HEAD, Authorization, Origin, Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers, Access-Control-Allow-Origin",
+                    "Content-Type": "application/json",
+                },
+            };
+            await axios(config).then((response) => {
                 this.setState({ triggerEditModal: !this.state.triggerEditModal, formEdit: response.data });
             }).catch((error) => {
                 return error
