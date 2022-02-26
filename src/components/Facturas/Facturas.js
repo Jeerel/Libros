@@ -3,8 +3,6 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faDownload } from "@fortawesome/free-solid-svg-icons";
 import { Table } from "react-bootstrap";
 import { CSVLink } from 'react-csv';
-import axios from "axios";
-import swal from "sweetalert";
 
 
 class ClientsContent extends React.Component {
@@ -83,81 +81,94 @@ class FacturaTable extends React.Component {
             { label: "*Text", key: "text" }
         ];
 
-        /*var data = [
-            {
-                code: "257",
-                text: "## $a Mexico"
-            },
-            {
-                code: "257",
-                text: "## $a Mexico"
-            }
-        ]*/
-
         const downloadMARC21 = async (response) => {
 
             data = [];
 
             for (let i = 0; i < response.libros.length; i++) {
                 let libro = response.libros[i]
+                data.push({
+                    code: "01",
+                    text: "$a MJS" 
+                })
                 if (libro.isbn) {
                     data.push({
                         code: "020",
-                        text: "## $a " + libro.isbn
+                        text: "$a " + libro.isbn
                     })
                 }
                 if (libro.issn) {
                     data.push({
                         code: "022",
-                        text: "## $a " + libro.issn
+                        text: "$a " + libro.issn
                     })
                 }
+
+                data.push({
+                    code: "35",
+                    text: "$a MJS" 
+                })
+
                 data.push({
                     code: "041",
-                    text: "## $a spa"
+                    text: "$a spa"
                 })
                 data.push({
                     code: "044",
-                    text: "## $a mx"
+                    text: "$a mx"
                 })
                 if (libro.autor) {
                     data.push({
                         code: "100",
-                        text: "0# $a " + libro.autor
+                        text: "$a " + libro.autor
                     })
                 }
                 if (libro.titulo) {
                     data.push({
-                        code: "130",
-                        text: "0# $a " + libro.titulo + " $f " + libro.anio
+                        code: "245",
+                        text: "$a " + libro.titulo 
                     })
+                }
+                var text=""
+                if (libro.placePub) {            
+                    text +=" $a " + libro.placePub                    
                 }
 
-                if (libro.placePub) {
-                    data.push({
-                        code: "260",
-                        text: "## $a " + libro.placePub
-                    })
+                if (libro.editorial) {
+                    text +=" $b " + libro.editorial
                 }
+
+                if (libro.anio) {
+                    text +=" $c " + libro.anio
+                }
+
+                data.push({
+                    code: "260",
+                    text: text
+                })
+
                 if (libro.descripcion) {
                     data.push({
                         code: "300",
-                        text: "## $a " + libro.descripcion
+                        text: "$a " + libro.descripcion
                     })
                 }
                 if (libro.anio) {
                     data.push({
                         code: "362",
-                        text: "0#$a " + libro.anio
+                        text: "$a " + libro.anio
                     })
                 }
                 if (libro.nota) {
                     data.push({
                         code: "500",
-                        text: "0#$a " + libro.nota
+                        text: "$a " + libro.nota
                     })
                 }
-                break;
+                    data.push({
+                        code: "980",
+                        text: "$a " + libro.fecha_facturada +" $b "+libro.precio +" $e "+libro.precio +" $f"+libro.idFactura
+                    })
             }
 
             console.log(data);
@@ -316,7 +327,6 @@ class FacturaTable extends React.Component {
             });*/
         }
 
-        const functionFetchData = this.props.functionFetchData;
         return (
             <Fragment>
                 <Table responsive>

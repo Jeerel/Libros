@@ -25,23 +25,38 @@ class BooksContent extends React.Component {
             },
         });
     }
-
-    peticionAvanced = () => {
-
+    peticionAvanced = async (event) => {
+        const url = "https://appi-books.herokuapp.com/api/filters/libros";
         let obj = {}
         for (let i in this.state.formFilter) {
             if (this.state.formFilter[i]) {
                 obj[i] = this.state.formFilter[i];
             }
         }
-        let url = "https://appi-books.herokuapp.com/api/filters/libros";
-        axios.post(url, obj).then((response) => {
+        console.log(obj)
+        var data = obj;
+          
+          var config = {
+            method: 'POST',
+            url: 'https://appi-books.herokuapp.com/api/filters/libros',
+            headers: { 
+              'Authorization': 'Bearer '+sessionStorage.is_security, 
+              'Content-Type': 'application/json'
+            },
+            data : data
+          };
+          
+          axios(config)
+          .then(function (response) {
+            console.log(response)
             this.setState({ data: response.data });
-        }).catch((error) => {
-            return error;
-        });
+          })
+          .catch(function (error) {
+            console.log(error);
+          });
+          
     }
-
+   
     render() {
 
         const formFilter = this.state.formFilter;
@@ -132,7 +147,7 @@ class BooksContent extends React.Component {
                         <label>Estado</label>
                         <select className="form-control mt-2" name="placePub"
                             value={formFilter ? formFilter.placePub : ""} onChange={this.handleChangeFilter}>
-                            <option selected disabled>Seleccione una opción</option>
+                            <option selected>Seleccione una opción</option>
                             <option value="Aguascalientes">Aguascalientes</option>
                             <option value="Baja California">Baja California</option>
                             <option value="Baja California Sur">Baja California Sur</option>
@@ -254,12 +269,9 @@ class BookTable extends React.Component {
                         method: "DELETE",
                         url: "https://appi-books.herokuapp.com/api/libros/" + libro.idLibro,
                         headers: {
-                            'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNjQ1Mjc5MTcwLCJleHAiOjE2NDUzMDc5NzB9.HWcMBHnPQpWH7O7vsvNuXnWQJob8Q4LLz6_grOnSFRU',
-                            "Access-Control-Allow-Origin": "*",
-                            "Access-Control-Allow-Headers":
-                                "POST, GET, PUT, DELETE, OPTIONS, HEAD, Authorization, Origin, Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers, Access-Control-Allow-Origin",
+                            'Authorization': 'Bearer '+sessionStorage.is_security,
                             "Content-Type": "application/json",
-                        },
+                        }
                     };
 
                     axios(config)
@@ -286,12 +298,9 @@ class BookTable extends React.Component {
                 method: "GET",
                 url: url,
                 headers: {
-                    'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNjQ1Mjc5MTcwLCJleHAiOjE2NDUzMDc5NzB9.HWcMBHnPQpWH7O7vsvNuXnWQJob8Q4LLz6_grOnSFRU',
-                    "Access-Control-Allow-Origin": "*",
-                    "Access-Control-Allow-Headers":
-                        "POST, GET, PUT, DELETE, OPTIONS, HEAD, Authorization, Origin, Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers, Access-Control-Allow-Origin",
+                    'Authorization': 'Bearer '+sessionStorage.is_security,
                     "Content-Type": "application/json",
-                },
+                }
             };
             await axios(config).then((response) => {
                 this.setState({ triggerEditModal: !this.state.triggerEditModal, formEdit: response.data });

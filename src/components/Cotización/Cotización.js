@@ -2,7 +2,6 @@ import React, { Fragment } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faMoneyBill } from "@fortawesome/free-solid-svg-icons";
 import { Table } from "react-bootstrap";
-import { CSVLink } from 'react-csv';
 import axios from "axios";
 import swal from "sweetalert";
 
@@ -78,12 +77,9 @@ class FacturaTable extends React.Component {
             method: "PUT",
             url: url,
             headers: {
-                'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNjQ1Mjc5MTcwLCJleHAiOjE2NDUzMDc5NzB9.HWcMBHnPQpWH7O7vsvNuXnWQJob8Q4LLz6_grOnSFRU',
-                "Access-Control-Allow-Origin": "*",
-                "Access-Control-Allow-Headers":
-                    "POST, GET, PUT, DELETE, OPTIONS, HEAD, Authorization, Origin, Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers, Access-Control-Allow-Origin",
+                'Authorization': 'Bearer '+sessionStorage.is_security,
                 "Content-Type": "application/json",
-            },
+            }
         };
 
         this.setState({ loading: true, error: null });

@@ -111,10 +111,7 @@ class PerfilesTable extends React.Component {
                         method: "DELETE",
                         url: "https://appi-books.herokuapp.com/api/empleoyes/" + perfil.id,
                         headers: {
-                            'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNjQ1Mjc5MTcwLCJleHAiOjE2NDUzMDc5NzB9.HWcMBHnPQpWH7O7vsvNuXnWQJob8Q4LLz6_grOnSFRU',
-                            "Access-Control-Allow-Origin": "*",
-                            "Access-Control-Allow-Headers":
-                                "POST, GET, PUT, DELETE, OPTIONS, HEAD, Authorization, Origin, Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers, Access-Control-Allow-Origin",
+                            'Authorization': 'Bearer '+sessionStorage.is_security,
                             "Content-Type": "application/json",
                         },
                     }
@@ -142,10 +139,7 @@ class PerfilesTable extends React.Component {
                 method: "GET",
                 url: url,
                 headers: {
-                    'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNjQ1Mjc5MTcwLCJleHAiOjE2NDUzMDc5NzB9.HWcMBHnPQpWH7O7vsvNuXnWQJob8Q4LLz6_grOnSFRU',
-                    "Access-Control-Allow-Origin": "*",
-                    "Access-Control-Allow-Headers":
-                        "POST, GET, PUT, DELETE, OPTIONS, HEAD, Authorization, Origin, Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers, Access-Control-Allow-Origin",
+                    'Authorization': 'Bearer '+sessionStorage.is_security,
                     "Content-Type": "application/json",
                 },
             };

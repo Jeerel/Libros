@@ -29,7 +29,17 @@ class ModalEditarPerfil extends React.Component {
         }
         event.preventDefault();
         let url = "https://appi-books.herokuapp.com/api/empleoyes/" + obj.id;
-        axios.put(url, obj).then((response) => {
+        let config = {
+            method: "PUT",
+            url: url,
+            headers: {
+                'Authorization': 'Bearer '+sessionStorage.is_security,
+                "Content-Type": "application/json",
+            },
+            data: obj
+        };
+
+        axios(config).then((response) => {
             swal("Perfil Editado", { icon: "success", });
             this.props.onCloseModal();
             this.props.fetchDataPerfiles();

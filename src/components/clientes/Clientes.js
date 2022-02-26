@@ -1,6 +1,6 @@
 import React, { Fragment } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faEdit, faTrashAlt } from "@fortawesome/free-solid-svg-icons";
+import { faEdit, faTrashAlt,faSearch } from "@fortawesome/free-solid-svg-icons";
 import { Table } from "react-bootstrap";
 import axios from "axios";
 import swal from "sweetalert";
@@ -71,7 +71,7 @@ class ClientsContent extends React.Component {
                         />
                     </div>
                 </div>
-                <div className="col-xs-12 col-md-3 mt-2">
+                <div className="col-xs-12 col-md-2 mt-2">
                     <div className="form-group">
                         <label>E-mail</label>
                         <input
@@ -83,6 +83,11 @@ class ClientsContent extends React.Component {
                             onChange={this.handleChangeFilter}
                         />
                     </div>
+                </div>
+                <div className="col-xs-12 col-md-1 mt-3">
+                    <button className="btn btn-primary btnTop" onClick={() => this.peticionAvanced()}>
+                        <FontAwesomeIcon icon={faSearch} />
+                    </button>
                 </div>
                 <div className="col-xs-12 col-md-12 mt-2">
                     <ClientsTable clientes={clientes} functionFetchData={functionFetchData} />
@@ -127,12 +132,9 @@ class ClientsTable extends React.Component {
                         method: "DELETE",
                         url: "https://appi-books.herokuapp.com/api/cliente/" + cliente.idcliente,
                         headers: {
-                            'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNjQ1Mjc5MTcwLCJleHAiOjE2NDUzMDc5NzB9.HWcMBHnPQpWH7O7vsvNuXnWQJob8Q4LLz6_grOnSFRU',
-                            "Access-Control-Allow-Origin": "*",
-                            "Access-Control-Allow-Headers":
-                                "POST, GET, PUT, DELETE, OPTIONS, HEAD, Authorization, Origin, Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers, Access-Control-Allow-Origin",
+                            'Authorization': 'Bearer '+sessionStorage.is_security,
                             "Content-Type": "application/json",
-                        },
+                        }
                     }
 
                     axios(config)
@@ -159,12 +161,9 @@ class ClientsTable extends React.Component {
                 method: "GET",
                 url: url,
                 headers: {
-                    'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNjQ1Mjc5MTcwLCJleHAiOjE2NDUzMDc5NzB9.HWcMBHnPQpWH7O7vsvNuXnWQJob8Q4LLz6_grOnSFRU',
-                    "Access-Control-Allow-Origin": "*",
-                    "Access-Control-Allow-Headers":
-                        "POST, GET, PUT, DELETE, OPTIONS, HEAD, Authorization, Origin, Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers, Access-Control-Allow-Origin",
+                    'Authorization': 'Bearer '+sessionStorage.is_security,
                     "Content-Type": "application/json",
-                },
+                }
             };
             await axios(config).then((response) => {
                 this.setState({ triggerEditModal: !this.state.triggerEditModal, formEdit: response.data });
