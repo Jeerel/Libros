@@ -1,8 +1,8 @@
-import React, { useState } from "react";
-import { Col, Container, Modal, Row, Form, Table, Button, Badge } from "react-bootstrap";
+import React from "react";
+import { Col, Container, Modal, Row, Form, Table, Button, Badge, Alert } from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPlus } from "@fortawesome/free-solid-svg-icons";
-import axios from "axios";
+import { faPlus, faTrash, faHashtag } from "@fortawesome/free-solid-svg-icons";
+//import axios from "axios";
 
 class ModalAddCotizacion extends React.Component {
 
@@ -62,23 +62,67 @@ class ModalAddCotizacion extends React.Component {
 
         //const [arrayCotizacionLibros, setArrayCotizacionLibros] = useState([]);
 
+        const popLibro = async (index) => {
+            let auxArray = this.state.arrayCotizacionLibros; //declaramos un arreglo auxiliar
+            auxArray.splice(index, 1); //eliminamos el elemento del index que estamos pasando
+            //vaciamos la info nueva en el estado
+
+            /*
+            TODO:
+            - Hacer validacion de cuando no hay mas datos en aux array borrar this.state.arrayCotizacionLibros para
+              mostrar de nuevo el alert de insertar libros
+            FIXME:
+            */
+            await this.setState({
+                ...this.state,
+                arrayCotizacionLibros: auxArray
+            });
+
+            console.log(typeof this.state.arrayCotizacionLibros, this.state.arrayCotizacionLibros)
+        }
+
         const pushLibro = async (libro) => {
 
-            await this.state.arrayCotizacionLibros ? //preguntamos si hay datos en array
-                this.setState({ //si hay datos entonces ejecutamos este set state
-                    ...this.state,
-                    arrayCotizacionLibros: [
-                        ...this.state.arrayCotizacionLibros,
-                        libro
-                    ]
-                }) :
-                this.setState({ //si no hay datos entonces usaremos este set state
+            if (this.state.arrayCotizacionLibros) { //preguntamos si esta vacio el arreglo de libros - cotizacion
+
+                let noExiste = true;
+                //for para iterar sobre el array que tenemos y comprobar que no tenemos mas de un libro repetido en el array
+                for (let i = 0; i < this.state.arrayCotizacionLibros.length; i++) {
+                    //validamos que si existe el mismo libro aumente 1 en su contador 
+                    if (this.state.arrayCotizacionLibros[i].idLibro === libro.idLibro) {
+
+                        noExiste = false;
+                        let auxArray = this.state.arrayCotizacionLibros;
+                        auxArray[i].count = auxArray[i].count + 1;
+
+                        await this.setState({
+                            ...this.state,
+                            arrayCotizacionLibros: auxArray
+                        });
+                        break;
+                    }
+                }
+                if (noExiste) {
+                    libro.count = 1;
+                    //y lo guardamos en el array del state de coti libros
+                    await this.setState({
+                        ...this.state,
+                        arrayCotizacionLibros: [
+                            ...this.state.arrayCotizacionLibros,
+                            libro
+                        ]
+                    });
+                }
+
+            } else {
+                libro.count = 1;
+                await this.setState({ //si no hay datos entonces usaremos este set state
                     ...this.state,
                     arrayCotizacionLibros: [
                         libro
                     ]
                 });
-            console.log(this.state.arrayCotizacionLibros);
+            }
         }
 
         const form = this.state.form
@@ -114,18 +158,36 @@ class ModalAddCotizacion extends React.Component {
                                     <label>
                                         Libros seleccionados
                                     </label>
-                                    <Col md={6} className="mt-3">
-                                        {
-                                            this.state.arrayCotizacionLibros ?
-                                                this.state.arrayCotizacionLibros.map((libro, i) => {
-                                                    return (
-                                                        <Button variant="info" className="mt-2">
-                                                            {libro.titulo} <Badge bg="dark">1</Badge>
-                                                        </Button>
-                                                    )
-                                                }) :
-                                                <p>Agregue los libros que desea agregar a la cotizacion en la tabla siguiente</p>
-                                        }
+                                    <Col md={12} className="mt-3">
+                                        <div className="d-grid gap-2">
+                                            {
+                                                this.state.arrayCotizacionLibros ?
+                                                    this.state.arrayCotizacionLibros.map((libro, index) => {
+                                                        return (
+
+                                                            <Alert variant="info">
+                                                                <div className="d-flex">
+                                                                    <div className="pl-2">
+                                                                        <p>
+                                                                            {libro.titulo}
+                                                                        </p>
+                                                                    </div>
+                                                                    <div className="ml-auto mt-auto p-2">
+                                                                        <Button className="justify-content-end" size="sm" onClick={() => popLibro(index)} variant="outline-danger">
+                                                                            <FontAwesomeIcon icon={faTrash} />
+                                                                        </Button>
+                                                                    </div>
+                                                                </div>
+                                                                <hr />
+                                                                <div className="d-flex justify-content-start">
+                                                                    <p><FontAwesomeIcon icon={faHashtag} /> Libros <Badge bg="dark">{libro.count}</Badge></p>
+                                                                </div>
+                                                            </Alert>
+                                                        )
+                                                    }) :
+                                                    <Alert variant="warning"><p>No hay libros en esta cotización, seleccione los libros que desea agregar a la cotización de la tabla siguiente.</p></Alert>
+                                            }
+                                        </div>
                                     </Col>
                                 </Col>
                                 <Col xs={12} md={6}>

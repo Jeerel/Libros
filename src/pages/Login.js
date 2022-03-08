@@ -1,15 +1,17 @@
 import React, { Fragment } from "react";
 import swal from "sweetalert";
 import axios from "axios";
+import "./styles/loginStyle.css"
+import "../App.css"
 
 class Login extends React.Component {
     state = {
         form: {},
         loading: false
     }
-    handleChange= async (e) => {
+    handleChange = async (e) => {
         e.persist();
-       await this.setState({
+        await this.setState({
             form: {
                 ...this.state.form,
                 [e.target.name]: e.target.value,
@@ -20,41 +22,41 @@ class Login extends React.Component {
     login = async (event) => {
         event.preventDefault();
         var data = JSON.stringify(this.state.form);
-          
-          var config = {
+
+        var config = {
             method: 'post',
             url: 'https://appi-books.herokuapp.com/api/login',
-            headers: { 
-              'Content-Type': 'application/json'
+            headers: {
+                'Content-Type': 'application/json'
             },
-            data : data
-          };
-          
-          axios(config)
-          .then(function (response) {
-              console.log(response)
-              var responseData=response.data;
-              console.log(responseData)
-              if(responseData.error){
-                swal( responseData.mess, {
-                    icon: "error",
-                });
-              }else{
-                sessionStorage.is_Emial = responseData.is_Emial;
-                sessionStorage.is_Name= responseData.is_Name;
-                sessionStorage.is_Profile= responseData.is_Profile;
-                sessionStorage.is_security= responseData.is_security;
-                swal(responseData.mess, {
-                    icon: "success",
-                });
-                setTimeout(function(){
-                    window.location="/libros"
-                },2000)
-              }
-          })
-          .catch(function (error) {
-            console.log(error);
-          });
+            data: data
+        };
+
+        axios(config)
+            .then(function (response) {
+                console.log(response)
+                var responseData = response.data;
+                console.log(responseData)
+                if (responseData.error) {
+                    swal(responseData.mess, {
+                        icon: "error",
+                    });
+                } else {
+                    sessionStorage.is_Emial = responseData.is_Emial;
+                    sessionStorage.is_Name = responseData.is_Name;
+                    sessionStorage.is_Profile = responseData.is_Profile;
+                    sessionStorage.is_security = responseData.is_security;
+                    swal(responseData.mess, {
+                        icon: "success",
+                    });
+                    setTimeout(function () {
+                        window.location = "/libros"
+                    }, 2000)
+                }
+            })
+            .catch(function (error) {
+                console.log(error);
+            });
     }
 
     render() {
