@@ -33,30 +33,28 @@ class BooksContent extends React.Component {
                 obj[i] = this.state.formFilter[i];
             }
         }
-        console.log(obj)
         var data = obj;
-          
-          var config = {
+        console.log(data)
+        var config = {
             method: 'POST',
             url: 'https://appi-books.herokuapp.com/api/filters/libros',
-            headers: { 
-              'Authorization': 'Bearer '+sessionStorage.is_security, 
-              'Content-Type': 'application/json'
+            headers: {
+                'Authorization': 'Bearer ' + sessionStorage.is_security,
+                'Content-Type': 'application/json'
             },
-            data : data
-          };
-          
-          axios(config)
-          .then(function (response) {
-            console.log(response)
-            this.setState({ data: response.data });
-          })
-          .catch(function (error) {
-            console.log(error);
-          });
-          
+            data: data
+        };
+
+        axios(config)
+            .then(function (response) {
+                console.log(response.data.body)
+                this.setState({ data: response.data.body });
+            })
+            .catch(function (error) {
+            });
+
     }
-   
+
     render() {
 
         const formFilter = this.state.formFilter;
@@ -147,7 +145,7 @@ class BooksContent extends React.Component {
                         <label>Estado</label>
                         <select className="form-control mt-2" name="placePub"
                             value={formFilter ? formFilter.placePub : ""} onChange={this.handleChangeFilter}>
-                            <option selected>Seleccione una opción</option>
+                            <option value="" selected>Seleccione una opción</option>
                             <option value="Aguascalientes">Aguascalientes</option>
                             <option value="Baja California">Baja California</option>
                             <option value="Baja California Sur">Baja California Sur</option>
@@ -269,7 +267,7 @@ class BookTable extends React.Component {
                         method: "DELETE",
                         url: "https://appi-books.herokuapp.com/api/libros/" + libro.idLibro,
                         headers: {
-                            'Authorization': 'Bearer '+sessionStorage.is_security,
+                            'Authorization': 'Bearer ' + sessionStorage.is_security,
                             "Content-Type": "application/json",
                         }
                     };
@@ -298,12 +296,12 @@ class BookTable extends React.Component {
                 method: "GET",
                 url: url,
                 headers: {
-                    'Authorization': 'Bearer '+sessionStorage.is_security,
+                    'Authorization': 'Bearer ' + sessionStorage.is_security,
                     "Content-Type": "application/json",
                 }
             };
             await axios(config).then((response) => {
-                this.setState({ triggerEditModal: !this.state.triggerEditModal, formEdit: response.data });
+                this.setState({ triggerEditModal: !this.state.triggerEditModal, formEdit: response.data.body });
             }).catch((error) => {
                 return error
             });
@@ -393,7 +391,7 @@ class BookTable extends React.Component {
                 <Table responsive>
                     <thead>
                         <tr>
-                            <th>Autors</th>
+                            <th>Autor</th>
                             <th>Título</th>
                             <th>Editorial(s)</th>
                             <th>ISBN/ISSN</th>

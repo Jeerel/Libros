@@ -37,7 +37,8 @@ class AltaLibros extends React.Component {
         };
         this.setState({ loading: true, error: null });
         await axios(config).then((response) => {
-            this.setState({ loading: false, data: response.data })
+            let data=response.data.body || []
+            this.setState({ loading: false, data: data })
         }).catch((error) => {
             this.setState({ loading: false, error: error });
         })
@@ -91,7 +92,7 @@ class AltaLibros extends React.Component {
                     <div className="container mt-3">
                         <div className="row">
                             <div className="col-xs-12 col-md-12">
-                                <h1>Alta de Libros</h1>
+                                <h1>Libros</h1>
                             </div>
                             <Libros libros={this.state.data} fetchDataLibros={this.fetchDataLibros} />
                             {/* editoriales={this.state.dataEditorial} */}

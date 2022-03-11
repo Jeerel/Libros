@@ -39,7 +39,8 @@ class Perfiles extends React.Component {
         this.setState({ loading: true, error: null });
 
         await axios(config).then((response) => {
-            this.setState({ loading: false, data: response.data })
+            let data= response.data.body || []
+            this.setState({ loading: false, data: data })
         }).catch((error) => {
             this.setState({ loading: false, error: error });
         });

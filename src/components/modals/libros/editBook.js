@@ -175,13 +175,6 @@ class ModalEditLibro extends React.Component {
                                 </Col>
                                 <Col xs={12} md={3} className="mt-3">
                                     <label>
-                                        Fecha
-                                    </label>
-                                    <input className="form-control" type="date" name="fecha" onChange={this.handleChange}
-                                        id="fechaEdit" value={form ? form.fecha : ""} />
-                                </Col>
-                                <Col xs={12} md={3} className="mt-3">
-                                    <label>
                                         Precio
                                     </label>
                                     <input className="form-control" type="number" name="precio" onChange={this.handleChange}

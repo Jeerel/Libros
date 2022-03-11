@@ -24,6 +24,35 @@ class ClientsContent extends React.Component {
         });
     }
 
+    peticionAvanced = async (event) => {
+        let obj = {}
+        for (let i in this.state.formFilter) {
+            if (this.state.formFilter[i]) {
+                obj[i] = this.state.formFilter[i];
+            }
+        }
+        var data = obj;
+        console.log(data)
+        var config = {
+            method: 'POST',
+            url: 'https://appi-books.herokuapp.com/api/filters/clientes',
+            headers: {
+                'Authorization': 'Bearer ' + sessionStorage.is_security,
+                'Content-Type': 'application/json'
+            },
+            data: data
+        };
+
+        axios(config)
+            .then(function (response) {
+                console.log(response.data.body)
+                this.setState({ data: response.data.body });
+            })
+            .catch(function (error) {
+            });
+
+    }
+
     render() {
 
         const formFilter = this.state.formFilter;
@@ -166,7 +195,7 @@ class ClientsTable extends React.Component {
                 }
             };
             await axios(config).then((response) => {
-                this.setState({ triggerEditModal: !this.state.triggerEditModal, formEdit: response.data });
+                this.setState({ triggerEditModal: !this.state.triggerEditModal, formEdit: response.data.body });
             }).catch((error) => {
                 return error
             });

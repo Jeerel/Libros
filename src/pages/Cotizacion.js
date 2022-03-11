@@ -41,14 +41,15 @@ class Cotizacion extends React.Component {
         this.setState({ loading: true, error: null });
 
         await axios(config).then((response) => {
-            this.setState({ loading: false, data: response.data })
+            console.log(response)
+            this.setState({ loading: false, data: response.data.body })
         }).catch((error) => {
             this.setState({ loading: false, error: error });
         });
     }
 
     fetchDataClientes = async () => {
-        const url = "https://appi-books.herokuapp.com/api/cliente";
+        const url = "https://appi-books.herokuapp.com/api/clientes";
         let config = {
             method: "GET",
             url: url,
@@ -61,7 +62,8 @@ class Cotizacion extends React.Component {
         this.setState({ loading: true, error: null });
 
         await axios(config).then((response) => {
-            this.setState({ loading: false, dataCliente: response.data })
+            let data=response.data.body
+            this.setState({ loading: false, dataCliente: data })
         }).catch((error) => {
             this.setState({ loading: false, error: error });
         });
@@ -79,7 +81,7 @@ class Cotizacion extends React.Component {
         };
         this.setState({ loading: true, error: null });
         await axios(config).then((response) => {
-            this.setState({ loading: false, dataLibros: response.data })
+            this.setState({ loading: false, dataLibros: response.data.body })
         }).catch((error) => {
             this.setState({ loading: false, error: error });
         })

@@ -26,7 +26,7 @@ class Clientes extends React.Component {
     }
 
     fetchDataClientes = async () => {
-        const url = "https://appi-books.herokuapp.com/api/cliente";
+        const url = "https://appi-books.herokuapp.com/api/clientes";
         let config = {
             method: "GET",
             url: url,
@@ -39,7 +39,8 @@ class Clientes extends React.Component {
         this.setState({ loading: true, error: null });
 
         await axios(config).then((response) => {
-            this.setState({ loading: false, data: response.data })
+            let data =response.data.body ||[]
+            this.setState({ loading: false, data: data })
         }).catch((error) => {
             this.setState({ loading: false, error: error });
         });

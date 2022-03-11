@@ -1,6 +1,6 @@
 import React, { Fragment } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faEdit, faTrashAlt } from "@fortawesome/free-solid-svg-icons";
+import { faEdit, faTrashAlt,faSearch } from "@fortawesome/free-solid-svg-icons";
 import { Table } from "react-bootstrap";
 import axios from "axios";
 import swal from "sweetalert";
@@ -22,6 +22,35 @@ class PerfilesContent extends React.Component {
                 [e.target.name]: e.target.value,
             },
         });
+    }
+
+    peticionAvanced = async (event) => {
+        let obj = {}
+        for (let i in this.state.formFilter) {
+            if (this.state.formFilter[i]) {
+                obj[i] = this.state.formFilter[i];
+            }
+        }
+        var data = obj;
+        console.log(data)
+        var config = {
+            method: 'POST',
+            url: 'https://appi-books.herokuapp.com/api/filters/users',
+            headers: {
+                'Authorization': 'Bearer ' + sessionStorage.is_security,
+                'Content-Type': 'application/json'
+            },
+            data: data
+        };
+
+        axios(config)
+            .then(function (response) {
+                console.log(response.data.body)
+                this.setState({ data: response.data.body });
+            })
+            .catch(function (error) {
+            });
+
     }
 
     render() {
@@ -68,6 +97,11 @@ class PerfilesContent extends React.Component {
                             <option value="Invitado">Invitado</option>
                         </select>
                     </div>
+                </div>
+                <div className="col-xs-12 col-md-1 mt-3">
+                    <button className="btn btn-primary btnTop" onClick={() => this.peticionAvanced()}>
+                        <FontAwesomeIcon icon={faSearch} />
+                    </button>
                 </div>
                 <div className="col-xs-12 col-md-12 mt-2">
                     <PerfilesTable perfiles={perfiles} functionFetchData={functionFetchData} />
@@ -144,7 +178,7 @@ class PerfilesTable extends React.Component {
                 },
             };
             await axios(config).then((response) => {
-                this.setState({ triggerEditModal: !this.state.triggerEditModal, formEdit: response.data });
+                this.setState({ triggerEditModal: !this.state.triggerEditModal, formEdit: response.data.body });
             }).catch((error) => {
                 return error
             });

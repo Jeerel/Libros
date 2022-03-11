@@ -1,8 +1,9 @@
 import React, { Fragment } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faDownload } from "@fortawesome/free-solid-svg-icons";
+import { faDownload,faSearch } from "@fortawesome/free-solid-svg-icons";
 import { Table } from "react-bootstrap";
 import { CSVLink } from 'react-csv';
+import axios from "axios";
 
 
 class ClientsContent extends React.Component {
@@ -21,6 +22,34 @@ class ClientsContent extends React.Component {
             },
         });
     }
+    peticionAvanced = async (event) => {
+        let obj = {}
+        for (let i in this.state.formFilter) {
+            if (this.state.formFilter[i]) {
+                obj[i] = this.state.formFilter[i];
+            }
+        }
+        var data = obj;
+        console.log(data)
+        var config = {
+            method: 'POST',
+            url: 'https://appi-books.herokuapp.com/api/filters/facturacion',
+            headers: {
+                'Authorization': 'Bearer ' + sessionStorage.is_security,
+                'Content-Type': 'application/json'
+            },
+            data: data
+        };
+
+        axios(config)
+            .then(function (response) {
+                console.log(response.data.body)
+                this.setState({ data: response.data.body });
+            })
+            .catch(function (error) {
+            });
+
+    }
 
     render() {
 
@@ -36,14 +65,17 @@ class ClientsContent extends React.Component {
                         <input
                             className="form-control mt-2"
                             type="text"
-                            value={formFilter ? formFilter.nombre : ""}
-                            name="nombre"
-                            id="nombreFilter"
+                            value={formFilter ? formFilter.idFactura : ""}
+                            name="idFactura"
+                            id="idFactura"
                             onChange={this.handleChangeFilter}
                         />
                     </div>
                 </div>
-                <div className="col-xs-12 col-md-3 mt-2">
+                <div className="col-xs-12 col-md-3 mt-3">
+                    <button className="btn btn-primary btnTop" onClick={() => this.peticionAvanced()}>
+                        <FontAwesomeIcon icon={faSearch} />
+                    </button>
                 </div>
                 <div className="col-xs-12 col-md-12 mt-2">
                     <FacturaTable facturas={facturas} functionFetchData={functionFetchData} />
