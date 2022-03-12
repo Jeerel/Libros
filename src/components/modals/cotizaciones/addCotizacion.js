@@ -1,8 +1,8 @@
 import React from "react";
 import { Col, Container, Modal, Row, Form, Table, Button, Badge, Alert } from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPlus, faTrash, faHashtag } from "@fortawesome/free-solid-svg-icons";
-//import axios from "axios";
+import { faPlus, faTrash, faHashtag, faMinus } from "@fortawesome/free-solid-svg-icons";
+import axios from "axios";
 
 class ModalAddCotizacion extends React.Component {
 
@@ -24,26 +24,48 @@ class ModalAddCotizacion extends React.Component {
         });
     };*/
 
-    /*peticionPost = async (event) => {
+    peticionPost = async (event) => {
         event.preventDefault();
-        const url = "https://appi-books.herokuapp.com/api/libros";
+        //preparamos la informacion que deseamos enviar
+        let auxArray = this.state.form.dataLibros;
+        //iteramos el auxiliar del array de libros de la cotizacion
+        for (let i = 0; i < auxArray.length; i++) {
+            //asignamos a variables temporales para reasginar valores
+            const idLibro = auxArray[i].idLibro;
+            const cantidad = auxArray[i].count;
+            const precio = auxArray[i].precio;
+            //creamos la nueva estructura del objeto del array
+            auxArray[i] = {
+                "idLibro": idLibro,
+                "cantidad": cantidad,
+                "precio": precio
+            };
+        }
+        //fin del for
+
+        //creamos la estructura a enviar
+        let data = {
+            "idCliente": this.state.form.dataClientes[0].idcliente, //obtenemos el cliente del state 
+            "datos": auxArray //le pasamos el nuevo array
+        }
+
+        const url = "https://appi-books.herokuapp.com/api/cotizaciones/";
         let config = {
             method: "POST",
             url: url,
             headers: {
-                'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNjQ1Mjc5MTcwLCJleHAiOjE2NDUzMDc5NzB9.HWcMBHnPQpWH7O7vsvNuXnWQJob8Q4LLz6_grOnSFRU',
-                "Access-Control-Allow-Origin": "*",
-                "Access-Control-Allow-Headers":
-                    "POST, GET, PUT, DELETE, OPTIONS, HEAD, Authorization, Origin, Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers, Access-Control-Allow-Origin",
+                'Authorization': 'Bearer ' + sessionStorage.is_security,
                 "Content-Type": "application/json",
             },
-            data: this.state.form
+            data: data
         };
+
         axios(config)
             .then((response) => {
-
-                if (response.data === 'Enviado') {
+                if (response.data.succes === true) {
                     this.props.onCloseModal();
+                    this.props.fetchDataCotizaciones();
+                    this.props.fetchDataClientes();
                     this.props.fetchDataLibros();
                 }
 
@@ -51,10 +73,10 @@ class ModalAddCotizacion extends React.Component {
             .catch((error) => {
                 return error;
             });
-    }*/
+    }
 
     cleanModal = async () => {
-        await this.setState({ form: {} });
+        await this.setState({ form: {}, arrayCotizacionLibros: null });
         this.props.onCloseModal();
     }
 
@@ -62,24 +84,38 @@ class ModalAddCotizacion extends React.Component {
 
         //const [arrayCotizacionLibros, setArrayCotizacionLibros] = useState([]);
 
+        //funcion para eliminar del array el libro seleccionado
         const popLibro = async (index) => {
             let auxArray = this.state.arrayCotizacionLibros; //declaramos un arreglo auxiliar
             auxArray.splice(index, 1); //eliminamos el elemento del index que estamos pasando
             //vaciamos la info nueva en el estado
 
-            /*
-            TODO:
-            - Hacer validacion de cuando no hay mas datos en aux array borrar this.state.arrayCotizacionLibros para
-              mostrar de nuevo el alert de insertar libros
-            FIXME:
-            */
+            //preguntamos por el tamaño del arreglo para hacer que presente de nuevo el mensaje del alert
+            auxArray.length === 0 ?
+                await this.setState({
+                    ...this.state,
+                    arrayCotizacionLibros: null
+                }) :
+                await this.setState({
+                    ...this.state,
+                    arrayCotizacionLibros: auxArray
+                });
+
+        }
+        //fin de la funcion de eliminar del arreglo el libro
+
+        //funcion para restar libros, al libro seleccionado del array 
+        const substractCount = async (index) => {
+            let auxArray = this.state.arrayCotizacionLibros; //declaramos un arreglo auxiliar
+            //hacemos la operacion de restar una unidad
+            auxArray[index].count = auxArray[index].count - 1;
+            //pasamos el auxiliar al array del estado
             await this.setState({
                 ...this.state,
                 arrayCotizacionLibros: auxArray
             });
-
-            console.log(typeof this.state.arrayCotizacionLibros, this.state.arrayCotizacionLibros)
         }
+        //fin de la funcion
 
         const pushLibro = async (libro) => {
 
@@ -143,7 +179,7 @@ class ModalAddCotizacion extends React.Component {
                                     <label>
                                         Cliente
                                     </label>
-                                    <select className="form-control mt-2" name="cliente" id="cliente" value={form ? form.cliente : ""} onChange={this.handleChange}>
+                                    <select className="form-control mt-2" name="cliente" id="cliente" value={form ? form.cliente : ""} onChange={this.handleChange} required>
                                         <option value="" selected disabled>Seleccione una opción</option>
                                         {this.props.clientes.map((cliente, i) => {
                                             return (
@@ -180,7 +216,11 @@ class ModalAddCotizacion extends React.Component {
                                                                 </div>
                                                                 <hr />
                                                                 <div className="d-flex justify-content-start">
-                                                                    <p><FontAwesomeIcon icon={faHashtag} /> Libros <Badge bg="dark">{libro.count}</Badge></p>
+                                                                    <p>
+                                                                        <FontAwesomeIcon icon={faHashtag} /> Libros <Badge bg="dark">{libro.count}</Badge> {
+                                                                            libro.count > 1 ? <Button variant="outline-danger" size="sm" onClick={() => substractCount(index)}> <FontAwesomeIcon icon={faMinus} /></Button> : null
+                                                                        }
+                                                                    </p>
                                                                 </div>
                                                             </Alert>
                                                         )
@@ -229,15 +269,15 @@ class ModalAddCotizacion extends React.Component {
                         </Container>
                     </Modal.Body>
                     <Modal.Footer>
-                        <button
-                            className="btn btn-primary">
+                        <Button
+                            variant="primary"
+                            type="submit"
+                        >
                             Guardar
-                        </button>
-                        <button
-                            className="btn btn-danger"
-                            onClick={this.cleanModal}>
+                        </Button>
+                        <Button variant="danger" onClick={this.cleanModal}>
                             Cancelar
-                        </button>
+                        </Button>
                     </Modal.Footer>
                 </Form>
             </Modal>
