@@ -1,5 +1,5 @@
 import React from "react";
-import { Col, Container, Modal, Row, Form } from "react-bootstrap";
+import { Col, Container, Modal, Row, Form,Button } from "react-bootstrap";
 import swal from "sweetalert";
 import axios from "axios";
 
@@ -232,16 +232,16 @@ class ModalEditLibro extends React.Component {
                         </Container>
                     </Modal.Body>
                     <Modal.Footer>
-                        <button
+                        <Button
                             type="submit"
-                            className="btn btn-primary">
+                            variant="btn btn-primary">
                             Guardar
-                        </button>
-                        <button
-                            className="btn btn-danger"
+                        </Button>
+                        <Button
+                            variant="btn btn-danger"
                             onClick={this.cleanModal}>
                             Cancelar
-                        </button>
+                        </Button>
                     </Modal.Footer>
                 </Form>
             </Modal>

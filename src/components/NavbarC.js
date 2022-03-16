@@ -18,54 +18,58 @@ const NavbarC = (props) => {
 
     const toggle = () => setIsOpen(!isOpen);
 
-    return (
-        <div>
-            <Navbar color="light" light expand="md">
-                <img src={LibrosImg} className="logoLibros" alt="Logo de libros de todo mexico" />
-                <NavbarBrand>
-                    <Link className="nav-link black-type" to="/">
-                        Libros de Todo México
-                    </Link>
-                </NavbarBrand>
-                <NavbarToggler onClick={toggle} />
-                <Collapse isOpen={isOpen} navbar>
-                    <Nav className="mr-auto" navbar>
-                        <NavItem>
-                            <Link className="nav-link" to="/libros">
-                                Libros
-                            </Link>
-                        </NavItem>
-                        {/*<NavItem>
+    if (window.location.pathname !== "/") {
+        return (
+            <div>
+                <Navbar color="light" light expand="md">
+                    <img src={LibrosImg} className="logoLibros" alt="Logo de libros de todo mexico" />
+                    <NavbarBrand>
+                        <Link className="nav-link black-type" to="#">
+                            Libros de Todo México
+                        </Link>
+                    </NavbarBrand>
+                    <NavbarToggler onClick={toggle} />
+                    <Collapse isOpen={isOpen} navbar>
+                        <Nav className="mr-auto" navbar>
+                            <NavItem>
+                                <Link className="nav-link" to="/libros">
+                                    Libros
+                                </Link>
+                            </NavItem>
+                            {/*<NavItem>
                             <Link className="nav-link" to="/editoriales">
                                 Editoriales
                             </Link>
                         </NavItem>*/}
-                        <NavItem>
-                            <Link className="nav-link" to="/cotizacion">
-                                Cotización
-                            </Link>
-                        </NavItem>
-                        <NavItem>
-                            <Link className="nav-link" to="/facturas">
-                                Facturas
-                            </Link>
-                        </NavItem>
-                        <NavItem>
-                            <Link className="nav-link" to="/clientes">
-                                Clientes
-                            </Link>
-                        </NavItem>
-                        <NavItem>
-                            <Link className="nav-link" to="/perfiles">
-                                Perfiles
-                            </Link>
-                        </NavItem>
-                    </Nav>
-                </Collapse>
-            </Navbar>
+                            <NavItem>
+                                <Link className="nav-link" to="/cotizacion">
+                                    Cotización
+                                </Link>
+                            </NavItem>
+                            <NavItem>
+                                <Link className="nav-link" to="/facturas">
+                                    Facturas
+                                </Link>
+                            </NavItem>
+                            <NavItem>
+                                <Link className="nav-link" to="/clientes">
+                                    Clientes
+                                </Link>
+                            </NavItem>
+                            <NavItem>
+                                <Link className="nav-link" to="/perfiles">
+                                    Perfiles
+                                </Link>
+                            </NavItem>
+                        </Nav>
+                    </Collapse>
+                </Navbar>
 
-        </div>
-    );
+            </div>
+        );
+    } else {
+        return (<div></div>)
+    }
 
 
 }

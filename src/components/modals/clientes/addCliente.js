@@ -1,5 +1,5 @@
 import React from "react";
-import { Col, Container, Modal, Row, Form } from "react-bootstrap";
+import { Col, Container, Modal, Row, Form,Button } from "react-bootstrap";
 import axios from "axios";
 
 class ModalAddCliente extends React.Component {
@@ -96,15 +96,15 @@ class ModalAddCliente extends React.Component {
                         </Container>
                     </Modal.Body>
                     <Modal.Footer>
-                        <button
-                            className="btn btn-primary">
+                        <Button
+                            variant="btn btn-primary">
                             Guardar
-                        </button>
-                        <button
-                            className="btn btn-danger"
+                        </Button>
+                        <Button
+                            variant="btn btn-danger"
                             onClick={this.cleanModal}>
                             Cancelar
-                        </button>
+                        </Button>
                     </Modal.Footer>
                 </Form>
             </Modal>

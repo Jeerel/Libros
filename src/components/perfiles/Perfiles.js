@@ -1,7 +1,7 @@
 import React, { Fragment } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEdit, faTrashAlt,faSearch } from "@fortawesome/free-solid-svg-icons";
-import { Table } from "react-bootstrap";
+import { Table, Button } from "react-bootstrap";
 import axios from "axios";
 import swal from "sweetalert";
 
@@ -99,9 +99,9 @@ class PerfilesContent extends React.Component {
                     </div>
                 </div>
                 <div className="col-xs-12 col-md-1 mt-3">
-                    <button className="btn btn-primary btnTop" onClick={() => this.peticionAvanced()}>
+                    <Button variant="btn btn-primary btnTop" onClick={() => this.peticionAvanced()}>
                         <FontAwesomeIcon icon={faSearch} />
-                    </button>
+                    </Button>
                 </div>
                 <div className="col-xs-12 col-md-12 mt-2">
                     <PerfilesTable perfiles={perfiles} functionFetchData={functionFetchData} />
@@ -205,16 +205,16 @@ class PerfilesTable extends React.Component {
                                     <td>{perfil.correo}</td>
                                     <td>{perfil.tipo}</td>
                                     <td>
-                                        <button
-                                            className="btn btn-warning text-white"
+                                        <Button
+                                            variant="btn btn-warning text-white"
                                             onClick={() => { peticionEdit(perfil); }}>
                                             <FontAwesomeIcon icon={faEdit} />
-                                        </button>
-                                        <button
-                                            className="btn btn-danger btn-xs"
+                                        </Button>
+                                        <Button
+                                            variant="btn btn-danger btn-xs"
                                             onClick={() => { peticionDelete(perfil); }}>
                                             <FontAwesomeIcon icon={faTrashAlt} />
-                                        </button>
+                                        </Button>
                                     </td>
                                 </tr>
                             )

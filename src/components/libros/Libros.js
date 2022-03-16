@@ -26,7 +26,6 @@ class BooksContent extends React.Component {
         });
     }
     peticionAvanced = async (event) => {
-        const url = "https://appi-books.herokuapp.com/api/filters/libros";
         let obj = {}
         for (let i in this.state.formFilter) {
             if (this.state.formFilter[i]) {

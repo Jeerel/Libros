@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import { CSVLink } from 'react-csv'
 import ModalAddLibro from '../components/modals/libros/addBook';
 
 //MARC 001, 035	100$a	245$a	20$a	20$a	260$a	260$b	260$c	300		980$a	980$b	980$c	980$e	980$f	980$g	981$a	981$b	981$c
@@ -23,7 +22,7 @@ Vendorcode:,
 Fundcode:, 
 Location:*/
 
-const headers = [
+/* const headers = [
     { label: "*Unique vendor identifier", key: "Uniquevendoridentifier" },
     { label: "*Author", key: "Author" },
     { label: "*Title", key: "Title" },
@@ -44,9 +43,9 @@ const headers = [
     { label: "*Fund code", key: "Fundcode" },
     { label: "*Location (two letter location code from order)", key: "Location" },
 
-];
+]; */
 
-const libro = {
+/* const libro = {
     Uniquevendoridentifier: "mjse",
     Author: "Marinis, Natalia de… [et al.] ; coordinador: Yerko Castro Neira",
     Title: "Antropología de la violencia. Miradas etnográficas y posicionamientos críticos",
@@ -66,8 +65,8 @@ const libro = {
     Vendorcode: "mjse",
     Fundcode: "mexia",
     Location: "ma"
-}
-
+} */
+/* 
 const data = [
     {
         Uniquevendoridentifier: "MARC 001, 035",
@@ -114,7 +113,7 @@ const data = [
     }
 
 ];
-
+ */
 class Pruebas extends Component {
 
     state = {

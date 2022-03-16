@@ -28,12 +28,9 @@ class Facturas extends React.Component {
         this.setState({ loading: true, error: null });
 
         await axios(config).then((response) => {
-            console.log("response")
-            console.log(response.data.body)
             let data=response.data.body || []
             this.setState({ loading: false, data: data })
         }).catch((error) => {
-            console.log(error)
             this.setState({ loading: false, error: error });
         });
     }
@@ -42,7 +39,6 @@ class Facturas extends React.Component {
         if (this.state.loading === true && !this.state.data) {
             return <PageLoading />
         }
-        console.log(this.state.data)
         return (
             <Fragment>
                 <div className="container mt-3">

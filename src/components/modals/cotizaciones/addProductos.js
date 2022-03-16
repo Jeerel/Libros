@@ -1,5 +1,5 @@
 import React from "react";
-import { Col, Container, Modal, Row, Form } from "react-bootstrap";
+import { Col, Container, Modal, Row, Form,Button } from "react-bootstrap";
 import axios from "axios";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
@@ -126,10 +126,10 @@ class ModalAddCliente extends React.Component {
                                                         <td>{libro.precio}</td>
                                                         <td>{libro.precio * 2}</td>
                                                         <td>
-                                                            <button
-                                                                className="btn btn-primary btn-xs" onClick={() => { this.pushData(libro); }}>
+                                                            <Button
+                                                                variantButton="btn btn-primary btn-xs" onClick={() => { this.pushData(libro); }}>
                                                                 <FontAwesomeIcon icon={faPlus} />
-                                                            </button>
+                                                            </Button>
                                                         </td>
                                                     </tr>
                                                 )
@@ -141,15 +141,15 @@ class ModalAddCliente extends React.Component {
                         </Container>
                     </Modal.Body>
                     <Modal.Footer>
-                        <button
-                            className="btn btn-primary">
+                        <Button
+                            variant="btn btn-primary">
                             Guardar
-                        </button>
-                        <button
-                            className="btn btn-danger"
+                        </Button>
+                        <Button
+                            variant="btn btn-danger"
                             onClick={this.cleanModal}>
                             Cancelar
-                        </button>
+                        </Button>
                     </Modal.Footer>
                 </Modal>
             );
