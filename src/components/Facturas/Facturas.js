@@ -213,6 +213,58 @@ class FacturaTable extends React.Component {
             ]*/
         ];
 
+        const mostrarBoton = (libros) => {
+
+            for (let i = 0; i < libros.length; i++) {
+
+                let infoMarc = [
+                    {
+                        columns: [
+                            { title: "Code", style: { font: { sz: "18", bold: true } }, width: { wpx: 125 } },
+                            { title: "*Text", style: { font: { sz: "18", bold: true } }, width: { wpx: 125 } }
+                        ],
+                        data: [
+                            ['001', '$a MJS'], // 0
+                            ['020', '$a '], //1 ISBN
+                            ['022', '$a '], //2 ISSN
+                            ['035', '$a MJS'], //3
+                            ['041', '$a spa'], //4
+                            ['044', '$a mx'], //5
+                            ['100', '$a '], //6 AUTOR
+                            ['245', '$a '], //7 TITULO
+                            ['260', '$a '], //8 CADENA DE TEXTO
+                            ['300', '$a '], //9 DESCRIP FISICA
+                            ['362', ''], //10 ANIO PUBLICACION
+                            ['500', '$a '], //11 NOTA GENERAL
+                            ['980', ''] //12 FACTURA FECHA ANIO MES DIA
+                        ]
+                    }
+                ]
+                if (i === 0) {
+                    infoMarc[0].data[1][1] = 'CHOCOLATE!'
+                    infoMarc[0].data[2][1] = 'CHOCOLATE!2'
+                    infoMarc[0].data[3][1] = 'CHOCOLATE!3'
+                } else if (i === 1) {
+                    infoMarc[0].data[1][1] = 'Vainilla!'
+                    infoMarc[0].data[2][1] = 'Vainilla!2'
+                    infoMarc[0].data[3][1] = 'Vainilla!3'
+                }
+                dataSetArray.push(infoMarc) // DataSet[1]
+            }
+
+            return (
+                <Fragment>
+                    <ExcelFile filename="ExcelMarc" element={<Button variant="success"><FontAwesomeIcon icon={faFileExcel} /></Button>}>
+                        {libros.map((libro, i) => {
+                            return (
+                                <ExcelSheet dataSet={dataSetArray[i]} name={'hoja ' + i}></ExcelSheet>
+                            )
+                        })}
+                    </ExcelFile>
+                </Fragment>
+            )
+        }
+
         const exportMarc21 = (factura) => {
 
             console.log(factura)
@@ -376,10 +428,11 @@ class FacturaTable extends React.Component {
                                                 <ExcelFile filename="PRUEBA" element={<Button variant="success" onClick={() => { exportMarc21(factura); }}><FontAwesomeIcon icon={faFileExcel} /></Button>}>
                                                     <ExcelSheet dataSet={DataSet} name="PRUEBANAME"></ExcelSheet>
                                                 </ExcelFile>
-                                            ) : <ExcelFile filename="ExcelMarc" element={<Button variant="success" onClick={() => { exportMarc21Mul(factura); }}><FontAwesomeIcon icon={faFileExcel} /></Button>}>
+                                            ) : mostrarBoton(factura.libros)
+                                            /*<ExcelFile filename="ExcelMarc" element={<Button variant="success" onClick={() => { exportMarc21Mul(factura); }}><FontAwesomeIcon icon={faFileExcel} /></Button>}>
                                                 <ExcelSheet dataSet={dataSetArray[0]} name="hoja1"></ExcelSheet>
                                                 <ExcelSheet dataSet={dataSetArray[1]} name="hoja2"></ExcelSheet>
-                                            </ExcelFile>
+                                            </ExcelFile>*/
                                         }
                                     </td>
                                 </tr>
