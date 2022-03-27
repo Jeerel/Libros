@@ -1,5 +1,5 @@
 import React, { Fragment } from "react";
-import { Col, Container, Modal, Row, Form,Button } from "react-bootstrap";
+import { Col, Container, Modal, Row, Form, Button } from "react-bootstrap";
 import swal from "sweetalert";
 import axios from "axios";
 
@@ -33,7 +33,7 @@ class ModalEditarPerfil extends React.Component {
             method: "PUT",
             url: url,
             headers: {
-                'Authorization': 'Bearer '+sessionStorage.is_security,
+                'Authorization': 'Bearer ' + sessionStorage.is_security,
                 "Content-Type": "application/json",
             },
             data: obj

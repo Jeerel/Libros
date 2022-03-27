@@ -1,5 +1,5 @@
 import React from "react";
-import { Col, Container, Modal, Row, Form,Button } from "react-bootstrap";
+import { Col, Container, Modal, Row, Form, Button } from "react-bootstrap";
 import axios from "axios";
 
 class ModalAddCliente extends React.Component {
@@ -28,15 +28,14 @@ class ModalAddCliente extends React.Component {
             method: "POST",
             url: url,
             headers: {
-                'Authorization': 'Bearer '+sessionStorage.is_security,
+                'Authorization': 'Bearer ' + sessionStorage.is_security,
                 "Content-Type": "application/json",
             },
             data: this.state.form
         };
         axios(config)
             .then((response) => {
-
-                if (response.data === 'Enviado') {
+                if (response.data.succes) {
                     this.props.onCloseModal();
                     this.props.fetchDataClientes();
                 }
@@ -97,6 +96,7 @@ class ModalAddCliente extends React.Component {
                     </Modal.Body>
                     <Modal.Footer>
                         <Button
+                            type="submit"
                             variant="btn btn-primary">
                             Guardar
                         </Button>

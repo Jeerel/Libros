@@ -1,12 +1,12 @@
 import React, { Fragment } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faMoneyBill, faTrashAlt,faSearch } from "@fortawesome/free-solid-svg-icons";
-import { Table } from "react-bootstrap";
+import { faMoneyBill, faTrashAlt, faSearch, faEdit } from "@fortawesome/free-solid-svg-icons";
+import { Table, Button } from "react-bootstrap";
 import axios from "axios";
 import swal from "sweetalert";
+import ModalEditarCotizacion from "../modals/cotizaciones/editCotizacion";
 
-
-class ClientsContent extends React.Component {
+class CotizacionContent extends React.Component {
 
     state = {
         formFilter: {},
@@ -55,13 +55,17 @@ class ClientsContent extends React.Component {
     render() {
         const formFilter = this.state.formFilter;
         const cotizacion = this.state.data;
-        const functionFetchData = this.props.cotizacion.fetchDataCotizaciones
+        const functionFetchDataCotizaciones = this.props.cotizacion.fetchDataCotizaciones;
+        const functionFetchDataClientes = this.props.cotizacion.fetchDataClientes;
+        const functionFetchDataLibros = this.props.cotizacion.fetchDataLibros;
+        const dataCliente = this.props.cotizacion.clientes;
+        const dataLibro = this.props.cotizacion.libros;
 
         return (
             <Fragment>
                 <div className="col-xs-12 col-md-3 mt-2">
                     <div className="form-group">
-                        <label>Id factura</label>
+                        <label>Id Cotización</label>
                         <input
                             className="form-control mt-2"
                             type="text"
@@ -78,7 +82,14 @@ class ClientsContent extends React.Component {
                     </button>
                 </div>
                 <div className="col-xs-12 col-md-12 mt-2">
-                    <FacturaTable cotizacion={cotizacion} functionFetchData={functionFetchData} />
+                    <CotizacionTable
+                        cotizacion={cotizacion}
+                        functionFetchDataCotizaciones={functionFetchDataCotizaciones}
+                        functionFetchDataClientes={functionFetchDataClientes}
+                        functionFetchDataLibros={functionFetchDataLibros}
+                        dataCliente={dataCliente}
+                        dataLibro={dataLibro}
+                    />
                 </div>
             </Fragment>
         );
@@ -86,10 +97,10 @@ class ClientsContent extends React.Component {
 }
 
 
-class FacturaTable extends React.Component {
+class CotizacionTable extends React.Component {
 
     state = {
-        dataClientes: [],
+        dataCotizacion: [],
         modalEditar: false,
         formEdit: undefined,
         triggerEditModal: false,
@@ -103,9 +114,9 @@ class FacturaTable extends React.Component {
     handleOpenModal = e => {
         this.setState({ triggerEditModal: true });
     };
-     peticionDelete = async (cotizacion) => {
+    peticionDelete = async (cotizacion) => {
         console.log(cotizacion)
-         swal({
+        swal({
             title: "Deseas eliminar la cotización " + cotizacion.id_cotizacion + "?",
             text: "No podra recuperar la información",
             icon: "warning",
@@ -117,7 +128,7 @@ class FacturaTable extends React.Component {
                     method: "DELETE",
                     url: "https://appi-books.herokuapp.com/api/cotizaciones/" + cotizacion.id_cotizacion,
                     headers: {
-                        'Authorization': 'Bearer '+sessionStorage.is_security,
+                        'Authorization': 'Bearer ' + sessionStorage.is_security,
                         "Content-Type": "application/json",
                     },
                 }
@@ -126,7 +137,9 @@ class FacturaTable extends React.Component {
                         swal("Perfil eliminado correctamente", {
                             icon: "success",
                         });
-                        this.props.functionFetchData();
+                        this.props.functionFetchDataCotizaciones();
+                        this.props.functionFetchDataClientes();
+                        this.props.functionFetchDataLibros();
                     })
                     .catch((error) => {
                         swal("Error en el sistema", {
@@ -146,7 +159,7 @@ class FacturaTable extends React.Component {
             method: "PUT",
             url: url,
             headers: {
-                'Authorization': 'Bearer '+sessionStorage.is_security,
+                'Authorization': 'Bearer ' + sessionStorage.is_security,
                 "Content-Type": "application/json",
             }
         };
@@ -157,7 +170,9 @@ class FacturaTable extends React.Component {
             swal("Se genero la factura #" + response.data.factura, {
                 icon: "success",
             })
-            this.props.functionFetchData();
+            this.props.functionFetchDataCotizaciones();
+            this.props.functionFetchDataClientes();
+            this.props.functionFetchDataLibros();
 
         }).catch((error) => {
             this.setState({ loading: false, error: error });
@@ -165,6 +180,29 @@ class FacturaTable extends React.Component {
     }
 
     render() {
+
+        const peticionEdit = async (cotizacion) => {
+            let url = "https://appi-books.herokuapp.com/api/cotizaciones/" + cotizacion.id_cotizacion
+            let config = {
+                method: "GET",
+                url: url,
+                headers: {
+                    'Authorization': 'Bearer ' + sessionStorage.is_security,
+                    "Content-Type": "application/json",
+                },
+            };
+            await axios(config).then((response) => {
+                this.setState({ triggerEditModal: !this.state.triggerEditModal, formEdit: response.data.body });
+            }).catch((error) => {
+                return error
+            });
+        }
+
+        const functionFetchDataCotizaciones = this.props.functionFetchDataCotizaciones;
+        const functionFetchDataClientes = this.props.functionFetchDataClientes;
+        const functionFetchDataLibros = this.props.functionFetchDataLibros;
+        const dataCliente = this.props.dataCliente;
+        const dataLibro = this.props.dataLibro;
 
         return (
             <Fragment>
@@ -199,24 +237,40 @@ class FacturaTable extends React.Component {
                                             onClick={() => { this.peticionDelete(cotizacion); }}>
                                             <FontAwesomeIcon icon={faTrashAlt} />
                                         </button>
+                                        <Button variant="warning text-white"
+                                            onClick={() => { peticionEdit(cotizacion); }}>
+                                            <FontAwesomeIcon icon={faEdit} />
+                                        </Button>
                                     </td>
                                 </tr>
                             )
                         })}
                     </tbody>
                 </Table>
+                <ModalEditarCotizacion
+                    onCloseModal={this.handleCloseModal}
+                    onOpenModal={this.handleOpenModal}
+                    modalIsOpen={this.state.triggerEditModal}
+                    data={this.state.formEdit}
+                    fetchDataCotizacionesCotizaciones={functionFetchDataCotizaciones}
+                    fetchDataCotizacionesClientes={functionFetchDataClientes}
+                    fetchDataCotizacionesLibros={functionFetchDataLibros}
+                    dataCliente={dataCliente}
+                    dataLibro={dataLibro}
+                />
+
             </Fragment>
         );
     }
 }
 
-function FacturasM(props) {
+function CotizacionM(props) {
 
     return (
         <Fragment>
-            <ClientsContent cotizacion={props} />
+            <CotizacionContent cotizacion={props} />
         </Fragment>
     );
 }
 
-export default FacturasM
+export default CotizacionM

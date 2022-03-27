@@ -6,7 +6,7 @@ import "../App.css"
 
 //componentes
 import PageLoading from "../components/PageLoading";
-import CotizacionM from "../components/Cotización/Cotización";
+import CotizacionM from "../components/Cotizacion/Cotizacion";
 import ModalAddCotizacion from "../components/modals/cotizaciones/addCotizacion";
 
 class Cotizacion extends React.Component {
@@ -116,7 +116,14 @@ class Cotizacion extends React.Component {
                             <div className="col-xs-12 col-md-12">
                                 <h1>Cotizaciones</h1>
                             </div>
-                            <CotizacionM cotizacion={this.state.data} fetchDataCotizaciones={this.fetchDataCotizaciones} />
+                            <CotizacionM
+                                cotizacion={this.state.data}
+                                fetchDataCotizaciones={this.fetchDataCotizaciones}
+                                fetchDataClientes={this.fetchDataClientes}
+                                fetchDataLibros={this.fetchDataLibros}
+                                clientes={this.state.dataCliente}
+                                libros={this.state.dataLibros}
+                            />
                         </div>
                         <div className="fixed-action-btn">
                             <button

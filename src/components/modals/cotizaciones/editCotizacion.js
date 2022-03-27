@@ -2,16 +2,16 @@ import React from "react";
 import { Col, Container, Modal, Row, Form, Table, Button, Badge, Alert } from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus, faTrash, faHashtag, faMinus } from "@fortawesome/free-solid-svg-icons";
+import swal from "sweetalert";
 import axios from "axios";
 
-class ModalAddCotizacion extends React.Component {
+class ModalEditarCotizacion extends React.Component {
 
     state = {
-        form: {
-            dataClientes: this.props.clientes,
-            dataLibros: this.props.libros,
-            arrayCotizacionLibros: []
-        }
+        form: undefined,
+        dataClientes: undefined,
+        dataLibros: undefined,
+        arrayCotizacionLibros: []
     }
 
     handleChange = async (e) => {
@@ -22,13 +22,13 @@ class ModalAddCotizacion extends React.Component {
                 [e.target.name]: e.target.value,
             },
         });
-        console.log(this.state.form)
     };
 
-    peticionPost = async (event) => {
+
+    peticionPut = async (event) => {
         event.preventDefault();
         //preparamos la informacion que deseamos enviar
-        let auxArray = this.state.form.arrayCotizacionLibros;
+        let auxArray = this.state.arrayCotizacionLibros;
         //iteramos el auxiliar del array de libros de la cotizacion
         for (let i = 0; i < auxArray.length; i++) {
             //asignamos a variables temporales para reasginar valores
@@ -52,7 +52,7 @@ class ModalAddCotizacion extends React.Component {
 
         const url = "https://appi-books.herokuapp.com/api/cotizaciones/";
         let config = {
-            method: "POST",
+            method: "PUT",
             url: url,
             headers: {
                 'Authorization': 'Bearer ' + sessionStorage.is_security,
@@ -64,10 +64,13 @@ class ModalAddCotizacion extends React.Component {
         axios(config)
             .then((response) => {
                 if (response.data.succes) {
+                    console.log(response)
+                    /*
                     this.props.onCloseModal();
                     this.props.fetchDataCotizaciones();
                     this.props.fetchDataClientes();
                     this.props.fetchDataLibros();
+                    */
                 }
 
             })
@@ -76,12 +79,35 @@ class ModalAddCotizacion extends React.Component {
             });
     }
 
+
     cleanModal = async () => {
-        await this.setState({ form: {}, arrayCotizacionLibros: null });
-        this.props.onCloseModal();
+        await this.setState({
+            form: undefined, arrayCotizacionLibros: null
+        });
+        await this.props.onCloseModal();
+    }
+
+    fetchDataCotizacionesModalEdit = async () => {
+
+        await this.setState({
+            form: {
+                cliente: this.props.data.dataCliente[0].id_cliente
+            }, arrayCotizacionLibros: this.props.data.dataLibros
+        })
+        //console.log('LO QUE TIENE DE ARRAY LIBROS: ', this.props.data.dataLibros)
+    }
+
+    poniendoUndefined = async () => {
+        await this.setState({ form: undefined })
     }
 
     render() {
+
+        if (this.state.form === undefined && this.props.modalIsOpen === true) {
+            this.fetchDataCotizacionesModalEdit()
+        } else if ((this.state.form !== undefined || this.state.form != null) && this.props.modalIsOpen === false) {
+            this.poniendoUndefined()
+        }
 
         //funcion para eliminar del array el libro seleccionado
         const popLibro = async (index) => {
@@ -102,19 +128,6 @@ class ModalAddCotizacion extends React.Component {
 
         }
         //fin de la funcion de eliminar del arreglo el libro
-
-        //funcion para restar libros, al libro seleccionado del array 
-        const substractCantidad = async (index) => {
-            let auxArray = this.state.arrayCotizacionLibros; //declaramos un arreglo auxiliar
-            //hacemos la operacion de restar una unidad
-            auxArray[index].cantidad = auxArray[index].cantidad - 1;
-            //pasamos el auxiliar al array del estado
-            await this.setState({
-                ...this.state,
-                arrayCotizacionLibros: auxArray
-            });
-        }
-        //fin de la funcion
 
         const pushLibro = async (libro) => {
 
@@ -160,15 +173,31 @@ class ModalAddCotizacion extends React.Component {
             }
         }
 
+        //funcion para restar libros, al libro seleccionado del array 
+        const substractCantidad = async (index) => {
+            let auxArray = this.state.arrayCotizacionLibros; //declaramos un arreglo auxiliar
+            //hacemos la operacion de restar una unidad
+            auxArray[index].cantidad = auxArray[index].cantidad - 1;
+            //pasamos el auxiliar al array del estado
+            await this.setState({
+                ...this.state,
+                arrayCotizacionLibros: auxArray
+            });
+        }
+        //fin de la funcion
+
         const form = this.state.form
+
+        console.log('STATE: ', this.state)
+        console.log(this.props)
 
         return (
             <Modal show={this.props.modalIsOpen} backdrop="static" keyboard={false} size="xl" aria-labelledby="contained-modal-title-vcenter"
                 centered onHide={this.cleanModal}>
-                <Form onSubmit={this.peticionPost}>
+                <Form onSubmit={this.peticionPut}>
                     <Modal.Header closeButton>
                         <Modal.Title>
-                            Nueva Cotización
+                            Editar Cotización
                         </Modal.Title>
                     </Modal.Header>
                     <Modal.Body>
@@ -178,9 +207,10 @@ class ModalAddCotizacion extends React.Component {
                                     <label>
                                         Cliente
                                     </label>
+
                                     <select className="form-control mt-2" name="cliente" id="cliente" value={form ? form.cliente : ""} onChange={this.handleChange} required>
                                         <option value="" selected disabled>Seleccione una opción</option>
-                                        {this.props.clientes.map((cliente, i) => {
+                                        {this.props.dataCliente.map((cliente, i) => {
                                             return (
                                                 <option key={i} value={cliente.idcliente}>
                                                     {cliente.nombre}
@@ -188,7 +218,9 @@ class ModalAddCotizacion extends React.Component {
                                             )
                                         })}
                                     </select>
+
                                 </Col>
+
                                 <Col xs={12} md={3}>
                                     <label>
                                         Libros seleccionados
@@ -245,7 +277,7 @@ class ModalAddCotizacion extends React.Component {
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            {this.props.libros.map((libro, i) => {
+                                            {this.props.dataLibro.map((libro, i) => {
                                                 return (
                                                     <tr>
                                                         <td>{libro.titulo}</td>
@@ -255,6 +287,7 @@ class ModalAddCotizacion extends React.Component {
                                                         <td>{libro.numCopias}</td>
                                                         <td>
                                                             <Button variant="success" size="sm" onClick={() => { pushLibro(libro); }}>
+                                                                {/* onClick={() => { pushLibro(libro); }} */}
                                                                 <FontAwesomeIcon icon={faPlus} />
                                                             </Button>
                                                         </td>
@@ -285,4 +318,4 @@ class ModalAddCotizacion extends React.Component {
 
 }
 
-export default ModalAddCotizacion;
+export default ModalEditarCotizacion;
