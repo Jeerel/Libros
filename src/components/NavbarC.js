@@ -42,15 +42,15 @@ const NavbarC = (props) => {
                             </Link>
                         </NavItem>*/}
                             <NavItem>
-                                <Link className="nav-link" to="/cotizacion">
-                                    Cotización
-                                </Link>
-                            </NavItem>
-                            <NavItem>
                                 <Link className="nav-link" to="/facturas">
                                     Facturas
                                 </Link>
                             </NavItem>
+                            {/* <NavItem>
+                                <Link className="nav-link" to="/facturas">
+                                    Facturas
+                                </Link>
+                            </NavItem> */}
                             <NavItem>
                                 <Link className="nav-link" to="/clientes">
                                     Clientes

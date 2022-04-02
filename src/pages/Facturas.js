@@ -29,6 +29,7 @@ class Facturas extends React.Component {
 
         await axios(config).then((response) => {
             let data=response.data.body || []
+            console.log(response.data.body)
             this.setState({ loading: false, data: data })
         }).catch((error) => {
             this.setState({ loading: false, error: error });

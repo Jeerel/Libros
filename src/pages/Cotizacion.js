@@ -28,7 +28,7 @@ class Cotizacion extends React.Component {
     }
 
     fetchDataCotizaciones = async () => {
-        const url = "https://appi-books.herokuapp.com/api/cotizaciones";
+        const url = "https://appi-books.herokuapp.com/api/facturas";
         let config = {
             method: "GET",
             url: url,
@@ -114,7 +114,7 @@ class Cotizacion extends React.Component {
                     <div className="container mt-3">
                         <div className="row">
                             <div className="col-xs-12 col-md-12">
-                                <h1>Cotizaciones</h1>
+                                <h1>Facturas</h1>
                             </div>
                             <CotizacionM
                                 cotizacion={this.state.data}

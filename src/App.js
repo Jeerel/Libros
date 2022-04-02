@@ -38,8 +38,7 @@ function App() {
                     }
                     <Route exact path="/perfiles" component={Perfiles} />
                     <Route exact path="/pedidos" component={Pedidos} />
-                    <Route exact path="/cotizacion" component={Cotizacion} />
-                    <Route exact path="/facturas" component={Facturas} />
+                    <Route exact path="/facturas" component={Cotizacion} />
                     <Route exact path="/pruebas" component={Pruebas} />
                 </Switch>
             </Layout>

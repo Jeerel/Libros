@@ -1,10 +1,14 @@
 import React, { Fragment } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faMoneyBill, faTrashAlt, faSearch, faEdit } from "@fortawesome/free-solid-svg-icons";
+import { faMoneyBill, faTrashAlt, faSearch, faEdit, faFileExcel } from "@fortawesome/free-solid-svg-icons";
 import { Table, Button } from "react-bootstrap";
 import axios from "axios";
 import swal from "sweetalert";
 import ModalEditarCotizacion from "../modals/cotizaciones/editCotizacion";
+import ReactExport from "react-data-export";
+
+const ExcelFile = ReactExport.ExcelFile;
+const ExcelSheet = ReactExport.ExcelFile.ExcelSheet;
 
 class CotizacionContent extends React.Component {
 
@@ -180,6 +184,70 @@ class CotizacionTable extends React.Component {
     }
 
     render() {
+        
+        let dataSetArray = [];
+
+        const mostrarBoton = (factura) => {
+            var libros = factura.libros
+            let nameExcel = "Factura" + factura.id_cotizacion
+            for (let i = 0; i < libros.length; i++) {
+                let libro=libros[i]
+                let infoMarc = [
+                    {
+                        columns: [
+                            { title: "Code", style: { font: { sz: "18", bold: true } }, width: { wpx: 125 } },
+                            { title: "*Text", style: { font: { sz: "18", bold: true } }, width: { wpx: 125 } }
+                        ],
+                        data: [
+                            ['001', '$a MJS'], // 0
+                            ['020', '$a '], //1 ISBN
+                            ['022', '$a '], //2 ISSN
+                            ['035', '$a MJS'], //3
+                            ['041', '$a spa'], //4
+                            ['044', '$a mx'], //5
+                            ['100', '$a '], //6 AUTOR
+                            ['245', '$a '], //7 TITULO
+                            ['260', '$a '], //8 CADENA DE TEXTO
+                            ['300', '$a '], //9 DESCRIP FISICA
+                            ['362', ''], //10 ANIO PUBLICACION
+                            ['500', '$a '], //11 NOTA GENERAL
+                            ['980', ''] //12 FACTURA FECHA ANIO MES DIA
+                        ]
+                    }
+                ]
+
+                
+                infoMarc[0].data[1][1] = libro.isbn ? infoMarc[0].data[1][1] + libro.isbn : '';
+
+                infoMarc[0].data[2][1] = libro.issn ? infoMarc[0].data[2][1] + libro.issn : '';
+
+                infoMarc[0].data[6][1] = libro.autor ? infoMarc[0].data[6][1] + libro.autor : '';
+
+                infoMarc[0].data[7][1] = libro.titulo ? infoMarc[0].data[7][1] + libro.titulo : '';
+
+                let pub = libro.placePub ? "$a " + libro.placePub + ' ' : '';
+                pub = libro.editorial ? pub + "$b" + libro.editorial + ' ' : pub;
+                pub = libro.anio ? pub + '$c ' + libro.anio + ' ' : pub;
+                infoMarc[0].data[8][1] = pub ? pub : '';
+                infoMarc[0].data[9][1] = libro.descripcion ? infoMarc[0].data[9][1] + libro.descripcion : '';
+                infoMarc[0].data[10][1] = libro.anio ? infoMarc[0].data[10][1] + libro.anio : '';
+                infoMarc[0].data[11][1] = libro.nota ? infoMarc[0].data[11][1] + libro.nota : '';
+                infoMarc[0].data[12][1] = '$a ' + libro.fecha_cotizacion + ' $b ' + libro.precio + " $e " + libro.precio + " $f " + libro.id_cotizacion;
+                dataSetArray.push(infoMarc) // DataSet[1]
+            }
+
+            return (
+                <Fragment>
+                    <ExcelFile filename={nameExcel} element={<Button variant="success"><FontAwesomeIcon icon={faFileExcel} /></Button>}>
+                        {libros.map((libro, i) => {
+                            return (
+                                <ExcelSheet dataSet={dataSetArray[i]} name={libro.titulo}></ExcelSheet>
+                            )
+                        })}
+                    </ExcelFile>
+                </Fragment>
+            )
+        }
 
         const peticionEdit = async (cotizacion) => {
             let url = "https://appi-books.herokuapp.com/api/cotizaciones/" + cotizacion.id_cotizacion
@@ -209,7 +277,7 @@ class CotizacionTable extends React.Component {
                 <Table responsive>
                     <thead>
                         <tr>
-                            <th>Id Cotización</th>
+                            <th>Id factura</th>
                             <th>Nombre</th>
                             <th>Dirección</th>
                             <th>Teléfono</th>
@@ -227,20 +295,19 @@ class CotizacionTable extends React.Component {
                                     <td>{cotizacion.telefono}</td>
                                     <td>{cotizacion.email}</td>
                                     <td>
-                                        <button
-                                            className="btn btn-primary text-white"
-                                            onClick={() => { this.peticionPutFactura(cotizacion); }}>
-                                            <FontAwesomeIcon icon={faMoneyBill} />
-                                        </button>
+                                        {
+                                            mostrarBoton(cotizacion)
+                                        }
+                                        
+                                        <Button variant="warning text-white"
+                                            onClick={() => { peticionEdit(cotizacion); }}>
+                                            <FontAwesomeIcon icon={faEdit} />
+                                        </Button>
                                         <button
                                             className="btn btn-danger btn-xs"
                                             onClick={() => { this.peticionDelete(cotizacion); }}>
                                             <FontAwesomeIcon icon={faTrashAlt} />
                                         </button>
-                                        <Button variant="warning text-white"
-                                            onClick={() => { peticionEdit(cotizacion); }}>
-                                            <FontAwesomeIcon icon={faEdit} />
-                                        </Button>
                                     </td>
                                 </tr>
                             )

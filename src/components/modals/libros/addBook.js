@@ -19,6 +19,7 @@ class ModalAddLibro extends React.Component {
     };
 
     peticionPost = async (event) => {
+        console.log("EJTER")
         event.preventDefault();
         const url = "https://appi-books.herokuapp.com/api/libros";
         let config = {
@@ -32,19 +33,20 @@ class ModalAddLibro extends React.Component {
         };
         axios(config)
             .then((response) => {
-
-                if (response.data === 'Enviado') {
+                if (response.data.body.estatus === 'Enviado') {
                     this.props.onCloseModal();
                     this.props.fetchDataLibros();
                 }
 
             })
             .catch((error) => {
+                console.log(error)
                 return error;
             });
     }
 
     cleanModal = async () => {
+        console.log("ENTER")
         await this.setState({ form: {} });
         this.props.onCloseModal();
     }
@@ -88,19 +90,20 @@ class ModalAddLibro extends React.Component {
                                     <label>
                                         ISBN
                                     </label>
-                                    <input className="form-control" type="tex" name="isbn" id="isbn" onChange={this.handleChange} value={form ? form.isbn : ""} required autoComplete="off" />
+                                    <input className="form-control" type="tex" name="isbn" id="isbn" onChange={this.handleChange} value={form ? form.isbn : ""} autoComplete="off" />
                                 </Col>
                                 <Col xs={12} md={3}>
                                     <label>
                                         ISSN
                                     </label>
-                                    <input className="form-control" type="tex" name="issn" id="issn" onChange={this.handleChange} value={form ? form.issn : ""} required autoComplete="off" />
+                                    <input className="form-control" type="tex" name="issn" id="issn" onChange={this.handleChange} value={form ? form.issn : ""} autoComplete="off" />
                                 </Col>
                             </Row>
                         </Container>
                     </Modal.Body>
                     <Modal.Footer>
                         <Button
+                        type="submit"
                             variant="btn btn-primary">
                             Guardar
                         </Button>

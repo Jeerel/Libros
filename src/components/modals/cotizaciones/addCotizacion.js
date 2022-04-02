@@ -28,7 +28,7 @@ class ModalAddCotizacion extends React.Component {
     peticionPost = async (event) => {
         event.preventDefault();
         //preparamos la informacion que deseamos enviar
-        let auxArray = this.state.form.arrayCotizacionLibros;
+        let auxArray = this.state.arrayCotizacionLibros;
         //iteramos el auxiliar del array de libros de la cotizacion
         for (let i = 0; i < auxArray.length; i++) {
             //asignamos a variables temporales para reasginar valores

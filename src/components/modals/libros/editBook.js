@@ -115,9 +115,15 @@ class ModalEditLibro extends React.Component {
                                 </Col>
                                 <Col xs={12} md={3}>
                                     <label>
-                                        ISBN / ISSN
+                                        ISBN
                                     </label>
-                                    <input className="form-control" type="tex" name="isbn" id="isbn" onChange={this.handleChange} value={form ? form.isbn : ""} required autoComplete="off" />
+                                    <input className="form-control" type="tex" name="isbn" id="isbn" onChange={this.handleChange} value={form ? form.isbn : ""}  autoComplete="off" />
+                                </Col>
+                                <Col xs={12} md={3}>
+                                    <label>
+                                        ISSN
+                                    </label>
+                                    <input className="form-control" type="tex" name="issn" id="issn" onChange={this.handleChange} value={form ? form.issn : ""} autoComplete="off" />
                                 </Col>
                                 <Col xs={12} md={3} className="mt-3">
                                     <label>
@@ -179,20 +185,6 @@ class ModalEditLibro extends React.Component {
                                     </label>
                                     <input className="form-control" type="number" name="precio" onChange={this.handleChange}
                                         id="precioEdit" value={form ? form.precio : ""} />
-                                </Col>
-                                <Col xs={12} md={3} className="mt-3">
-                                    <label>
-                                        Número de Factura
-                                    </label>
-                                    <input className="form-control" type="number" onChange={this.handleChange}
-                                        name="numFact" id="numFactEdit" value={form ? form.numFact : ""} />
-                                </Col>
-                                <Col xs={12} md={3} className="mt-3">
-                                    <label>
-                                        Número de copias en inventario
-                                    </label>
-                                    <input className="form-control" type="number" onChange={this.handleChange}
-                                        name="numCopias" id="numCopyEdit" value={form ? form.numCopias : ""} />
                                 </Col>
                                 <Col xs={12} md={3} className="mt-3">
                                     <label>
