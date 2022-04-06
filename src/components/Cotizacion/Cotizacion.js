@@ -184,14 +184,14 @@ class CotizacionTable extends React.Component {
     }
 
     render() {
-        
+
         let dataSetArray = [];
 
         const mostrarBoton = (factura) => {
             var libros = factura.libros
             let nameExcel = "Factura" + factura.id_cotizacion
             for (let i = 0; i < libros.length; i++) {
-                let libro=libros[i]
+                let libro = libros[i]
                 let infoMarc = [
                     {
                         columns: [
@@ -199,24 +199,24 @@ class CotizacionTable extends React.Component {
                             { title: "*Text", style: { font: { sz: "18", bold: true } }, width: { wpx: 125 } }
                         ],
                         data: [
-                            ['001', '$a MJS'], // 0
-                            ['020', '$a '], //1 ISBN
-                            ['022', '$a '], //2 ISSN
-                            ['035', '$a MJS'], //3
-                            ['041', '$a spa'], //4
-                            ['044', '$a mx'], //5
-                            ['100', '$a '], //6 AUTOR
-                            ['245', '$a '], //7 TITULO
-                            ['260', '$a '], //8 CADENA DE TEXTO
-                            ['300', '$a '], //9 DESCRIP FISICA
-                            ['362', ''], //10 ANIO PUBLICACION
-                            ['500', '$a '], //11 NOTA GENERAL
-                            ['980', ''] //12 FACTURA FECHA ANIO MES DIA
+                            ['=001', '$a MJS'], // 0
+                            ['=020', '\\\\$a '], //1 ISBN
+                            ['=022', '$a '], //2 ISSN
+                            ['=035', '$a MJS'], //3
+                            ['=041', '0\$a spa'], //4
+                            ['=044', '\\\\$a mx'], //5
+                            ['=100', '1\$a '], //6 AUTOR
+                            ['=245', '10$a '], //7 TITULO
+                            ['=260', '\\\\$a '], //8 CADENA DE TEXTO
+                            ['=300', '\\\\$a '], //9 DESCRIP FISICA
+                            ['=362', ''], //10 ANIO PUBLICACION
+                            ['=500', '$a '], //11 NOTA GENERAL
+                            ['=980', ''] //12 FACTURA FECHA ANIO MES DIA
                         ]
                     }
                 ]
 
-                
+
                 infoMarc[0].data[1][1] = libro.isbn ? infoMarc[0].data[1][1] + libro.isbn : '';
 
                 infoMarc[0].data[2][1] = libro.issn ? infoMarc[0].data[2][1] + libro.issn : '';
@@ -232,7 +232,7 @@ class CotizacionTable extends React.Component {
                 infoMarc[0].data[9][1] = libro.descripcion ? infoMarc[0].data[9][1] + libro.descripcion : '';
                 infoMarc[0].data[10][1] = libro.anio ? infoMarc[0].data[10][1] + libro.anio : '';
                 infoMarc[0].data[11][1] = libro.nota ? infoMarc[0].data[11][1] + libro.nota : '';
-                infoMarc[0].data[12][1] = '$a ' + libro.fecha_cotizacion + ' $b ' + libro.precio + " $e " + libro.precio + " $f " + libro.id_cotizacion;
+                infoMarc[0].data[12][1] = '\\$a ' + libro.fecha_cotizacion + ' $b ' + libro.precio + " $e " + libro.precio + " $f " + libro.id_cotizacion;
                 dataSetArray.push(infoMarc) // DataSet[1]
             }
 
@@ -298,7 +298,7 @@ class CotizacionTable extends React.Component {
                                         {
                                             mostrarBoton(cotizacion)
                                         }
-                                        
+
                                         <Button variant="warning text-white"
                                             onClick={() => { peticionEdit(cotizacion); }}>
                                             <FontAwesomeIcon icon={faEdit} />
