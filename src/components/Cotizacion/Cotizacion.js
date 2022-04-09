@@ -369,9 +369,9 @@ class CotizacionTable extends React.Component {
                                     <td>{cotizacion.email}</td>
                                     <td>
                                         {
-                                            /*
+
                                             mostrarBoton(cotizacion)
-                                            */
+
                                         }
                                         <Button variant="primary text-white" onClick={() => { getMarcTxt(cotizacion) }}>
                                             <FontAwesomeIcon icon={faDownload} />
