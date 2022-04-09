@@ -1,6 +1,6 @@
 import React, { Fragment } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faMoneyBill, faTrashAlt, faSearch, faEdit, faFileExcel } from "@fortawesome/free-solid-svg-icons";
+import { faMoneyBill, faTrashAlt, faSearch, faEdit, faFileExcel, faDownload } from "@fortawesome/free-solid-svg-icons";
 import { Table, Button } from "react-bootstrap";
 import axios from "axios";
 import swal from "sweetalert";
@@ -187,9 +187,82 @@ class CotizacionTable extends React.Component {
 
         let dataSetArray = [];
 
+        const getMarcTxt = async (factura) => {
+
+            let libros = factura.libros;
+            let nameTxt = "Factura " + factura.id_cotizacion;
+            let contenidoMarc = "";
+
+            console.log('tamaño de libros: ', libros.length)
+
+            for (let i = 0; i < libros.length; i++) {
+                let libro = libros[i];
+
+                let dataMarc = [
+                    ['=001  $a MJS '], // 0
+                    ['\n=020  \\\\$a '], //1 ISBN
+                    ['\n=022  $a '], //2 ISSN
+                    ['\n=035  $a MJS '], //3
+                    ['\n=041  0\$a spa '], //4
+                    ['\n=044  \\\\$a mx'], //5
+                    ['\n=100  1\$a '], //6 AUTOR
+                    ['\n=245  10$a '], //7 TITULO
+                    ['\n=260  \\\\$a '], //8 CADENA DE TEXTO
+                    ['\n=300  \\\\$a '], //9 DESCRIP FISICA
+                    ['\n=362  '], //10 ANIO PUBLICACION
+                    ['\n=500  $a '], //11 NOTA GENERAL
+                    ['\n=980  '] //12 FACTURA FECHA ANIO MES DIA
+                ]
+
+                dataMarc[1] = libro.isbn ? dataMarc[1] + libro.isbn : dataMarc[1] + '';
+
+                dataMarc[2] = libro.issn ? dataMarc[2] + libro.issn : dataMarc[2] + '';
+
+                dataMarc[6] = libro.autor ? dataMarc[6] + libro.autor : dataMarc[6] + '';
+
+                dataMarc[7] = libro.titulo ? dataMarc[7] + libro.titulo : dataMarc[7] + '';
+
+                let pub = libro.placePub ? "$a " + libro.placePub + ' ' : '';
+                pub = libro.editorial ? pub + "$b" + libro.editorial + ' ' : pub;
+                pub = libro.anio ? pub + '$c ' + libro.anio + ' ' : pub;
+                dataMarc[8] = pub ? dataMarc[8] + pub : dataMarc[8] + '';
+                dataMarc[9] = libro.descripcion ? dataMarc[9] + libro.descripcion : dataMarc[9] + '';
+                dataMarc[10] = libro.anio ? dataMarc[10] + libro.anio : dataMarc[10] + '';
+                dataMarc[11] = libro.nota ? dataMarc[11] + libro.nota : dataMarc[11] + '';
+                dataMarc[12] = dataMarc[12] + '\\$a ' + libro.fecha_cotizacion + ' $b ' + libro.precio + " $e " + libro.precio + " $f " + libro.id_cotizacion;
+
+                const reducer = (acumulator, curr) => acumulator + curr;
+                let contenidoLibroMarc = dataMarc.reduce(reducer);
+                contenidoLibroMarc = contenidoLibroMarc + '\n'
+
+                contenidoMarc = contenidoMarc + contenidoLibroMarc + '\n'
+
+            }
+
+            console.log('REDUCE:\n', contenidoMarc)
+            let textFileAsBlob = new Blob([contenidoMarc], { type: 'text/plain' });
+
+            let downloadLink = document.createElement("a");
+            downloadLink.download = nameTxt;
+            downloadLink.innerHTML = "texto oculto"
+            window.URL = window.URL || window.webkitURL;
+
+            downloadLink.href = window.URL.createObjectURL(textFileAsBlob);
+
+            downloadLink.style.display = "none";
+
+            document.body.appendChild(downloadLink);
+
+            downloadLink.click();
+
+        }
+
         const mostrarBoton = (factura) => {
             var libros = factura.libros
             let nameExcel = "Factura" + factura.id_cotizacion
+
+
+
             for (let i = 0; i < libros.length; i++) {
                 let libro = libros[i]
                 let infoMarc = [
@@ -296,9 +369,13 @@ class CotizacionTable extends React.Component {
                                     <td>{cotizacion.email}</td>
                                     <td>
                                         {
+                                            /*
                                             mostrarBoton(cotizacion)
+                                            */
                                         }
-
+                                        <Button variant="primary text-white" onClick={() => { getMarcTxt(cotizacion) }}>
+                                            <FontAwesomeIcon icon={faDownload} />
+                                        </Button>
                                         <Button variant="warning text-white"
                                             onClick={() => { peticionEdit(cotizacion); }}>
                                             <FontAwesomeIcon icon={faEdit} />
