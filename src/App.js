@@ -4,7 +4,7 @@ import { BrowserRouter, Route, Switch } from "react-router-dom";
 import AltaLibros from "./pages/AltaLibros";
 import Clientes from "./pages/Clientes"
 import Perfiles from './pages/Perfiles';
-import Facturas from './pages/Facturas';
+import Factura from './pages/Facturas';
 import Pedidos from './pages/Pedidos';
 import Cotizacion from './pages/Cotizacion';
 import Login from './pages/Login'
@@ -37,9 +37,14 @@ function App() {
                         //<Route exact path="/editoriales" component={Editoriales} />
                     }
                     <Route exact path="/perfiles" component={Perfiles} />
-                    <Route exact path="/pedidos" component={Pedidos} />
-                    <Route exact path="/facturas" component={Cotizacion} />
-                    <Route exact path="/pruebas" component={Pruebas} />
+                    {
+                        //<Route exact path="/pedidos" component={Pedidos} />
+                    }
+                    <Route exact path="/facturas" component={Factura} />
+                    {
+                        //<Route exact path="/facturas" component={Cotizacion} />
+                        //<Route exact path="/pruebas" component={Pruebas} />
+                    }
                 </Switch>
             </Layout>
         </BrowserRouter>

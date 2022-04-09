@@ -1,5 +1,5 @@
 import React from "react";
-import { Col, Container, Modal, Row, Form,Button } from "react-bootstrap";
+import { Col, Container, Modal, Row, Form, Button, FloatingLabel } from "react-bootstrap";
 import swal from "sweetalert";
 import axios from "axios";
 
@@ -27,7 +27,7 @@ class ModalEditLibro extends React.Component {
             method: "PUT",
             url: url,
             headers: {
-                'Authorization': 'Bearer '+sessionStorage.is_security,
+                'Authorization': 'Bearer ' + sessionStorage.is_security,
                 "Content-Type": "application/json",
             },
             data: this.state.form
@@ -77,148 +77,219 @@ class ModalEditLibro extends React.Component {
                         <Container>
                             <Row>
                                 <Col xs={12} md={3}>
-                                    <label>
-                                        Autor
-                                    </label>
-                                    <input className="form-control" type="tex" name="autor" id="autor" onChange={this.handleChange} value={form ? form.autor : ''} required autoComplete="off" />
+                                    <FloatingLabel
+                                        controlId="floatingInput"
+                                        label="Autor">
+                                        <Form.Control
+                                            type="text"
+                                            placeholder="Autor"
+                                            value={form ? form.autor : ""}
+                                            name="autor"
+                                            onChange={this.handleChange} required />
+                                    </FloatingLabel>
                                 </Col>
                                 <Col xs={12} md={3}>
-                                    <label>
-                                        Título
-                                    </label>
-                                    <input className="form-control" type="tex" name="titulo" id="titulo" onChange={this.handleChange} value={form ? form.titulo : ""} required autoComplete="off" />
+                                    <FloatingLabel
+                                        controlId="floatingInput"
+                                        label="Título">
+                                        <Form.Control
+                                            type="text"
+                                            placeholder="Título"
+                                            value={form ? form.titulo : ""}
+                                            name="titulo"
+                                            onChange={this.handleChange} required />
+                                    </FloatingLabel>
                                 </Col>
                                 <Col xs={12} md={3}>
-                                    <label>
-                                        Editorial
-                                    </label>
-                                    <input className="form-control" type="text" name="editorial" id="editorial" onChange={this.handleChange} value={form ? form.editorial : ""} autoComplete="off" required />
-                                    {
-                                        /*<select
-                                            className="form-control"
-                                            name="editorial"
-                                            id="editorial"
-                                            onChange={this.handleChange}
+                                    <FloatingLabel
+                                        controlId="floatingInput"
+                                        label="Editorial">
+                                        <Form.Control
+                                            type="text"
+                                            placeholder="Editorial"
                                             value={form ? form.editorial : ""}
-                                            required>
-                                            <option value="" selected disabled>Seleccione una opción</option>
-                                            {this.props.editoriales.map((editorial, i) => {
-                                                return (
-                                                    <option key={i} value={editorial.ideditorial}>
-                                                        {editorial.editorialName}
-                                                    </option>
-                                                );
-                                            })}
-                                        </select>*/
-                                    }
+                                            name="editorial"
+                                            onChange={this.handleChange} required />
+                                    </FloatingLabel>
+                                </Col>
+                                <Col xs={12} md={3}>
+                                    <FloatingLabel
+                                        controlId="floatingInput"
+                                        label="ISBN">
+                                        <Form.Control
+                                            type="text"
+                                            placeholder="ISBN"
+                                            value={form ? form.isbn : ""}
+                                            name="isbn"
+                                            onChange={this.handleChange} />
+                                    </FloatingLabel>
+                                </Col>
+                                <Col xs={12} md={3} className="mt-3">
+                                    <FloatingLabel
+                                        controlId="floatingInput"
+                                        label="ISSN">
+                                        <Form.Control
+                                            type="text"
+                                            placeholder="ISSN"
+                                            value={form ? form.issn : ""}
+                                            name="issn"
+                                            onChange={this.handleChange} />
+                                    </FloatingLabel>
+                                </Col>
+                                <Col xs={12} md={3} className="mt-3">
 
-                                </Col>
-                                <Col xs={12} md={3}>
-                                    <label>
-                                        ISBN
-                                    </label>
-                                    <input className="form-control" type="tex" name="isbn" id="isbn" onChange={this.handleChange} value={form ? form.isbn : ""}  autoComplete="off" />
-                                </Col>
-                                <Col xs={12} md={3}>
-                                    <label>
-                                        ISSN
-                                    </label>
-                                    <input className="form-control" type="tex" name="issn" id="issn" onChange={this.handleChange} value={form ? form.issn : ""} autoComplete="off" />
-                                </Col>
-                                <Col xs={12} md={3} className="mt-3">
-                                    <label>
-                                        Lugar de publicación
-                                    </label>
-                                    <select className="form-control" name="placePub" id="placePubEdit" onChange={this.handleChange} value={form ? form.placePub : ""}>
-                                        <option selected disabled value="">Seleccione una opción</option>
-                                        <option value="Aguascalientes">Aguascalientes</option>
-                                        <option value="Baja California">Baja California</option>
-                                        <option value="Baja California Sur">Baja California Sur</option>
-                                        <option value="Campeche">Campeche</option>
-                                        <option value="Chiapas">Chiapas</option>
-                                        <option value="Chihuahua">Chihuahua</option>
-                                        <option value="CDMX">Ciudad de México</option>
-                                        <option value="Coahuila">Coahuila</option>
-                                        <option value="Colima">Colima</option>
-                                        <option value="Durango">Durango</option>
-                                        <option value="Estado de México">Estado de México</option>
-                                        <option value="Guanajuato">Guanajuato</option>
-                                        <option value="Guerrero">Guerrero</option>
-                                        <option value="Hidalgo">Hidalgo</option>
-                                        <option value="Jalisco">Jalisco</option>
-                                        <option value="Michoacán">Michoacán</option>
-                                        <option value="Morelos">Morelos</option>
-                                        <option value="Nayarit">Nayarit</option>
-                                        <option value="Nuevo León">Nuevo León</option>
-                                        <option value="Oaxaca">Oaxaca</option>
-                                        <option value="Puebla">Puebla</option>
-                                        <option value="Querétaro">Querétaro</option>
-                                        <option value="Quintana Roo">Quintana Roo</option>
-                                        <option value="San Luis Potosí">San Luis Potosí</option>
-                                        <option value="Sinaloa">Sinaloa</option>
-                                        <option value="Sonora">Sonora</option>
-                                        <option value="Tabasco">Tabasco</option>
-                                        <option value="Tamaulipas">Tamaulipas</option>
-                                        <option value="Tlaxcala">Tlaxcala</option>
-                                        <option value="Veracruz">Veracruz</option>
-                                        <option value="Yucatán">Yucatán</option>
-                                        <option value="Zacatecas">Zacatecas</option>
-                                    </select>
+                                    <FloatingLabel
+                                        controlId="floatingSelect"
+                                        label="Lugar de publicación">
+                                        <Form.Select aria-label="Floating label" value={form ? form.placePub : ""} onChange={this.handleChange} name="placePub">
+                                            <option selected disabled value="">Seleccione una opción</option>
+                                            <option value="Aguascalientes">Aguascalientes</option>
+                                            <option value="Baja California">Baja California</option>
+                                            <option value="Baja California Sur">Baja California Sur</option>
+                                            <option value="Campeche">Campeche</option>
+                                            <option value="Chiapas">Chiapas</option>
+                                            <option value="Chihuahua">Chihuahua</option>
+                                            <option value="CDMX">Ciudad de México</option>
+                                            <option value="Coahuila">Coahuila</option>
+                                            <option value="Colima">Colima</option>
+                                            <option value="Durango">Durango</option>
+                                            <option value="Estado de México">Estado de México</option>
+                                            <option value="Guanajuato">Guanajuato</option>
+                                            <option value="Guerrero">Guerrero</option>
+                                            <option value="Hidalgo">Hidalgo</option>
+                                            <option value="Jalisco">Jalisco</option>
+                                            <option value="Michoacán">Michoacán</option>
+                                            <option value="Morelos">Morelos</option>
+                                            <option value="Nayarit">Nayarit</option>
+                                            <option value="Nuevo León">Nuevo León</option>
+                                            <option value="Oaxaca">Oaxaca</option>
+                                            <option value="Puebla">Puebla</option>
+                                            <option value="Querétaro">Querétaro</option>
+                                            <option value="Quintana Roo">Quintana Roo</option>
+                                            <option value="San Luis Potosí">San Luis Potosí</option>
+                                            <option value="Sinaloa">Sinaloa</option>
+                                            <option value="Sonora">Sonora</option>
+                                            <option value="Tabasco">Tabasco</option>
+                                            <option value="Tamaulipas">Tamaulipas</option>
+                                            <option value="Tlaxcala">Tlaxcala</option>
+                                            <option value="Veracruz">Veracruz</option>
+                                            <option value="Yucatán">Yucatán</option>
+                                            <option value="Zacatecas">Zacatecas</option>
+                                        </Form.Select>
+                                    </FloatingLabel>
                                 </Col>
                                 <Col xs={12} md={3} className="mt-3">
-                                    <label>
-                                        Coordinadores / Antalogadores / Compiladores
-                                    </label>
-                                    <textarea className="form-control" type="text" onChange={this.handleChange}
-                                        name="coordinadores" id="coordinadoresEdit" value={form ? form.coordinadores : ""} />
+                                    <FloatingLabel
+                                        controlId="floatingInput"
+                                        label="Tema">
+                                        <Form.Control
+                                            type="text"
+                                            placeholder="Tema"
+                                            value={form ? form.tema : ""}
+                                            name="tema"
+                                            onChange={this.handleChange} />
+                                    </FloatingLabel>
                                 </Col>
                                 <Col xs={12} md={3} className="mt-3">
-                                    <label>
-                                        Año de publicación
-                                    </label>
-                                    <input className="form-control" type="number" name="anio" onChange={this.handleChange}
-                                        id="anio" value={form ? form.anio : ""} />
+                                    <FloatingLabel
+                                        controlId="floatingInput"
+                                        label="Año de publicación">
+                                        <Form.Control
+                                            type="number"
+                                            placeholder="Año de publicación"
+                                            value={form ? form.anio : ""}
+                                            name="anio"
+                                            onChange={this.handleChange} />
+                                    </FloatingLabel>
                                 </Col>
                                 <Col xs={12} md={3} className="mt-3">
-                                    <label>
-                                        Precio
-                                    </label>
-                                    <input className="form-control" type="number" name="precio" onChange={this.handleChange}
-                                        id="precioEdit" value={form ? form.precio : ""} />
+                                    <FloatingLabel
+                                        controlId="floatingInput"
+                                        label="Precio">
+                                        <Form.Control
+                                            type="number"
+                                            placeholder="Precio"
+                                            value={form ? form.precio : ""}
+                                            name="precio"
+                                            onChange={this.handleChange} />
+                                    </FloatingLabel>
                                 </Col>
                                 <Col xs={12} md={3} className="mt-3">
-                                    <label>
-                                        Número de páginas
-                                    </label>
-                                    <input className="form-control" type="number" onChange={this.handleChange}
-                                        name="paginas" id="numPagEdit" value={form ? form.paginas : ""} />
+                                    <FloatingLabel
+                                        controlId="floatingInput"
+                                        label="Número de páginas">
+                                        <Form.Control
+                                            type="number"
+                                            placeholder="Número de páginas"
+                                            value={form ? form.paginas : ""}
+                                            name="paginas"
+                                            onChange={this.handleChange} />
+                                    </FloatingLabel>
                                 </Col>
                                 <Col xs={12} md={3} className="mt-3">
-                                    <label>
-                                        Dimensiones (Largo-Ancho-Alto) [cm]
-                                    </label>
-                                    <input className="form-control" type="text" onChange={this.handleChange}
-                                        name="dimensiones" id="dimensionesEdit" value={form ? form.dimensiones : ""} />
+                                    <FloatingLabel
+                                        controlId="floatingInput"
+                                        label="Dimensiones (cm)">
+                                        <Form.Control
+                                            type="text"
+                                            placeholder="Dimensiones (cm)"
+                                            value={form ? form.dimensiones : ""}
+                                            name="dimensiones"
+                                            onChange={this.handleChange} />
+                                    </FloatingLabel>
                                 </Col>
                                 <Col xs={12} md={3} className="mt-3">
-                                    <label>Colección / Serie</label>
-                                    <input className="form-control" type="text" onChange={this.handleChange}
-                                        name="coleccionSerie" id="coleccionSerieEdit" value={form ? form.coleccionSerie : ""} />
+
+                                    <FloatingLabel
+                                        controlId="floatingInput"
+                                        label="Colección / Serie">
+                                        <Form.Control
+                                            type="text"
+                                            placeholder="Colección / Serie"
+                                            value={form ? form.coleccionSerie : ""}
+                                            name="coleccionSerie"
+                                            onChange={this.handleChange} />
+                                    </FloatingLabel>
+                                </Col>
+                                <Col xs={12} md={5} className="mt-3">
+                                    <FloatingLabel
+                                        controlId="floatingTextarea"
+                                        label="Coordinadores / Antalogadores / Compiladores">
+                                        <Form.Control
+                                            as="textarea"
+                                            placeholder="Coordinadores / Antalogadores / Compiladores"
+                                            value={form ? form.coordinadores : ""}
+                                            name="coordinadores"
+                                            style={{ height: '100px' }}
+                                            onChange={this.handleChange} />
+                                    </FloatingLabel>
                                 </Col>
                                 <Col xs={12} md={3} className="mt-3">
-                                    <label>Tema</label>
-                                    <input className="form-control" type="text" onChange={this.handleChange}
-                                        name="tema" id="temaEdit" value={form ? form.tema : ""} />
+                                    <FloatingLabel
+                                        controlId="floatingTextarea"
+                                        label="Nota Bibliográfica">
+                                        <Form.Control
+                                            as="textarea"
+                                            placeholder="Nota Bibliográfica"
+                                            value={form ? form.nota : ""}
+                                            name="nota"
+                                            style={{ height: '100px' }}
+                                            onChange={this.handleChange} />
+                                    </FloatingLabel>
                                 </Col>
-                                <Col xs={12} md={12} className="mt-3">
-                                    <label>Nota Bibliográfica</label>
-                                    <textarea className="form-control" name="nota" id="notaEdit"
-                                        value={form ? form.nota : ""} onChange={this.handleChange} rows="3" />
-                                </Col>
-                                <Col xs={12} md={12} className="mt-3">
-                                    <label>Descripción</label>
-                                    <textarea className="form-control" name="descripcion" id="descripcionEdit"
-                                        value={form ? form.descripcion : ""} onChange={this.handleChange} rows="3" />
+                                <Col xs={12} md={4} className="mt-3">
+
+                                    <FloatingLabel
+                                        controlId="floatingTextarea"
+                                        label="Descripción">
+                                        <Form.Control
+                                            as="textarea"
+                                            placeholder="Descripción"
+                                            value={form ? form.descripcion : ""}
+                                            name="descripcion"
+                                            style={{ height: '100px' }}
+                                            onChange={this.handleChange} />
+                                    </FloatingLabel>
                                 </Col>
                             </Row>
                         </Container>
