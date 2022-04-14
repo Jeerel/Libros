@@ -70,7 +70,7 @@ class Login extends React.Component {
                         <div class="rounded d-flex justify-content-center">
                             <div class="col-md-4 col-sm-12 shadow-lg p-5 bg-light">
                                 <div class="text-center">
-                                    <h3 class="text-primary">Iniciar sesión</h3>
+                                    <h3 class="text-primary">Iniciar sesións</h3>
                                 </div>
                                 <form onSubmit={this.login}>
                                     <div class="p-4">
