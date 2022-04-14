@@ -1,5 +1,5 @@
 import React from "react";
-import { Col, Container, Modal, Row, Form,Button } from "react-bootstrap";
+import { Col, Container, Modal, Row, Form, Button, FloatingLabel } from "react-bootstrap";
 import axios from "axios";
 
 class ModalAddLibro extends React.Component {
@@ -19,18 +19,18 @@ class ModalAddLibro extends React.Component {
     };
 
     peticionPost = async (event) => {
-        console.log("EJTER")
         event.preventDefault();
         const url = "https://appi-books.herokuapp.com/api/libros";
         let config = {
             method: "POST",
             url: url,
             headers: {
-                'Authorization': 'Bearer '+sessionStorage.is_security,
+                'Authorization': 'Bearer ' + sessionStorage.is_security,
                 "Content-Type": "application/json",
             },
             data: this.state.form
         };
+
         axios(config)
             .then((response) => {
                 if (response.data.body.estatus === 'Enviado') {
@@ -40,13 +40,13 @@ class ModalAddLibro extends React.Component {
 
             })
             .catch((error) => {
-                console.log(error)
+
                 return error;
             });
     }
 
     cleanModal = async () => {
-        console.log("ENTER")
+
         await this.setState({ form: {} });
         this.props.onCloseModal();
     }
@@ -68,42 +68,74 @@ class ModalAddLibro extends React.Component {
                         <Container>
                             <Row>
                                 <Col xs={12} md={3}>
-                                    <label>
-                                        Autor
-                                    </label>
-                                    <input className="form-control" type="tex" name="autor" id="autor" onChange={this.handleChange} value={form ? form.autor : ''} required autoComplete="off" />
+
+                                    <FloatingLabel
+                                        controlId="floatingInput"
+                                        label="Autor">
+                                        <Form.Control
+                                            type="text"
+                                            placeholder="Autor"
+                                            value={form ? form.autor : ""}
+                                            name="autor"
+                                            onChange={this.handleChange} required />
+                                    </FloatingLabel>
+
                                 </Col>
                                 <Col xs={12} md={3}>
-                                    <label>
-                                        Título
-                                    </label>
-                                    <input className="form-control" type="tex" name="titulo" id="titulo" onChange={this.handleChange} value={form ? form.titulo : ""} required autoComplete="off" />
+
+                                    <FloatingLabel
+                                        controlId="floatingInput"
+                                        label="Título">
+                                        <Form.Control
+                                            type="text"
+                                            placeholder="Título"
+                                            value={form ? form.titulo : ""}
+                                            name="titulo"
+                                            onChange={this.handleChange} required />
+                                    </FloatingLabel>
                                 </Col>
                                 <Col xs={12} md={3}>
-                                    <label>
-                                        Editorial
-                                    </label>
-                                    <input className="form-control" type="tex" name="editorial"
-                                        id="editorial" onChange={this.handleChange} value={form ? form.editorial : ""} required autoComplete="off" />
+                                    <FloatingLabel
+                                        controlId="floatingInput"
+                                        label="Editorial">
+                                        <Form.Control
+                                            type="text"
+                                            placeholder="Editorial"
+                                            value={form ? form.editorial : ""}
+                                            name="editorial"
+                                            onChange={this.handleChange} required />
+                                    </FloatingLabel>
                                 </Col>
                                 <Col xs={12} md={3}>
-                                    <label>
-                                        ISBN
-                                    </label>
-                                    <input className="form-control" type="tex" name="isbn" id="isbn" onChange={this.handleChange} value={form ? form.isbn : ""} autoComplete="off" />
+                                    <FloatingLabel
+                                        controlId="floatingInput"
+                                        label="ISBN">
+                                        <Form.Control
+                                            type="text"
+                                            placeholder="ISBN"
+                                            value={form ? form.isbn : ""}
+                                            name="isbn"
+                                            onChange={this.handleChange} />
+                                    </FloatingLabel>
                                 </Col>
-                                <Col xs={12} md={3}>
-                                    <label>
-                                        ISSN
-                                    </label>
-                                    <input className="form-control" type="tex" name="issn" id="issn" onChange={this.handleChange} value={form ? form.issn : ""} autoComplete="off" />
+                                <Col xs={12} md={3} className="mt-3">
+                                    <FloatingLabel
+                                        controlId="floatingInput"
+                                        label="ISSN">
+                                        <Form.Control
+                                            type="text"
+                                            placeholder="ISSN"
+                                            value={form ? form.issn : ""}
+                                            name="issn"
+                                            onChange={this.handleChange} />
+                                    </FloatingLabel>
                                 </Col>
                             </Row>
                         </Container>
                     </Modal.Body>
                     <Modal.Footer>
                         <Button
-                        type="submit"
+                            type="submit"
                             variant="btn btn-primary">
                             Guardar
                         </Button>

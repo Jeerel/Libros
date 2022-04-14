@@ -1,8 +1,7 @@
 import React, { Fragment } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faSearch, faDownload, faEdit, faTrashAlt } from "@fortawesome/free-solid-svg-icons";
-import { Table } from "react-bootstrap";
-import { CSVLink } from 'react-csv';
+import { faSearch, faEdit, faTrashAlt } from "@fortawesome/free-solid-svg-icons"; // faDownload
+import { Table, Button, FloatingLabel, Form } from "react-bootstrap";
 import axios from "axios";
 import swal from "sweetalert";
 
@@ -12,8 +11,8 @@ class BooksContent extends React.Component {
 
     state = {
         formFilter: {},
+        formFilterPrueba: {},
         data: this.props.libros.libros,
-        //dataEditoriales: this.props.libros.editoriales
     }
 
     handleChangeFilter = async (e) => {
@@ -25,7 +24,8 @@ class BooksContent extends React.Component {
             },
         });
     }
-    peticionAvanced = async (event) => {
+
+    peticionAvanced = async () => {
         let obj = {}
         for (let i in this.state.formFilter) {
             if (this.state.formFilter[i]) {
@@ -33,7 +33,6 @@ class BooksContent extends React.Component {
             }
         }
         var data = obj;
-        console.log(data)
         var config = {
             method: 'POST',
             url: 'https://appi-books.herokuapp.com/api/filters/libros',
@@ -46,10 +45,13 @@ class BooksContent extends React.Component {
 
         axios(config)
             .then(function (response) {
-                console.log(response.data.body)
                 this.setState({ data: response.data.body });
             })
             .catch(function (error) {
+                swal("Error en el sistema", {
+                    icon: "error",
+                });
+                return error;
             });
 
     }
@@ -57,15 +59,48 @@ class BooksContent extends React.Component {
     render() {
 
         const formFilter = this.state.formFilter;
+        const formFilterPrueba = this.state.formFilterPrueba;
         const libros = this.state.data;
-        //const editoriales = this.state.dataEditoriales;
         const functionFetchData = this.props.libros.fetchDataLibros
+
+
+        let handleChangeFilterPrueba = async (e) => {
+            e.persist();
+            await this.setState({
+                formFilterPrueba: {
+                    ...this.state.formFilterPrueba,
+                    [e.target.name]: e.target.value,
+                },
+            });
+            console.log('DATA ORIGINAL: ', this.state.data)
+
+            let auxData = []
+            auxData = this.state.data
+
+            console.log(typeof auxData)
+            //vamos a hacer uso de la constante que se pasara a variable 'libros' para hacer filtrado de la informacion  con la funcion de abajo
+            auxData.filter(filterPrueba)
+        }
+
+        function filterPrueba(libro) {
+            console.log('iterando todo el arreglo', libro)
+        }
 
 
         return (
             <Fragment>
                 <div className="col-xs-12 col-md-3 mt-2">
                     <div className="form-group">
+                        <FloatingLabel
+                            controlId="floatingInput"
+                            label="Prueba">
+                            <Form.Control
+                                type="text"
+                                placeholder="Prueba"
+                                value={formFilterPrueba ? formFilterPrueba.prueba : ""}
+                                name="Prueba"
+                                onChange={handleChangeFilterPrueba} required />
+                        </FloatingLabel>
                         <label>ISBN/ISSN</label>
                         <input
                             className="form-control mt-2"
@@ -107,23 +142,6 @@ class BooksContent extends React.Component {
                     <div className="form-group">
                         <label>Editorial</label>
                         <input className="form-control mt-2" type="text" name="editorial" id="editorial" onChange={this.handleChangeFilter} value={formFilter ? formFilter.editorial : ""} autoComplete="off" required />
-                        {/*
-                            <select
-                            className="form-control mt-2"
-                            name="editorial"
-                            id="editorial"
-                            value={formFilter ? formFilter.editorial : ""}
-                            onChange={this.handleChangeFilter}>
-                            <option value="" selected>Seleccione una opción</option>
-                            {editoriales.map((editorial, i) => {
-                                return (
-                                    <option key={i} value={editorial.ideditorial}>
-                                        {editorial.editorialName}
-                                    </option>
-                                );
-                            })}
-                            </select>
-                        */}
                     </div>
                 </div>
                 <div className="col-xs-12 col-md-3 mt-2">
@@ -197,7 +215,7 @@ class BooksContent extends React.Component {
                 </div>
                 <div className="col-xs-12 col-md-12 mt-5">
                     <BookTable libros={libros} functionFetchData={functionFetchData} />
-                    {/* editoriales={editoriales} */}
+
                 </div>
             </Fragment>
         )
@@ -225,32 +243,6 @@ class BookTable extends React.Component {
     };
 
     render() {
-
-        const headers = [
-            { label: "Code", key: "code" },
-            { label: "*Text", key: "text" },
-            /* { label: "*Unique vendor identifier", key: "Uniquevendoridentifier" },
-             { label: "*Author", key: "Author" },
-             /* { label: "*Title", key: "Title" },
-             { label: "ISBN - hardcover", key: "ISBNhardcover" },
-             { label: "ISBN - paperback", key: "ISBNpaperback" },
-             { label: "*Place of publication", key: "Placeofpublication" },
-             { label: "*Publisher", key: "Publisher" },
-             { label: "*Date of publication", key: "Dateofpublication" },
-             { label: "*Physical description", key: "Physicaldescription" },
-             { label: "*Language", key: "Language" },
-             { label: "*ma (yymmdd)", key: "ma" },
-             { label: "*US$ (no decimal format)", key: "US" },
-             { label: "*US shipping$ (no decimal format)", key: "USshipping" },
-             { label: "Net amount $ (no decimal format)", key: "Netamount" },
-             { label: "*Invoice number", key: "Invoicenumber" },
-             { label: "*Number of copies (default is 1)", key: "Numberofcopies" },
-             { label: "*Vendor code", key: "Vendorcode" },
-             { label: "*Fund code", key: "Fundcode" },
-             { label: "*Location (two letter location code from order)", key: "Location" },
-             */
-        ];
-
         let data = [];
 
         const peticionDelete = async (libro) => {
@@ -272,13 +264,13 @@ class BookTable extends React.Component {
                     };
 
                     axios(config)
-                        .then((response) => {
+                        .then(() => {
                             swal("Libro eliminado correctamente", {
                                 icon: "success",
                             });
                             functionFetchData();
                         })
-                        .catch((error) => {
+                        .catch(() => {
                             swal("Error en el sistema", {
                                 icon: "error",
                             });
@@ -302,85 +294,11 @@ class BookTable extends React.Component {
             await axios(config).then((response) => {
                 this.setState({ triggerEditModal: !this.state.triggerEditModal, formEdit: response.data.body });
             }).catch((error) => {
+                swal("Error en el sistema", {
+                    icon: "error",
+                });
                 return error
             });
-        }
-
-        const downloadMARC21 = async (libro) => {
-
-            data = []
-            if (libro.isbn) {
-                data.push({
-                    code: "020",
-                    text: "## $a " + libro.isbn
-                })
-            }
-            if (libro.issn) {
-                data.push({
-                    code: "022",
-                    text: "## $a " + libro.issn
-                })
-            }
-            data.push({
-                code: "041",
-                text: "## $a spa"
-            })
-            data.push({
-                code: "044",
-                text: "## $a mx"
-            })
-            if (libro.autor) {
-                data.push({
-                    code: "100",
-                    text: "0# $a " + libro.autor
-                })
-            }
-            if (libro.titulo) {
-                data.push({
-                    code: "130",
-                    text: "0# $a " + libro.titulo + " $f " + libro.anio
-                })
-            }
-            data.push({
-                code: "257",
-                text: "## $a Mexico"
-            })
-            data.push({
-                code: "257",
-                text: "## $a Mexico"
-            })
-            if (libro.placePub) {
-                data.push({
-                    code: "260",
-                    text: "## $a " + libro.placePub
-                })
-            }
-            if (libro.descripcion) {
-                data.push({
-                    code: "300",
-                    text: "## $a " + libro.descripcion
-                })
-            }
-            if (libro.anio) {
-                data.push({
-                    code: "362",
-                    text: "0#$a " + libro.anio
-                })
-            }
-            if (libro.nota) {
-                data.push({
-                    code: "500",
-                    text: "0#$a " + libro.nota
-                })
-            }
-
-            await this.setState({ ...this.state, dataLibros: data })
-
-            return (
-                <CSVLink data={data} >
-                </CSVLink>
-            )
-
         }
 
         const functionFetchData = this.props.functionFetchData
@@ -407,21 +325,11 @@ class BookTable extends React.Component {
                                 <td>{libro.isbn}</td>
                                 <td>{libro.anio}</td>
                                 <td>
-                                    <CSVLink data={this.state.dataLibros} headers={headers} filename={'MARC21-' + libro.titulo + '.csv'}>
-                                        <button className="btn btn-primary btn-xs" onClick={() => { downloadMARC21(libro) }}>
-                                            <FontAwesomeIcon icon={faDownload} />
-                                        </button>
-                                    </CSVLink>
-                                    <button
-                                        className="btn btn-warning text-white"
-                                        onClick={() => { peticionEdit(libro); }}>
-                                        <FontAwesomeIcon icon={faEdit} />
-                                    </button>
-                                    <button
-                                        className="btn btn-danger btn-xs"
-                                        onClick={() => { peticionDelete(libro); }}>
-                                        <FontAwesomeIcon icon={faTrashAlt} />
-                                    </button>
+
+                                    <Button onClick={() => { peticionEdit(libro); }} className="text-white" variant="warning" size="sm"><FontAwesomeIcon icon={faEdit} /></Button>
+
+                                    <Button onClick={() => { peticionDelete(libro); }} variant="danger" size="sm"><FontAwesomeIcon icon={faTrashAlt} /></Button>
+
                                 </td>
                             </tr>
                             )
@@ -435,7 +343,6 @@ class BookTable extends React.Component {
                     data={this.state.formEdit}
                     fetchDataLibros={functionFetchData}
                 />
-                {/* editoriales={this.props.editoriales} */}
             </Fragment>
         )
     }
