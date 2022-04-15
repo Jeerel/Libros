@@ -1,6 +1,6 @@
 import React, { Fragment, useEffect, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faSearch, faEdit, faTrashAlt } from "@fortawesome/free-solid-svg-icons"; // faDownload
+import { faEdit, faTrashAlt } from "@fortawesome/free-solid-svg-icons";
 import { Table, Button, FloatingLabel, Form, Col } from "react-bootstrap";
 import axios from "axios";
 import swal from "sweetalert";
@@ -192,24 +192,13 @@ function BooksContent(props) {
         //asignamos a una variable array lo que regrese la funcion filter
         let arrayFiltrado = tablaLibros.filter((libro) => {
             //como la funcion filter tiene su callback, generamos una funcion dentro de filter
-            /*if (
-                libro.libro.toString().toLowerCase().includes(e.target.value.toLowerCase()) ||
-                libro.issn.toString().toLowerCase().includes(e.target.value.toString().toLowerCase()) ||
-                libro.isbn.toString().toLowerCase().includes(e.target.value.toString().toLowerCase()) ||
-                libro.titulo.toString().toLowerCase().includes(e.target.value.toLowerCase()) ||
-                libro.autor.toString().toLowerCase().includes(e.target.value.toLowerCase()) ||
-                libro.editorial.toString().toLowerCase().includes(e.target.value.toLowerCase()) ||
-                libro.anio.toString().includes(e.target.value.toString()) ||
-                libro.estado.toString().toLowerCase().includes(e.target.value.toLowerCase())
-            ) { //pasamos a string y a minusculas y preguntamos si contiene nuestro input
-                return libro //si lo contiene lo regresamos
-            }*/
             //iteramos el objeto libro
             for (let propiedad in libro) {
-
-                /*if (libro[propiedad].toString().toLowerCase().includes(e.target.value.toLowerCase())) {
-                    return libro
-                }*/
+                if (libro[propiedad]) {
+                    if (libro[propiedad].toString().toLowerCase().includes(e.target.value.toLowerCase())) {
+                        return libro
+                    }
+                }
             }
         });
 
