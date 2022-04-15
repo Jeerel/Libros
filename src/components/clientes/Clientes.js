@@ -1,57 +1,187 @@
-import React, { Fragment } from "react";
+import React, { Fragment, useState, useEffect } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faEdit, faTrashAlt,faSearch } from "@fortawesome/free-solid-svg-icons";
-import { Table } from "react-bootstrap";
+import { faEdit, faTrashAlt } from "@fortawesome/free-solid-svg-icons";
+import { Table, Col, FloatingLabel, Form } from "react-bootstrap";
 import axios from "axios";
 import swal from "sweetalert";
 
 import ModalEditarCliente from "../modals/clientes/editCliente";
 
+function ClientsContent(props) {
+
+    //asignacion de constantes, variables y estados
+    const [clientes, setClientes] = useState([]);
+    const [tablaClientes, setTablaClientes] = useState([]);
+    const [filtroNombre, setFiltroNombre] = useState([]);
+    const [filtroDireccion, setFiltroDireccion] = useState([]);
+    const [filtroTelefono, setFiltroTelefono] = useState([]);
+    const [filtroCorreo, setFiltroCorreo] = useState([]);
+    const functionFetchData = props.clientes.fetchDataClientes;
+
+    const getContent = async () => {
+        setClientes(props.clientes.clientes);
+        setTablaClientes(props.clientes.clientes);
+    };
+
+    useEffect(() => {
+        getContent();
+    }, []);
+
+    console.log('CLIENTES: ', props.clientes.clientes)
+
+    //funciones de filtrado
+
+    //Funcion de filtrado para el campo nombre
+    const handleChangeFilterNombre = async (e) => {
+
+        e.persist();
+
+        setFiltroNombre(e.target.value);
+
+        //asignamos a una variable array lo que regrese la funcion filter
+        let arrayFiltrado = tablaClientes.filter((cliente) => {
+            //como la funcion filter tiene su callback, generamos una funcion dentro de filter
+            if (cliente.nombre.toString().toLowerCase().includes(e.target.value.toLowerCase())) { //pasamos a string y a minusculas y preguntamos si contiene nuestro input
+                return cliente; //si lo contiene lo regresamos
+            }
+        });
+
+        setClientes(arrayFiltrado);
+
+    }
+    //fin de funcion de filtrado de nombre
+
+    //Funcion de filtrado para el campo direccion
+    const handleChangeFilterDireccion = async (e) => {
+
+        e.persist();
+
+        setFiltroDireccion(e.target.value);
+
+        //asignamos a una variable array lo que regrese la funcion filter
+        let arrayFiltrado = tablaClientes.filter((cliente) => {
+            //como la funcion filter tiene su callback, generamos una funcion dentro de filter
+            if (cliente.direccion.toString().toLowerCase().includes(e.target.value.toLowerCase())) { //pasamos a string y a minusculas y preguntamos si contiene nuestro input
+                return cliente; //si lo contiene lo regresamos
+            }
+        });
+
+        setClientes(arrayFiltrado);
+
+    }
+    //fin de funcion de filtrado de direccion
+
+    //Funcion de filtrado para el campo telefono
+    const handleChangeFilterTelefono = async (e) => {
+
+        e.persist();
+
+        setFiltroTelefono(e.target.value);
+
+        //asignamos a una variable array lo que regrese la funcion filter
+        let arrayFiltrado = tablaClientes.filter((cliente) => {
+            //como la funcion filter tiene su callback, generamos una funcion dentro de filter
+            if (cliente.telefono.toString().toLowerCase().includes(e.target.value.toString().toLowerCase())) { //pasamos a string y a minusculas y preguntamos si contiene nuestro input
+                return cliente; //si lo contiene lo regresamos
+            }
+        });
+
+        setClientes(arrayFiltrado);
+
+    }
+    //fin de funcion de filtrado de telefono
+
+    //Funcion de filtrado para el campo correo
+    const handleChangeFilterCorreo = async (e) => {
+
+        e.persist();
+
+        setFiltroCorreo(e.target.value);
+
+        //asignamos a una variable array lo que regrese la funcion filter
+        let arrayFiltrado = tablaClientes.filter((cliente) => {
+            //como la funcion filter tiene su callback, generamos una funcion dentro de filter
+            if (cliente.email.toString().toLowerCase().includes(e.target.value.toLowerCase())) { //pasamos a string y a minusculas y preguntamos si contiene nuestro input
+                return cliente; //si lo contiene lo regresamos
+            }
+        });
+
+        setClientes(arrayFiltrado);
+
+    }
+    //fin de funcion de filtrado de correo
+
+    return (
+        <Fragment>
+
+            <Col xs={12} md={3} className="mt-3">
+                <FloatingLabel
+                    controlId="floatingInput"
+                    label="Nombre">
+                    <Form.Control
+                        type="text"
+                        placeholder="Nombre"
+                        value={filtroNombre}
+                        name="nombre"
+                        onChange={handleChangeFilterNombre} />
+                </FloatingLabel>
+            </Col>
+
+            <Col xs={12} md={3} className="mt-3">
+                <FloatingLabel
+                    controlId="floatingInput"
+                    label="Dirección">
+                    <Form.Control
+                        type="text"
+                        placeholder="Dirección"
+                        value={filtroDireccion}
+                        name="direccion"
+                        onChange={handleChangeFilterDireccion} />
+                </FloatingLabel>
+            </Col>
+
+            <Col xs={12} md={3} className="mt-3">
+                <FloatingLabel
+                    controlId="floatingInput"
+                    label="Teléfono">
+                    <Form.Control
+                        type="number"
+                        placeholder="Teléfono"
+                        value={filtroTelefono}
+                        name="telefono"
+                        onChange={handleChangeFilterTelefono} />
+                </FloatingLabel>
+            </Col>
+
+            <Col xs={12} md={3} className="mt-3">
+                <FloatingLabel
+                    controlId="floatingInput"
+                    label="Correo">
+                    <Form.Control
+                        type="email"
+                        placeholder="Correo"
+                        value={filtroCorreo}
+                        name="correo"
+                        onChange={handleChangeFilterCorreo} />
+                </FloatingLabel>
+            </Col>
+
+            <Col xs={12} md={12} className="mt-3">
+                <ClientsTable clientes={clientes} functionFetchData={functionFetchData} />
+            </Col>
+
+        </Fragment>
+    )
+
+}
+
+/*
 class ClientsContent extends React.Component {
 
     state = {
         formFilter: {},
         data: this.props.clientes.clientes
     };
-
-    handleChangeFilter = async (e) => {
-        e.persist();
-        await this.setState({
-            formFilter: {
-                ...this.state.formFilter,
-                [e.target.name]: e.target.value,
-            },
-        });
-    }
-
-    peticionAvanced = async (event) => {
-        let obj = {}
-        for (let i in this.state.formFilter) {
-            if (this.state.formFilter[i]) {
-                obj[i] = this.state.formFilter[i];
-            }
-        }
-        var data = obj;
-        console.log(data)
-        var config = {
-            method: 'POST',
-            url: 'https://appi-books.herokuapp.com/api/filters/clientes',
-            headers: {
-                'Authorization': 'Bearer ' + sessionStorage.is_security,
-                'Content-Type': 'application/json'
-            },
-            data: data
-        };
-
-        axios(config)
-            .then(function (response) {
-                console.log(response.data.body)
-                this.setState({ data: response.data.body });
-            })
-            .catch(function (error) {
-            });
-
-    }
 
     render() {
 
@@ -127,6 +257,7 @@ class ClientsContent extends React.Component {
     }
 
 }
+*/
 
 
 class ClientsTable extends React.Component {
@@ -161,7 +292,7 @@ class ClientsTable extends React.Component {
                         method: "DELETE",
                         url: "https://appi-books.herokuapp.com/api/cliente/" + cliente.idcliente,
                         headers: {
-                            'Authorization': 'Bearer '+sessionStorage.is_security,
+                            'Authorization': 'Bearer ' + sessionStorage.is_security,
                             "Content-Type": "application/json",
                         }
                     }
@@ -190,7 +321,7 @@ class ClientsTable extends React.Component {
                 method: "GET",
                 url: url,
                 headers: {
-                    'Authorization': 'Bearer '+sessionStorage.is_security,
+                    'Authorization': 'Bearer ' + sessionStorage.is_security,
                     "Content-Type": "application/json",
                 }
             };

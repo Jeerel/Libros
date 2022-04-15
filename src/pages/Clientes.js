@@ -31,7 +31,7 @@ class Clientes extends React.Component {
             method: "GET",
             url: url,
             headers: {
-                'Authorization': 'Bearer '+sessionStorage.is_security,
+                'Authorization': 'Bearer ' + sessionStorage.is_security,
                 "Content-Type": "application/json",
             },
         };
@@ -39,7 +39,7 @@ class Clientes extends React.Component {
         this.setState({ loading: true, error: null });
 
         await axios(config).then((response) => {
-            let data =response.data.body ||[]
+            let data = response.data.body || []
             this.setState({ loading: false, data: data })
         }).catch((error) => {
             this.setState({ loading: false, error: error });
