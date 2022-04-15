@@ -1,7 +1,7 @@
-import React, { Fragment } from "react";
+import React, { Fragment, useEffect, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTrashAlt, faSearch, faFileExcel, faDownload } from "@fortawesome/free-solid-svg-icons";
-import { Table, Button } from "react-bootstrap";
+import { Table, Button, FloatingLabel, Form, Col } from "react-bootstrap";
 import axios from "axios";
 import swal from "sweetalert";
 import ReactExport from "react-data-export";
@@ -9,7 +9,72 @@ import ReactExport from "react-data-export";
 const ExcelFile = ReactExport.ExcelFile;
 const ExcelSheet = ReactExport.ExcelFile.ExcelSheet;
 
+function FacturasContents(props) {
+    //asignacion de constantes, variables, y estados
+    const [facturas, setFacturas] = useState([]);
+    const [tablaFacturas, setTablaFacturas] = useState([]);
+    const [filtroFactura, setFiltroFactura] = useState("");
+    const functionFetchData = props.facts.fetchDataFacturas
+
+    const getContent = async () => {
+        setFacturas(props.facts.factura);
+        setTablaFacturas(props.facts.factura);
+    }
+    
+    //Funcion de filtrado para el campo isbn e issn
+    const handleChangeFactura = async (e) => {
+        e.persist();
+        setFiltroFactura(e.target.value);
+        filtrarFactur(e);
+    }
+    //funcion que filtrara de acuerdo a ciertas validaciones
+    const filtrarFactur = (e) => {
+        //asignamos a una variable array lo que regrese la funcion filter
+        let arrayFiltrado = tablaFacturas.filter((libro) => {
+            //como la funcion filter tiene su callback, generamos una funcion dentro de filter
+            //validacion de que tenga año el libro
+            if (libro.id_cotizacion) {
+                if (libro.id_cotizacion.toString().includes(e.target.value.toString())) { //pasamos a string y a minusculas y preguntamos si contiene nuestro input
+                    return libro //si lo contiene lo regresamos
+                }
+            }
+        });
+
+        setFacturas(arrayFiltrado);
+    }
+    //fin de la funcion filtrarISBN_ISSN
+
+    useEffect(() => {
+        getContent();
+    }, []);
+    return (
+
+        <Fragment>
+            <Col xs={12} md={3} className="mt-2">
+
+                <FloatingLabel
+                    controlId="floatingInput"
+                    label="# Factura">
+                    <Form.Control
+                        type="text"
+                        placeholder="# Factura"
+                        value={filtroFactura}
+                        name="numberFactura"
+                        onChange={handleChangeFactura} />
+                </FloatingLabel>
+            </Col>
+
+            <div className="col-xs-12 col-md-12 mt-5">
+                <FacturasContent thisProps={props} facturas={facturas} functionFetchData={functionFetchData} />
+
+            </div>
+        </Fragment>
+    )
+
+}
+
 class FacturasContent extends React.Component {
+
 
     state = {
         formFilter: {},
@@ -34,7 +99,6 @@ class FacturasContent extends React.Component {
             }
         }
         var data = obj;
-        console.log(data)
         var config = {
             method: 'POST',
             url: 'https://appi-books.herokuapp.com/api/filters/cotizacion',
@@ -47,7 +111,6 @@ class FacturasContent extends React.Component {
 
         axios(config)
             .then(function (response) {
-                console.log(response.data.body)
                 this.setState({ data: response.data.body });
             })
             .catch(function (error) {
@@ -57,33 +120,14 @@ class FacturasContent extends React.Component {
 
     render() {
         const formFilter = this.state.formFilter;
-        const factura = this.state.data;
-        const functionFetchDataFacturas = this.props.facturas.fetchDataFacturas;
-        const functionFetchDataClientes = this.props.facturas.fetchDataClientes;
-        const functionFetchDataLibros = this.props.facturas.fetchDataLibros;
-        const dataCliente = this.props.facturas.clientes;
-        const dataLibro = this.props.facturas.libros;
-
+        const factura = this.props.facturas;
+        const functionFetchDataFacturas = this.props.thisProps.facts.fetchDataFacturas;
+        const functionFetchDataClientes = this.props.thisProps.facts.fetchDataClientes;
+        const functionFetchDataLibros = this.props.thisProps.facts.fetchDataLibros;
+        const dataCliente = this.props.thisProps.facts.clientes;
+        const dataLibro = this.props.thisProps.facts.libros;
         return (
             <Fragment>
-                <div className="col-xs-12 col-md-3 mt-2">
-                    <div className="form-group">
-                        <label>Factura ID</label>
-                        <input
-                            className="form-control mt-2"
-                            type="text"
-                            value={formFilter ? formFilter.id_cotizacion : ""}
-                            name="id_cotizacion"
-                            id="id_cotizacion"
-                            onChange={this.handleChangeFilter}
-                        />
-                    </div>
-                </div>
-                <div className="col-xs-12 col-md-3 mt-3">
-                    <button className="btn btn-primary btnTop" onClick={() => this.peticionAvanced()}>
-                        <FontAwesomeIcon icon={faSearch} />
-                    </button>
-                </div>
                 <div className="col-xs-12 col-md-12 mt-2">
                     <FacturaTable
                         factura={factura}
@@ -118,7 +162,6 @@ class FacturaTable extends React.Component {
         this.setState({ triggerEditModal: true });
     };
     peticionDelete = async (factura) => {
-        console.log(factura)
         swal({
             title: "Deseas eliminar la factura " + factura.id_cotizacion + "?",
             text: "No podra recuperar la información",
@@ -193,8 +236,6 @@ class FacturaTable extends React.Component {
             let nameTxt = "Factura " + factura.id_cotizacion;
             let contenidoMarc = "";
 
-            console.log('tamaño de libros: ', libros.length)
-
             for (let i = 0; i < libros.length; i++) {
                 let libro = libros[i];
 
@@ -238,8 +279,6 @@ class FacturaTable extends React.Component {
                 contenidoMarc = contenidoMarc + contenidoLibroMarc + '\n'
 
             }
-
-            console.log('REDUCE:\n', contenidoMarc)
             let textFileAsBlob = new Blob([contenidoMarc], { type: 'text/plain' });
 
             let downloadLink = document.createElement("a");
@@ -311,9 +350,7 @@ class FacturaTable extends React.Component {
             }
 
             const prueba = () => {
-                console.log(libros)
                 libros.map((libro, i) => {
-                    console.log(libro, i)
                 })
             }
 
@@ -323,7 +360,6 @@ class FacturaTable extends React.Component {
 
                         <ExcelFile filename={nameExcel} element={<Button variant="success"><FontAwesomeIcon icon={faFileExcel} /></Button>}>
                             {libros.map((libro, i) => {
-                                //console.log(libro, dataSetArray[i])
                                 return (
                                     <ExcelSheet dataSet={dataSetArray[i]} name={libro.titulo}></ExcelSheet>
                                 )
@@ -359,7 +395,6 @@ class FacturaTable extends React.Component {
         const functionFetchDataLibros = this.props.functionFetchDataLibros;
         const dataCliente = this.props.dataCliente;
         const dataLibro = this.props.dataLibro;
-
         return (
             <Fragment>
                 <Table responsive>
@@ -411,7 +446,7 @@ function FacturaM(props) {
 
     return (
         <Fragment>
-            <FacturasContent facturas={props} />
+            <FacturasContents facts={props} />
         </Fragment>
     );
 }

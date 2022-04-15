@@ -287,7 +287,7 @@ function BooksContent(props) {
                     controlId="floatingSelect"
                     label="Lugar de publicación">
                     <Form.Select aria-label="Floating label" value={filtroEstado} onChange={handleChangeFilterEstado} name="estado">
-                        <option selected disabled value="">Seleccione una opción</option>
+                        <option selected value="">Seleccione una opción</option>
                         <option value="Aguascalientes">Aguascalientes</option>
                         <option value="Baja California">Baja California</option>
                         <option value="Baja California Sur">Baja California Sur</option>

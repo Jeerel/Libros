@@ -5,6 +5,8 @@ import AltaLibros from "./pages/AltaLibros";
 import Clientes from "./pages/Clientes"
 import Perfiles from './pages/Perfiles';
 import Factura from './pages/Facturas';
+import restPassword from './pages/restPasss';
+import newPassword from './pages/newPassword';
 import Pedidos from './pages/Pedidos';
 import Cotizacion from './pages/Cotizacion';
 import Login from './pages/Login'
@@ -33,6 +35,8 @@ function App() {
                     <Route exact path="/login" component={Login} />
                     <Route exact path="/libros" component={AltaLibros} />
                     <Route exact path="/clientes" component={Clientes} />
+                    <Route exact path="/restPassword" component={restPassword} />
+                    <Route exact path="/newPassword" component={newPassword} />
                     {
                         //<Route exact path="/editoriales" component={Editoriales} />
                     }

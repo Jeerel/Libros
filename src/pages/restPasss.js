@@ -1,7 +1,6 @@
 import React, { Fragment } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faUser, faKey } from "@fortawesome/free-solid-svg-icons";
-import { Link } from "react-router-dom";
 import swal from "sweetalert";
 import axios from "axios";
 import "./styles/loginStyle.css"
@@ -28,7 +27,7 @@ class Login extends React.Component {
 
         var config = {
             method: 'post',
-            url: 'https://appi-books.herokuapp.com/api/login',
+            url: 'https://appi-books.herokuapp.com/api/restPassword',
             headers: {
                 'Content-Type': 'application/json'
             },
@@ -48,11 +47,12 @@ class Login extends React.Component {
                     swal(responseData.body.mess, {
                         icon: "success",
                     }).then(() => {
-                        sessionStorage.is_Emial = responseData.body.is_Emial;
+                        /* sessionStorage.is_Emial = responseData.body.is_Emial;
                         sessionStorage.is_Name = responseData.body.is_Name;
                         sessionStorage.is_Profile = responseData.body.is_Profile;
                         sessionStorage.is_security = responseData.body.is_security;
-                        window.location = "/libros"
+                        window.location = "/libros" */
+                        //window.location = "/changePass"
                     })
                 }
             })
@@ -71,7 +71,7 @@ class Login extends React.Component {
                         <div class="rounded d-flex justify-content-center">
                             <div class="col-md-4 col-sm-12 shadow-lg p-5 bg-light">
                                 <div class="text-center">
-                                    <h3 class="text-primary">Iniciar sesión</h3>
+                                    <h3 class="text-primary">Recuperar contraseña</h3>
                                 </div>
                                 <form onSubmit={this.login}>
                                     <div class="p-4">
@@ -79,22 +79,12 @@ class Login extends React.Component {
                                             <span class="input-group-text bg-primary text-white"><FontAwesomeIcon icon={faUser} /></span>
                                             <input type="email" name="email" class="form-control" placeholder="Correo" onChange={this.handleChange} required="required" />
                                         </div>
-                                        <div class="input-group mb-3">
-                                            <span class="input-group-text bg-primary text-white"><FontAwesomeIcon icon={faKey} /></span>
-                                            <input type="password" name="pass" class="form-control" placeholder="Contraseña" onChange={this.handleChange} required="required" />
-                                        </div>
                                         <div className="col-md-12 col-xs-12">
                                             <div className="d-grid gap-2">
                                                 <button class="btn btn-primary text-center mt-2" type="submit">
-                                                    Iniciar
+                                                    Enviar correo
                                                 </button>
                                             </div>
-                                        </div>
-                                        <div className="col-md-12 col-xs-12 mt-3">
-                                        <Link className="nav-link" to="/restPassword">
-                                        <p class="text-center text-primary">Olvidaste tu contraseña?</p>
-                                </Link>
-                                            
                                         </div>
                                     </div>
                                 </form>

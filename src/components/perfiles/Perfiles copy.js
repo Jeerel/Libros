@@ -1,149 +1,12 @@
-import React, { Fragment, useEffect, useState } from "react";
+import React, { Fragment } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEdit, faTrashAlt,faSearch } from "@fortawesome/free-solid-svg-icons";
-import { Table, Button, FloatingLabel, Form, Col } from "react-bootstrap";
+import { Table, Button } from "react-bootstrap";
 import axios from "axios";
 import swal from "sweetalert";
 
 import ModalEditarPerfil from "../modals/perfiles/editPerfil";
-function PerfilesContenidos (props){
-//asignacion de constantes, variables, y estados
-const [perfiles, setPerfiles] = useState([]);
-const [tablaPerfiles, setTablaPerfiles] = useState([]);
-const [filtroNombre, setFiltroNombre] = useState("");
-const [filtroCorreo, setFiltroCorreo] = useState("");
-const [filtroTipo, setFiltroTipo] = useState("");
-const functionFetchData = props.perfiles.fetchDataPerfiles
-console.log("props.perfiles.perfiles")
-console.log(props.perfiles.perfiles)
-const getContent = async () => {
-    setPerfiles(props.perfiles.perfiles);
-    setTablaPerfiles(props.perfiles.perfiles);
-}
 
-//Funcion de filtrado para el campo nombre
-const handleChangeNombre = async (e) => {
-    e.persist();
-    setFiltroNombre(e.target.value);
-    filtrarNombre(e);
-}
-//funcion que filtrara de acuerdo a ciertas validaciones
-const filtrarNombre = (e) => {
-    //asignamos a una variable array lo que regrese la funcion filter
-    let arrayFiltrado = tablaPerfiles.filter((libro) => {
-        //como la funcion filter tiene su callback, generamos una funcion dentro de filter
-        //validacion de que tenga año el libro
-        if (libro.nombre) {
-            if (libro.nombre.toString().includes(e.target.value.toString())) { //pasamos a string y a minusculas y preguntamos si contiene nuestro input
-                return libro //si lo contiene lo regresamos
-            }
-        }
-    });
-
-    setPerfiles(arrayFiltrado);
-}
-//fin de la funcion filtrarISBN_ISSN
-
-//Funcion de filtrado para el campo nombre
-const handleChangeCorreo = async (e) => {
-    e.persist();
-    setFiltroCorreo(e.target.value);
-    filtrarCorreo(e);
-}
-//funcion que filtrara de acuerdo a ciertas validaciones
-const filtrarCorreo = (e) => {
-    //asignamos a una variable array lo que regrese la funcion filter
-    let arrayFiltrado = tablaPerfiles.filter((libro) => {
-        //como la funcion filter tiene su callback, generamos una funcion dentro de filter
-        //validacion de que tenga año el libro
-        if (libro.correo) {
-            if (libro.correo.toString().includes(e.target.value.toString())) { //pasamos a string y a minusculas y preguntamos si contiene nuestro input
-                return libro //si lo contiene lo regresamos
-            }
-        }
-    });
-
-    setPerfiles(arrayFiltrado);
-}
-//fin de la funcion filtrarISBN_ISSN
-
-//Funcion de filtrado para el campo nombre
-const handleChangeTipo = async (e) => {
-    e.persist();
-    setFiltroTipo(e.target.value);
-    filtrarTipo(e);
-}
-//funcion que filtrara de acuerdo a ciertas validaciones
-const filtrarTipo = (e) => {
-    //asignamos a una variable array lo que regrese la funcion filter
-    let arrayFiltrado = tablaPerfiles.filter((libro) => {
-        //como la funcion filter tiene su callback, generamos una funcion dentro de filter
-        //validacion de que tenga año el libro
-        if (libro.tipo) {
-            if (libro.tipo.toString().includes(e.target.value.toString())) { //pasamos a string y a minusculas y preguntamos si contiene nuestro input
-                return libro //si lo contiene lo regresamos
-            }
-        }
-    });
-
-    setPerfiles(arrayFiltrado);
-}
-//fin de la funcion filtrarISBN_ISSN
-
-
-
-console.log("perfiles")
-console.log(perfiles)
-useEffect(() => {
-    getContent();
-}, []);
-
-return (
-
-    <Fragment>
-        <Col xs={12} md={3} className="mt-2">
-            <FloatingLabel
-                controlId="floatingInput"
-                label="Nombre">
-                <Form.Control
-                    type="text"
-                    placeholder="Nombre"
-                    value={filtroNombre}
-                    name="nombrePerfil"
-                    onChange={handleChangeNombre}  />
-            </FloatingLabel>
-        </Col>
-        <Col xs={12} md={3} className="mt-2">
-            <FloatingLabel
-                controlId="floatingInput"
-                label="Correo">
-                <Form.Control
-                    type="text"
-                    placeholder="Correo"
-                    value={filtroCorreo}
-                    name="correoPerfil" 
-                    onChange={handleChangeCorreo} />
-            </FloatingLabel>
-        </Col>
-        <Col xs={12} md={3} className="mt-2">
-                <FloatingLabel
-                    controlId="floatingSelect"
-                    label="Tipo">
-                    <Form.Select aria-label="Floating label" value={filtroTipo} onChange={handleChangeTipo} name="estado">
-                        <option selected value="">Seleccione una opción</option>
-                        <option value="Administrador">Administrador</option>
-                            <option value="Usuario">Usuario</option>
-                            <option value="Invitado">Invitado</option>
-                    </Form.Select>
-                </FloatingLabel>
-            </Col>
-        <div className="col-xs-12 col-md-12 mt-5">
-        <PerfilesTable perfiles={perfiles} functionFetchData={functionFetchData} />
-        </div>
-    </Fragment>
-)
-
-}/* 
 class PerfilesContent extends React.Component {
 
     state = {
@@ -194,8 +57,6 @@ class PerfilesContent extends React.Component {
 
         const formFilter = this.state.formFilter;
         const perfiles = this.state.data;
-        console.log("this.props")
-        console.log(this.props)
         const functionFetchData = this.props.perfiles.fetchDataPerfiles
 
         return (
@@ -250,7 +111,7 @@ class PerfilesContent extends React.Component {
 
     }
 
-} */
+}
 
 class PerfilesTable extends React.Component {
 
@@ -378,7 +239,7 @@ function PerfilesM(props) {
 
     return (
         <Fragment>
-            <PerfilesContenidos perfiles={props} />
+            <PerfilesContent perfiles={props} />
         </Fragment>
     )
 

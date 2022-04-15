@@ -209,6 +209,7 @@ class ModalEditLibro extends React.Component {
                                         <Form.Control
                                             type="number"
                                             placeholder="Precio"
+                                            step="0.01"
                                             value={form ? form.precio : ""}
                                             name="precio"
                                             onChange={this.handleChange} />
