@@ -10,20 +10,10 @@ import newPassword from './pages/newPassword';
 import Pedidos from './pages/Pedidos';
 import Cotizacion from './pages/Cotizacion';
 import Login from './pages/Login'
-//import Editoriales from "./pages/Editoriales";
 import Pruebas from "./pages/Pruebas";
 
 
 import Layout from "./components/Layout";
-
-/*
-TODO:
--Tendremos que pasarle los parametros de redireccion en el navbar
-
-FIXME:
--Para acceder a las vistas ahora sera de esta manera: la localhost acompañado del route que le dimos aqui, ejemplo:
-http://localhost:3000/facturas
-*/
 
 function App() {
 
