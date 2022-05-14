@@ -20,7 +20,7 @@ function FacturasContents(props) {
         setFacturas(props.facts.factura);
         setTablaFacturas(props.facts.factura);
     }
-    
+
     //Funcion de filtrado para el campo isbn e issn
     const handleChangeFactura = async (e) => {
         e.persist();
@@ -235,45 +235,71 @@ class FacturaTable extends React.Component {
             let libros = factura.libros;
             let nameTxt = "Factura " + factura.id_cotizacion;
             let contenidoMarc = "";
+            let year = new Date().getFullYear().toString().substr(-2) //obtenemos el año con el formato de YY
+            let month = new Date().getMonth() + 1;
+            month = month.toString().length === 1 ? '0' + month.toString() : month; //obtenemos el mes con el formato de MM
+            let day = new Date().getDate();
+            day = day.toString().length === 1 ? '0' + day.toString() : day; //obtenemos el dia con el formato de DD
 
             for (let i = 0; i < libros.length; i++) {
                 let libro = libros[i];
 
                 let dataMarc = [
+
+                    ['\n=LDR 00000nam  2200000Ia 4500'], //[0] - LEADER aun falta por sacar e investigar
+                    ['\n=008 ' + year.toString() + month.toString() + day.toString() + '?' + new Date().getFullYear() + '\\\\\\\\MX\\\\\\\\\\\\\\\\\\\\\\\\000\\0\\SPA\\d'] //[1] - =008  YYMMDD?DAT1\\\\CNT\\\\\\\\\\\000\0\LNG\d -----> tiene que tener 41 caracteres de longitud, si no mide eso, agregar '\'
+                    ['\n=020  \\\\$a '], //[2] ISBN
+                    ['\n=022  \\\\$a '], //[3] ISSN
+                    ['\n=040  \\\\$a mx'], //[4] MX
+                    ['\n=100  1\\$a '], //[5] AUTOR
+                    ['\n=245  10$a '], //[6] TITULO
+                    ['\n=260  1\\$a '], //[7] CADENA DE TEXTO
+                    ['\n=300  \\\\$a '], //[8] NUM DE PAGINAS 25 p.
+                    ['\n=980  '] //[9] FACTURA FECHA ANIO MES DIA
+                ]
+
+                console.log(dataMarc)
+
+                /*dataMarc = [
                     ['=001  $a MJS '], // 0
                     ['\n=020  \\\\$a '], //1 ISBN
-                    ['\n=022  $a '], //2 ISSN
+                    ['\n=022  \\\\$a '], //2 ISSN
                     ['\n=035  $a MJS '], //3
                     ['\n=041  0\$a spa '], //4
                     ['\n=044  \\\\$a mx'], //5
-                    ['\n=100  1\$a '], //6 AUTOR
+                    ['\n=100  1\\$a '], //6 AUTOR
                     ['\n=245  10$a '], //7 TITULO
-                    ['\n=260  \\\\$a '], //8 CADENA DE TEXTO
+                    ['\n=260  2\\$a '], //8 CADENA DE TEXTO
                     ['\n=300  \\\\$a '], //9 DESCRIP FISICA
                     ['\n=362  '], //10 ANIO PUBLICACION
                     ['\n=500  $a '], //11 NOTA GENERAL
                     ['\n=980  '] //12 FACTURA FECHA ANIO MES DIA
-                ]
+                ]*/
 
-                dataMarc[1] = libro.isbn ? dataMarc[1] + libro.isbn : dataMarc[1] + '';
+                dataMarc[2] = libro.isbn ? dataMarc[2] + libro.isbn : dataMarc[2] + '';
 
-                dataMarc[2] = libro.issn ? dataMarc[2] + libro.issn : dataMarc[2] + '';
+                dataMarc[3] = libro.issn ? dataMarc[3] + libro.issn : dataMarc[3] + '';
 
-                dataMarc[6] = libro.autor ? dataMarc[6] + libro.autor : dataMarc[6] + '';
+                dataMarc[5] = libro.autor ? dataMarc[5] + libro.autor : dataMarc[5] + '';
 
-                dataMarc[7] = libro.titulo ? dataMarc[7] + libro.titulo : dataMarc[7] + '';
+                dataMarc[6] = libro.titulo ? dataMarc[6] + libro.titulo : dataMarc[6] + '';
 
-                let pub = libro.placePub ? "$a " + libro.placePub + ' ' : '';
-                pub = libro.editorial ? pub + "$b" + libro.editorial + ' ' : pub;
-                pub = libro.anio ? pub + '$c ' + libro.anio + ' ' : pub;
-                dataMarc[8] = pub ? dataMarc[8] + pub : dataMarc[8] + '';
-                dataMarc[9] = libro.descripcion ? dataMarc[9] + libro.descripcion : dataMarc[9] + '';
-                dataMarc[10] = libro.anio ? dataMarc[10] + libro.anio : dataMarc[10] + '';
-                dataMarc[11] = libro.nota ? dataMarc[11] + libro.nota : dataMarc[11] + '';
-                dataMarc[12] = dataMarc[12] + '\\$a ' + libro.fecha_cotizacion + ' $b ' + libro.precio + " $e " + libro.precio + " $f " + libro.id_cotizacion;
+                let pub = libro.placePub ? libro.placePub + ' ' : '';
+                pub = libro.editorial ? pub + " : $b " + libro.editorial + ' ' : pub;
+                pub = libro.anio ? pub + ', $c ' + libro.anio + ' ' : pub;
+                dataMarc[7] = pub ? dataMarc[7] + pub : dataMarc[7] + '';
+                //el numero de pagina sera el indice 8
+                dataMarc[8] = libro.paginas ? dataMarc[8] + libro.paginas + ' p.' : dataMarc[8] + '';
+                //dataMarc[9] = libro.descripcion ? dataMarc[9] + libro.descripcion : dataMarc[9] + '';
+                //dataMarc[10] = libro.anio ? dataMarc[10] + libro.anio : dataMarc[10] + '';
+                //dataMarc[11] = libro.nota ? dataMarc[11] + libro.nota : dataMarc[11] + '';
+                dataMarc[9] = dataMarc[9] + '\\\\$a' + new Date().getFullYear().toString() + month.toString() + day.toString() + "$f" + libro.id_cotizacion
+                //TODO: hay que verificar que significa el subcampo $s y se lo concatenamos
+                //+' $b ' + libro.precio + " $e " + libro.precio + " $f " + libro.id_cotizacion;
 
                 const reducer = (acumulator, curr) => acumulator + curr;
                 let contenidoLibroMarc = dataMarc.reduce(reducer);
+                console.log(dataMarc, contenidoLibroMarc)
                 contenidoLibroMarc = contenidoLibroMarc + '\n'
 
                 contenidoMarc = contenidoMarc + contenidoLibroMarc + '\n'
